@@ -37,6 +37,7 @@ export default function MotorChain({ onBack, onFinish }) {
   function previewSequence() {
     const e = eng.current;
     e.awaitingInput = false;
+    setWrongPad(null); // clear the slip highlight before replaying — otherwise it fights the .lit class through the whole preview
     let i = 0;
     function step() {
       if (i >= e.sequence.length) {
