@@ -4,11 +4,16 @@ import SessionSummary from "../components/SessionSummary.jsx";
 import { generateShortcutMaze, getCellWalls, isOpen } from "../utils/maze.js";
 
 const TOTAL_ROUNDS = 4;
+// Bigger than the original 4x4-6x5 range on purpose: in a small grid every
+// route looks like "just go there," so the trained path reads as arbitrary
+// instead of a real maze constraint, and the shortest path is trivial to
+// eyeball once the map's revealed. More cells makes both the walls and the
+// shortcut feel earned.
 const SIZES = [
-  [4, 4],
-  [5, 4],
-  [5, 5],
-  [6, 5],
+  [6, 6],
+  [7, 6],
+  [7, 7],
+  [8, 7],
 ];
 
 function adjacent(a, b, cols) {
@@ -30,7 +35,7 @@ export default function Shortcut({ onBack, onFinish }) {
   const [revealed, setRevealed] = useState([]);
   const [currentPos, setCurrentPos] = useState(0);
   const [userPath, setUserPath] = useState([]);
-  const [msg, setMsg] = useState("learn the route…");
+  const [msg, setMsg] = useState("watch closely — this is the only route you'll be shown");
   const [result, setResult] = useState(null);
   const [summary, setSummary] = useState(null);
 
@@ -41,6 +46,9 @@ export default function Shortcut({ onBack, onFinish }) {
 
   function playWalkthrough(onDone) {
     const path = eng.current.maze.trainedPath;
+    // Bigger mazes mean longer trained paths (20-50+ cells) — keep total watch
+    // time roughly constant instead of letting it stretch past 20+ seconds.
+    const stepMs = Math.max(110, Math.min(480, 7000 / path.length));
     let i = 0;
     function step() {
       if (i >= path.length) {
@@ -55,7 +63,7 @@ export default function Shortcut({ onBack, onFinish }) {
       });
       setCurrentPos(cellIdx);
       i++;
-      timers.current.push(setTimeout(step, 480));
+      timers.current.push(setTimeout(step, stepMs));
     }
     step();
   }
@@ -67,7 +75,7 @@ export default function Shortcut({ onBack, onFinish }) {
     setCurrentPos(eng.current.maze.start);
     playWalkthrough(() => {
       setPhase("ready");
-      setMsg("ready to test your map?");
+      setMsg("that's the one path you were taught — is it actually the fastest way?");
     });
   }
 
@@ -86,10 +94,10 @@ export default function Shortcut({ onBack, onFinish }) {
     setUserPath([maze.start]);
     setResult(null);
     setPhase("learn");
-    setMsg("learn the route…");
+    setMsg("watch closely — this is the only route you'll be shown");
     playWalkthrough(() => {
       setPhase("ready");
-      setMsg("ready to test your map?");
+      setMsg("that's the one path you were taught — is it actually the fastest way?");
     });
   }
 
@@ -101,7 +109,7 @@ export default function Shortcut({ onBack, onFinish }) {
     setCurrentPos(start);
     setUserPath([start]);
     setPhase("test");
-    setMsg("find the fastest way to the goal");
+    setMsg("full map revealed — find the fastest way to the goal");
   }
 
   function moveTo(i) {

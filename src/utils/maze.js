@@ -132,18 +132,28 @@ function farthestCellFrom(walls, rows, cols, start) {
  * so a second, shorter route exists that training never reveals.
  * Retries with a fresh maze if no valid shortcut candidate is found.
  */
-export function generateShortcutMaze(rows, cols, attempts = 25) {
+export function generateShortcutMaze(rows, cols, attempts = 50) {
+  // Remember the longest valid (length >= 6) path seen, even if it never got a
+  // shortcut — a prior fallback skipped this check entirely and could hand
+  // back a degenerate path.
+  let bestNoShortcut = null;
+  const start = 0; // fixed at a corner — always where the player starts
+
   for (let attempt = 0; attempt < attempts; attempt++) {
     const walls = carvePerfectMaze(rows, cols);
-    const start = 0;
-    const mid = farthestCellFrom(walls, rows, cols, start);
-    const goal = farthestCellFrom(walls, rows, cols, mid);
+    // Goal = farthest reachable cell from the FIXED start, via a single BFS.
+    // (Do not use the two-BFS "tree diameter" trick here: that finds the
+    // farthest pair of points in the whole tree, which can loop back to
+    // `start` itself whenever the fixed corner already happens to be one
+    // endpoint of that diameter — a corner very often is. That was the
+    // actual bug behind goal === start.)
+    const goal = farthestCellFrom(walls, rows, cols, start);
     const trainedPath = bfsPath(walls, rows, cols, start, goal);
     if (!trainedPath || trainedPath.length < 6) continue;
 
     let best = null;
     for (let i = 0; i < trainedPath.length; i++) {
-      for (let j = i + 3; j < trainedPath.length; j++) {
+      for (let j = i + 2; j < trainedPath.length; j++) {
         const a = trainedPath[i], b = trainedPath[j];
         if (areGridAdjacent(a, b, cols) && !isOpen(walls, cols, a, b)) {
           const savings = j - i - 1;
@@ -151,19 +161,24 @@ export function generateShortcutMaze(rows, cols, attempts = 25) {
         }
       }
     }
-    if (!best) continue;
+    if (!best) {
+      if (!bestNoShortcut || trainedPath.length > bestNoShortcut.trainedPath.length) {
+        bestNoShortcut = { walls, rows, cols, start, goal, trainedPath, optimalPath: trainedPath, shortcut: null };
+      }
+      continue;
+    }
 
     removeWall(best.a, best.b, cols, walls);
     const optimalPath = bfsPath(walls, rows, cols, start, goal);
     return { walls, rows, cols, start, goal, trainedPath, optimalPath, shortcut: best };
   }
-  // Extremely unlikely fallback: no shortcut found after all attempts —
-  // return a maze with no shortcut rather than throw; the game treats
-  // "trained length === optimal length" as simply nothing to discover.
+  // No maze in `attempts` tries produced a genuine shortcut — use the longest
+  // properly-sized path we saw rather than an unfiltered, possibly-degenerate one.
+  if (bestNoShortcut) return bestNoShortcut;
+  // Truly pathological case (grid too small to ever reach length 6) — generate
+  // one more maze unfiltered rather than looping forever.
   const walls = carvePerfectMaze(rows, cols);
-  const start = 0;
-  const mid = farthestCellFrom(walls, rows, cols, start);
-  const goal = farthestCellFrom(walls, rows, cols, mid);
+  const goal = farthestCellFrom(walls, rows, cols, start);
   const trainedPath = bfsPath(walls, rows, cols, start, goal);
   return { walls, rows, cols, start, goal, trainedPath, optimalPath: trainedPath, shortcut: null };
 }
