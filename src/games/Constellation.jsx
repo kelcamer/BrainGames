@@ -15,6 +15,7 @@ const MAX_CELLS = 81; // grid stops growing past 9x9 — count can still climb f
 export default function Constellation({ onBack, onFinish, best }) {
   const eng = useRef({ gridRows: 5, gridCols: 5, litCount: 6, achievedSpan: 0, growToggle: true, litSet: new Set(), exposure: 1200 });
   const timers = useRef([]);
+  const lastToggle = useRef({ i: -1, t: 0 });
   const [uiSpan, setUiSpan] = useState(6);
   const [phase, setPhase] = useState("show"); // show | recall | result | summary
   const [selected, setSelected] = useState([]);
@@ -43,6 +44,7 @@ export default function Constellation({ onBack, onFinish, best }) {
     while (litSet.size < e.litCount) litSet.add(rnd(total));
     e.litSet = litSet;
     e.exposure = clamp(900 + e.litCount * 150, 900, 3500);
+    lastToggle.current = { i: -1, t: 0 };
     setUiSpan(e.litCount);
     setSelected(new Array(total).fill(false));
     setResultInfo(null);
@@ -58,6 +60,15 @@ export default function Constellation({ onBack, onFinish, best }) {
 
   function toggleCell(i) {
     if (phase !== "recall") return;
+    // Guard against a duplicate event for one tap (touch + a synthesized
+    // "ghost" click is a known mobile-browser pattern). This matters more
+    // here than elsewhere in the app: toggling is its own inverse, so two
+    // firings for a single tap cancel out exactly — select, then instantly
+    // un-select — which read as "I picked it and it cleared my selection."
+    const now = Date.now();
+    const last = lastToggle.current;
+    if (last.i === i && now - last.t < 350) return;
+    lastToggle.current = { i, t: now };
     setSelected((prev) => {
       const next = prev.slice();
       if (next[i]) {
