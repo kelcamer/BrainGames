@@ -42,3 +42,27 @@ export function randomPraise() {
   return PRAISE[i];
 }
 
+// Encouragement for results screens that appear on a *miss* (e.g. a broken
+// span in Trace Map Hard) — celebrating there would be tone-deaf, so these
+// keep it warm and forward-looking instead.
+const CONSOLATION = [
+  "You'll get 'em next time!",
+  "So close — go again.",
+  "Almost had it!",
+  "Nice run. One more?",
+  "That's a solid streak.",
+  "Shake it off — try again.",
+  "Good push. Reset and go.",
+  "Next round's yours.",
+  "You're getting sharper.",
+  "Nearly there — again!",
+];
+
+let lastC = -1;
+export function randomConsolation() {
+  let i = Math.floor(Math.random() * CONSOLATION.length);
+  if (i === lastC) i = (i + 1) % CONSOLATION.length;
+  lastC = i;
+  return CONSOLATION[i];
+}
+

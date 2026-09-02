@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import HoldBar from "../components/HoldBar.jsx";
+import { randomConsolation } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -88,7 +89,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
       xpEarned,
       updateBest: (prev) => ({ maxSpan: Math.max(prev.maxSpan, achieved), plays: prev.plays + 1 }),
     });
-    setSummary({ achieved, xpEarned });
+    setSummary({ achieved, xpEarned, praise: randomConsolation() });
   }
 
   function start() {
@@ -114,6 +115,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
       <div className="game-stage">
         {summary ? (
           <SessionSummary
+            praise={summary.praise}
             eyebrow="sequence broken"
             bigNum={summary.achieved}
             detail={`tiles held in order, position only · +${summary.xpEarned} xp to Hippocampus`}
