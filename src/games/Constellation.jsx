@@ -162,7 +162,7 @@ export default function Constellation({ onBack, onFinish, best }) {
           />
         ) : (
           <>
-            <div className="cst-grid" style={{ gridTemplateColumns: `repeat(${e.gridCols}, 1fr)` }}>
+            <div className="cst-grid" style={{ gridTemplateColumns: `repeat(${e.gridCols}, 1fr)`, gridTemplateRows: `repeat(${e.gridRows}, 1fr)` }}>
               {Array.from({ length: total }, (_, i) => {
                 let cls = "cst-cell";
                 if (phase === "show" && e.litSet.has(i)) cls += " lit";

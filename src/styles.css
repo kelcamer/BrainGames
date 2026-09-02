@@ -281,8 +281,13 @@ button { font-family: inherit; cursor: pointer; }
 .peaks-choice:disabled { cursor: default; }
 
 /* Constellation (Hippocampus — simultaneous visuospatial span) */
-.cst-grid { display: grid; gap: 5px; width: min(340px, 84vw); }
-.cst-cell { aspect-ratio: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; transition: background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease; }
+/* Fixed square footprint on purpose — as the grid grows (more rows/cols),
+   cells shrink to fit inside this same box rather than the board itself
+   growing. Cells don't fix their own aspect-ratio; the grid's row/column
+   tracks (set inline per-round in JSX) divide this fixed box for both
+   dimensions, so a non-square row/col count still fits exactly. */
+.cst-grid { display: grid; gap: 5px; width: min(320px, 82vw); height: min(320px, 82vw); }
+.cst-cell { background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; transition: background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease; }
 .cst-cell.lit { background: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); border-color: var(--hippocampus); }
 .cst-cell.tappable { cursor: pointer; }
 .cst-cell.tappable:hover { border-color: var(--amber); }
