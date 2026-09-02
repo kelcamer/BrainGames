@@ -249,7 +249,9 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
       eng.current.best = Math.max(eng.current.best, eng.current.streak);
       timer.current = setTimeout(newRound, 1100);
     } else {
-      timer.current = setTimeout(finish, 1900);
+      // hold the result on screen for 10s so a wrong answer can be inspected
+      // (which option was marked correct vs. what was picked)
+      timer.current = setTimeout(finish, 10000);
     }
   }
 
@@ -318,7 +320,11 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
                   );
                 })}
               </div>
-              {phase === "result" && <p className="stage-msg mono">{picked === round.correctIndex ? "correct — next structure" : "not that one — run over"}</p>}
+              {phase === "result" && (
+                <p className="stage-msg mono">
+                  {picked === round.correctIndex ? "correct — next structure" : "not that one — the correct view is outlined in green (10s to inspect)"}
+                </p>
+              )}
             </>
           )
         )}
