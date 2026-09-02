@@ -270,6 +270,34 @@ button { font-family: inherit; cursor: pointer; }
 .rr-dot.miss { background: var(--danger); }
 .rr-countin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders Display", sans-serif; font-size: 96px; color: var(--amber); background: rgba(12, 22, 19, 0.75); border-radius: var(--radius-lg); }
 
+/* Four Peaks (Hippocampus — allocentric spatial memory) */
+.peaks-svg { width: 100%; display: block; border-radius: 8px; aspect-ratio: 2 / 1; }
+.peaks-svg--big { border: 1px solid var(--line); width: min(420px, 90vw); }
+.peaks-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: min(480px, 90vw); }
+.peaks-choice { border: 2px solid var(--line); border-radius: 8px; overflow: hidden; cursor: pointer; background: none; padding: 0; display: block; transition: border-color 0.15s ease; }
+.peaks-choice:hover { border-color: var(--hippocampus); }
+.peaks-choice.correct { border-color: var(--wordform); }
+.peaks-choice.wrong { border-color: var(--danger); }
+.peaks-choice:disabled { cursor: default; }
+
+/* Shortcut (Hippocampus — route learning / cognitive-map vs. habit) */
+.maze-grid { display: inline-grid; gap: 0; border: 2px solid var(--line-bright); border-radius: 4px; background: var(--ground); }
+.maze-cell { width: 38px; height: 38px; position: relative; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.maze-cell.fog { background: repeating-linear-gradient(135deg, var(--panel-2) 0 6px, var(--panel) 6px 12px); }
+.maze-cell.known { background: var(--panel-2); }
+.maze-cell.wall-top { border-top: 2px solid var(--line-bright); }
+.maze-cell.wall-right { border-right: 2px solid var(--line-bright); }
+.maze-cell.wall-bottom { border-bottom: 2px solid var(--line-bright); }
+.maze-cell.wall-left { border-left: 2px solid var(--line-bright); }
+.maze-cell.tappable { cursor: pointer; }
+.maze-cell.tappable:hover { background: var(--panel-3); }
+.maze-cell .token { width: 16px; height: 16px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.maze-cell .goal { width: 14px; height: 14px; background: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); transform: rotate(45deg); }
+.maze-cell .start-mark { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink-faint); }
+.maze-legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 11px; color: var(--ink-faint); }
+.maze-legend span { display: flex; align-items: center; gap: 6px; }
+.maze-legend .swatch-dot { width: 10px; height: 10px; border-radius: 50%; }
+
 /* summary card shared */
 .summary { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
 .summary .big-num { font-family: "JetBrains Mono", monospace; font-size: 36px; color: var(--amber); font-weight: 600; }

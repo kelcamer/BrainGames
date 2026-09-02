@@ -12,6 +12,8 @@ import WordBlitz from "./games/WordBlitz.jsx";
 import TraceMap from "./games/TraceMap.jsx";
 import TraceMapHard from "./games/TraceMapHard.jsx";
 import RhythmRecall from "./games/RhythmRecall.jsx";
+import FourPeaks from "./games/FourPeaks.jsx";
+import Shortcut from "./games/Shortcut.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -21,6 +23,8 @@ const GAME_COMPONENTS = {
   tracemap: TraceMap,
   tracemaphard: TraceMapHard,
   rhythmrecall: RhythmRecall,
+  fourpeaks: FourPeaks,
+  shortcut: Shortcut,
 };
 
 export default function App() {
