@@ -16,6 +16,7 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP: HARD MODE" },
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "fourpeaks", title: "FOUR PEAKS" },
+  { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
 ];
 
 export const GAME_BLURB = {
@@ -33,6 +34,8 @@ export const GAME_BLURB = {
     "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo — the working-memory-to-motor-pattern handoff, live.",
   fourpeaks:
     "Study a mountain skyline, then pick the same skyline from a rotated viewpoint. Modeled on the Four Mountains Test — the clinical gold standard for allocentric (viewpoint-independent) spatial memory.",
+  constellation:
+    "A set of squares flashes at once — pick the same set back. Get it right and the count climbs by one and the grid grows a size. A simultaneous visuospatial span test, not a sequence — closer to change-detection capacity tasks than Corsi.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -46,6 +49,7 @@ export const GAME_REGION = {
   tracemaphard: "hippocampus",
   rhythmrecall: "hippocampus",
   fourpeaks: "hippocampus",
+  constellation: "hippocampus",
 };
 
 export function levelFromXp(xp) {

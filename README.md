@@ -1,6 +1,6 @@
 # 🧠 Cortex Console
 
-A personal, MRI-informed brain-training arcade — eight drills, each targeting
+A personal, MRI-informed brain-training arcade — nine drills, each targeting
 a specific region measured on a real FreeSurfer scan (30F, Potvin 2016 +
 CentileBrain 2024 normative comparison). Progress (XP, levels, badges,
 streak) is stored in the browser's `localStorage`.
@@ -21,6 +21,7 @@ This is a full React rewrite of an earlier single-file prototype, with
 | Hippocampus | **Trace Map: Hard Mode** | The real Corsi block-tapping test — identical tiles, position only, nothing to name |
 | Hippocampus | **Rhythm Recall** | Simon-says on a synthesized 5-piece drum kit — working memory into motor pattern |
 | Hippocampus | **Four Peaks** | The Four Mountains Test format — recognize the same skyline from a rotated viewpoint. Allocentric spatial memory specifically |
+| Hippocampus | **Constellation** | Simultaneous visuospatial span — a set of squares flashes at once, pick the same set back. Get it right and both the count and the grid grow. Closer to change-detection capacity tasks than Corsi's sequence memory |
 
 ## Run it
 

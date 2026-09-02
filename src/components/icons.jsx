@@ -78,6 +78,20 @@ export function FourPeaksIcon() {
   );
 }
 
+export function ConstellationIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="14" cy="4" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="20" cy="10" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="7" cy="15" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="17" cy="18" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="20" r="1.4" fill="currentColor" stroke="none" />
+      <path d="M4 6 14 4 20 10M7 15 17 18 10 20" strokeDasharray="1.5 2.2" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -87,4 +101,5 @@ export const GAME_ICONS = {
   tracemaphard: TraceMapHardIcon,
   rhythmrecall: RhythmRecallIcon,
   fourpeaks: FourPeaksIcon,
+  constellation: ConstellationIcon,
 };

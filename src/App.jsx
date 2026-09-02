@@ -13,6 +13,7 @@ import TraceMap from "./games/TraceMap.jsx";
 import TraceMapHard from "./games/TraceMapHard.jsx";
 import RhythmRecall from "./games/RhythmRecall.jsx";
 import FourPeaks from "./games/FourPeaks.jsx";
+import Constellation from "./games/Constellation.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -23,6 +24,7 @@ const GAME_COMPONENTS = {
   tracemaphard: TraceMapHard,
   rhythmrecall: RhythmRecall,
   fourpeaks: FourPeaks,
+  constellation: Constellation,
 };
 
 export default function App() {
