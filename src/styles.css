@@ -17,6 +17,7 @@
   --wordform: #5ecf9e;
   --hippocampus: #b98ce6;
   --parietal: #3fc8d6;
+  --executive: #d96fd0;
   --danger: #e6626e;
   --radius: 10px;
   --radius-lg: 16px;
@@ -366,3 +367,57 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .disclaimer { font-size: 11.5px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; max-width: 70ch; }
 .reset-row { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
 
+
+/* Go / No-Go (Prefrontal Executive — response inhibition) */
+.gng-stage {
+  width: min(280px, 80vw); height: min(280px, 80vw);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel-2); border: 2px solid var(--line); border-radius: var(--radius-lg);
+  transition: background 0.1s ease, border-color 0.1s ease;
+}
+.gng-stage.gng-hit { border-color: var(--wordform); }
+.gng-stage.gng-cr { border-color: var(--wordform); }
+.gng-stage.gng-fa { border-color: var(--danger); background: rgba(230, 98, 110, 0.14); }
+.gng-stage.gng-miss { border-color: var(--amber); }
+.gng-shape { display: block; }
+.gng-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--executive); box-shadow: 0 0 24px rgba(217, 111, 208, 0.5); }
+.gng-triangle { width: 0; height: 0; border-left: 66px solid transparent; border-right: 66px solid transparent; border-bottom: 118px solid var(--danger); filter: drop-shadow(0 0 14px rgba(230, 98, 110, 0.4)); }
+
+/* N-Back (Prefrontal Executive — working memory) */
+.nb-card {
+  width: min(220px, 66vw); height: min(200px, 60vw);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel-2); border: 2px solid var(--line); border-radius: var(--radius-lg);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.nb-card.nb-hit { border-color: var(--wordform); }
+.nb-card.nb-fa { border-color: var(--danger); }
+.nb-card.nb-miss { border-color: var(--amber); }
+.nb-letter { font-size: clamp(64px, 22vw, 110px); font-weight: 700; color: var(--executive); }
+
+/* Task Switch (Prefrontal Executive — set shifting) */
+.ts-rule { font-size: 18px; color: var(--ink-dim); }
+.ts-rule b { color: var(--executive); font-weight: 700; letter-spacing: 0.04em; }
+.ts-rule.ts-switched b { color: var(--amber); }
+.ts-flip { color: var(--amber); font-size: 13px; font-weight: 600; }
+.ts-stim {
+  width: 160px; height: 160px; display: flex; align-items: center; justify-content: center;
+  background: var(--panel-2); border: 2px solid var(--line); border-radius: var(--radius-lg);
+  transition: border-color 0.1s ease;
+}
+.ts-stim.ts-ok { border-color: var(--wordform); }
+.ts-stim.ts-bad { border-color: var(--danger); }
+.ts-shape { width: 90px; height: 90px; display: block; }
+.ts-answers { display: flex; gap: 12px; }
+.ts-answers .btn { min-width: 120px; font-size: 15px; }
+
+/* Word Rush (Prefrontal Executive — verbal fluency) */
+.wr-letter { font-size: clamp(56px, 18vw, 88px); font-weight: 700; color: var(--executive); text-transform: uppercase; line-height: 1; }
+.wr-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: min(440px, 92vw); max-height: 180px; overflow-y: auto; }
+.wr-chip { background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--ink); text-transform: lowercase; }
+
+/* Face options reused .fr-* / executive answers */
+.fr-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: min(320px, 88vw); }
+.fr-options .btn { text-transform: capitalize; font-size: 15px; }
+.fr-options .btn.fr-correct { border-color: var(--wordform); color: var(--wordform); }
+.fr-options .btn.fr-wrong { border-color: var(--danger); color: var(--danger); }

@@ -15,6 +15,10 @@ import RhythmRecall from "./games/RhythmRecall.jsx";
 import Constellation from "./games/Constellation.jsx";
 import MagicNumber from "./games/MagicNumber.jsx";
 import BlockBuilder from "./games/BlockBuilder.jsx";
+import GoNoGo from "./games/GoNoGo.jsx";
+import NBack from "./games/NBack.jsx";
+import TaskSwitch from "./games/TaskSwitch.jsx";
+import WordRush from "./games/WordRush.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -27,6 +31,10 @@ const GAME_COMPONENTS = {
   constellation: Constellation,
   magicnumber: MagicNumber,
   blockbuilder: BlockBuilder,
+  gonogo: GoNoGo,
+  nback: NBack,
+  taskswitch: TaskSwitch,
+  wordrush: WordRush,
 };
 
 export default function App() {

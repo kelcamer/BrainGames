@@ -101,6 +101,43 @@ export function BlockBuilderIcon() {
   );
 }
 
+export function GoNoGoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="8" cy="12" r="4" />
+      <path d="M15 16 L20 7 L20.2 7 L15.2 16 Z M14.5 16.5h6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function NBackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="3" y="8" width="5" height="8" rx="1" />
+      <rect x="9.5" y="8" width="5" height="8" rx="1" />
+      <rect x="16" y="8" width="5" height="8" rx="1" />
+      <path d="M18.5 5.5 A6 6 0 0 0 6 6" strokeLinecap="round" />
+      <path d="M6 4 L6 6.4 L8.4 6.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function TaskSwitchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M4 8h11l-3-3 M20 16H9l3 3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function WordRushIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M5 7 L9 17 L13 7 M15 7 v10 M15 7 h4 M15 12 h3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -112,4 +149,8 @@ export const GAME_ICONS = {
   constellation: ConstellationIcon,
   magicnumber: MagicNumberIcon,
   blockbuilder: BlockBuilderIcon,
+  gonogo: GoNoGoIcon,
+  nback: NBackIcon,
+  taskswitch: TaskSwitchIcon,
+  wordrush: WordRushIcon,
 };

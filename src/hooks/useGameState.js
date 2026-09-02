@@ -5,7 +5,7 @@ const STORAGE_KEY = "cortexConsoleV1";
 
 function defaultState() {
   return {
-    xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0 },
+    xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
     best: {
       flashfocus: { accuracy: 0, minExposure: 9999, plays: 0 },
       tonetrace: { maxSeq: 0, minPitchDiff: 9999, plays: 0 },
@@ -17,6 +17,10 @@ function defaultState() {
       constellation: { maxSpan: 0, plays: 0 },
       magicnumber: { maxSpan: 0, plays: 0 },
       blockbuilder: { maxStreak: 0, plays: 0 },
+      gonogo: { accuracy: 0, plays: 0 },
+      nback: { maxN: 0, plays: 0 },
+      taskswitch: { accuracy: 0, plays: 0 },
+      wordrush: { bestCount: 0, plays: 0 },
     },
     streak: 0,
     lastPlayDate: null,
@@ -71,6 +75,13 @@ export const BADGES = [
   { id: "digit-span-7", label: "Digit Span 7 (Adult Avg)", test: (s) => s.best.magicnumber.maxSpan >= 7 },
   { id: "first-block", label: "First Block Builder Run", test: (s) => s.best.blockbuilder.plays >= 1 },
   { id: "block-streak-5", label: "Five Views Straight", test: (s) => s.best.blockbuilder.maxStreak >= 5 },
+  { id: "first-gonogo", label: "First Go/No-Go Run", test: (s) => s.best.gonogo.plays >= 1 },
+  { id: "gonogo-90", label: "Iron Impulse Control (90%)", test: (s) => s.best.gonogo.accuracy >= 90 },
+  { id: "first-nback", label: "First N-Back Run", test: (s) => s.best.nback.plays >= 1 },
+  { id: "nback-3", label: "3-Back Cleared", test: (s) => s.best.nback.maxN >= 3 },
+  { id: "first-taskswitch", label: "First Task Switch Run", test: (s) => s.best.taskswitch.plays >= 1 },
+  { id: "first-wordrush", label: "First Word Rush Run", test: (s) => s.best.wordrush.plays >= 1 },
+  { id: "wordrush-20", label: "20 Words in 60s", test: (s) => s.best.wordrush.bestCount >= 20 },
   { id: "streak-3", label: "3-Day Streak", test: (s) => s.streak >= 3 },
   { id: "streak-7", label: "7-Day Streak", test: (s) => s.streak >= 7 },
   { id: "level-5", label: "Level 5, Any Region", test: (s) => Object.keys(s.xp).some((k) => levelFromXp(s.xp[k]) >= 5) },

@@ -10,6 +10,7 @@ export const REGIONS = {
   wordform: { name: "Word-Form Area", color: "var(--wordform)", game: "wordblitz", label: "WORD BLITZ" },
   hippocampus: { name: "Hippocampus", color: "var(--hippocampus)", game: "tracemap", label: "TRACE MAP" },
   parietal: { name: "Parietal Cortex Network", color: "var(--parietal)", game: "blockbuilder", label: "BLOCK BUILDER" },
+  executive: { name: "Prefrontal Executive Network", color: "var(--executive)", game: "gonogo", label: "GO / NO-GO" },
 };
 
 // Secondary drills for a region that already has a primary card above.
@@ -18,6 +19,9 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
   { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
+  { regionKey: "executive", gameId: "nback", title: "N-BACK" },
+  { regionKey: "executive", gameId: "taskswitch", title: "TASK SWITCH" },
+  { regionKey: "executive", gameId: "wordrush", title: "WORD RUSH" },
 ];
 
 export const GAME_BLURB = {
@@ -39,6 +43,14 @@ export const GAME_BLURB = {
     "A number flashes, the screen blanks for a few seconds, then you type it back. Every clean recall adds a digit. The classic forward digit-span test — verbal working memory held across a delay; average adult span is about seven.",
   blockbuilder:
     "A 3D stack of cubes appears (with real gravity — nothing floats). Pick what it looks like from the back, left, or right. Trains mental rotation and perspective-taking — allocentric spatial reasoning, straight out of the old Cyberchase block puzzles.",
+  gonogo:
+    "Tap the circles fast, but never the triangles. Trains response inhibition — the withhold-the-impulse skill run by right inferior frontal cortex and the anterior cingulate. The most ADHD-relevant drill here.",
+  nback:
+    "Letters stream by; press MATCH when the current one equals the letter N steps back. Clear a level and N climbs. The canonical dorsolateral-PFC working-memory task.",
+  taskswitch:
+    "The rule flips between COLOR and SHAPE — answer by whichever is showing now. Trains cognitive flexibility / set-shifting; the stumble right after a switch is the classic measure.",
+  wordrush:
+    "One letter, 60 seconds — type as many words as you can that start with it. Phonemic verbal fluency, a left inferior-frontal (Broca's) task with heavy executive retrieval. Plays to a verbal strength.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -54,6 +66,10 @@ export const GAME_REGION = {
   constellation: "hippocampus",
   magicnumber: "parietal",
   blockbuilder: "parietal",
+  gonogo: "executive",
+  nback: "executive",
+  taskswitch: "executive",
+  wordrush: "executive",
 };
 
 export function levelFromXp(xp) {
