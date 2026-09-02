@@ -13,8 +13,15 @@ const rnd = (n) => Math.floor(Math.random() * n);
 
 // ---- structure generation -------------------------------------------------
 // heights[x][y] = number of stacked cubes on base cell (x = left→right,
-// y = front→back). A column of height h is filled at levels 0..h-1 — gravity
-// is automatic because height is a single count, not a per-level flag.
+// y = 0 back → n-1 front). A column of height h is filled at levels 0..h-1, so
+// gravity is automatic (height is a count, not a per-level flag).
+//
+// Heights are forced NON-INCREASING toward the viewer (+x, +y): no column is
+// ever taller than the ones behind and to its left. That's "stadium seating" —
+// it guarantees every cube is visible in the isometric view, so nothing is
+// hidden, there are no ambiguous gaps, and each side elevation is genuinely
+// deducible from the one shown. Without this constraint a tall cube can hide a
+// shorter one and the puzzle becomes unsolvable.
 function makeStructure(n, hCap) {
   let heights, filled;
   do {
@@ -23,9 +30,10 @@ function makeStructure(n, hCap) {
     for (let x = 0; x < n; x++) {
       heights[x] = [];
       for (let y = 0; y < n; y++) {
-        // Bias toward shorter/empty columns so structures stay readable.
-        const h = Math.max(0, rnd(hCap + 2) - 1);
-        heights[x][y] = Math.min(h, hCap);
+        const capL = x > 0 ? heights[x - 1][y] : hCap; // no taller than the col behind (−x)
+        const capB = y > 0 ? heights[x][y - 1] : hCap; // …or the col behind it (−y)
+        const cap = Math.min(hCap, capL, capB);
+        heights[x][y] = cap <= 0 ? 0 : rnd(cap + 1);
         if (heights[x][y] > 0) filled++;
       }
     }
@@ -89,6 +97,7 @@ const profileKey = (p) => p.join(",");
 // Build four candidate profiles: the correct one plus three plausible wrongs
 // (the other two side views, a mirror, and single-column ±1 perturbations).
 function buildChoices(heights, targetKey) {
+  const hMax = maxH(heights);
   const correct = VIEWS[targetKey].fn(heights);
   const cKey = profileKey(correct);
   const seen = new Set([cKey]);
@@ -111,11 +120,13 @@ function buildChoices(heights, targetKey) {
 
   // fill any remainder with single-column height tweaks of the correct view
   let guard = 0;
-  while (distractors.length < 3 && guard++ < 60) {
+  while (distractors.length < 3 && guard++ < 80) {
     const p = correct.slice();
     const i = rnd(p.length);
-    p[i] = Math.max(0, p[i] + (rnd(2) ? 1 : -1));
-    if (p.every((v) => v === 0)) continue;
+    // keep tweaks within the real height range so every option renders at the
+    // same grid size — no option is taller than the structure it came from
+    p[i] = Math.min(hMax, Math.max(0, p[i] + (rnd(2) ? 1 : -1)));
+    if (p.every((v) => v === 0) || profileKey(p) === cKey) continue;
     consider(p);
   }
 
@@ -162,7 +173,11 @@ function IsoStructure({ heights }) {
       const top = [project(x, y, z + 1), project(x + 1, y, z + 1), project(x + 1, y + 1, z + 1), project(x, y + 1, z + 1)];
       const right = [project(x + 1, y, z), project(x + 1, y + 1, z), project(x + 1, y + 1, z + 1), project(x + 1, y, z + 1)];
       const left = [project(x, y + 1, z), project(x + 1, y + 1, z), project(x + 1, y + 1, z + 1), project(x, y + 1, z + 1)];
+      // track every face, not just the top — otherwise the viewBox clips the
+      // bottom row of front faces and the FRONT label sits outside it
       track(top);
+      track(right);
+      track(left);
       faces.push(<polygon key={`${x}-${y}-${z}-r`} points={pts(right)} fill={FACE.right} stroke={FACE.stroke} strokeWidth="0.6" strokeLinejoin="round" />);
       faces.push(<polygon key={`${x}-${y}-${z}-l`} points={pts(left)} fill={FACE.left} stroke={FACE.stroke} strokeWidth="0.6" strokeLinejoin="round" />);
       faces.push(<polygon key={`${x}-${y}-${z}-t`} points={pts(top)} fill={FACE.top} stroke={FACE.stroke} strokeWidth="0.6" strokeLinejoin="round" />);
@@ -170,12 +185,23 @@ function IsoStructure({ heights }) {
   }
 
   const pad = 8;
-  const vb = `${bounds.minX - pad} ${bounds.minY - pad} ${bounds.maxX - bounds.minX + pad * 2} ${bounds.maxY - bounds.minY + pad * 2}`;
+  const sidePad = 14; // room for the FRONT / RIGHT labels, which sit below the corners
+  const labelRoom = 14;
+  const spanX = bounds.maxX - bounds.minX;
+  const w = spanX + (pad + sidePad) * 2;
+  const h = bounds.maxY - bounds.minY + pad * 2 + labelRoom;
+  const vb = `${bounds.minX - pad - sidePad} ${bounds.minY - pad} ${w} ${h}`;
+  const labelY = bounds.maxY + pad + 4;
   return (
-    <svg className="bb-iso" viewBox={vb} role="img" aria-label="3D block structure seen from the front">
+    <svg className="bb-iso" viewBox={vb} preserveAspectRatio="xMidYMid meet" role="img" aria-label="3D block structure — the two visible faces are the front and the right side">
       {faces}
-      <text x={(bounds.minX + bounds.maxX) / 2} y={bounds.maxY + pad - 1} className="bb-facing" textAnchor="middle">
+      {/* label the two visible faces so the viewer has a full reference frame:
+          the front faces point down-left (+y), the right faces down-right (+x) */}
+      <text x={bounds.minX + spanX * 0.28} y={labelY} className="bb-facing" textAnchor="middle">
         FRONT
+      </text>
+      <text x={bounds.minX + spanX * 0.72} y={labelY} className="bb-facing" textAnchor="middle">
+        RIGHT
       </text>
     </svg>
   );
@@ -207,7 +233,7 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
     const heights = makeStructure(n, hCap);
     const targetKey = Object.keys(VIEWS)[rnd(3)];
     const { options, correctIndex } = buildChoices(heights, targetKey);
-    const rows = Math.max(maxH(heights), ...options.map((p) => Math.max(...p)));
+    const rows = maxH(heights); // every option is clamped to this height
     setRound({ heights, targetKey, options, correctIndex, rows });
     setPicked(null);
     setPhase("play");
