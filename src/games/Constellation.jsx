@@ -175,7 +175,16 @@ export default function Constellation({ onBack, onFinish, best }) {
                   else if (!wasLit && wasSelected) cls += " wrong";
                 }
                 if (phase === "recall") cls += " tappable";
-                return <div key={i} className={cls} onClick={() => toggleCell(i)} />;
+                return (
+                  <div
+                    key={i}
+                    className={cls}
+                    onPointerDown={(e) => {
+                      e.preventDefault(); // stops the browser from also firing a trailing synthesized click for this tap
+                      toggleCell(i);
+                    }}
+                  />
+                );
               })}
             </div>
             <p className="stage-msg">{msg}</p>
