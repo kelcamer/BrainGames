@@ -291,12 +291,13 @@ button { font-family: inherit; cursor: pointer; }
 .maze-cell.wall-left { border-left: 2px solid var(--line-bright); }
 .maze-cell.tappable { cursor: pointer; }
 .maze-cell.tappable:hover { background: var(--panel-3); }
-.maze-cell .token { width: 16px; height: 16px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); }
-.maze-cell .goal { width: 14px; height: 14px; background: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); transform: rotate(45deg); }
-.maze-cell .start-mark { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink-faint); }
-.maze-legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 11px; color: var(--ink-faint); }
+.maze-cell { gap: 2px; }
+.maze-cell .token { width: 18px; height: 18px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); flex: none; }
+.maze-cell .goal-emoji { font-size: 20px; line-height: 1; filter: drop-shadow(0 0 4px var(--hippocampus)); }
+.maze-cell .start-mark { font-size: 11px; font-weight: 700; color: var(--ink-faint); }
+.maze-legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: var(--ink-dim); }
 .maze-legend span { display: flex; align-items: center; gap: 6px; }
-.maze-legend .swatch-dot { width: 10px; height: 10px; border-radius: 50%; }
+.maze-legend .swatch-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
 
 /* summary card shared */
 .summary { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }

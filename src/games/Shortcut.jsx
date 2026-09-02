@@ -198,7 +198,7 @@ export default function Shortcut({ onBack, onFinish }) {
           <>
             <div
               className="maze-grid"
-              style={{ gridTemplateColumns: `repeat(${maze.cols}, 38px)`, gridTemplateRows: `repeat(${maze.rows}, 38px)` }}
+              style={{ gridTemplateColumns: `repeat(${maze.cols}, 44px)`, gridTemplateRows: `repeat(${maze.rows}, 44px)` }}
             >
               {Array.from({ length: maze.rows * maze.cols }, (_, i) => {
                 const isRevealed = phase !== "learn" || revealed[i];
@@ -214,8 +214,8 @@ export default function Shortcut({ onBack, onFinish }) {
                 if (canMove) cls += " tappable";
                 return (
                   <div key={i} className={cls} onClick={() => canMove && moveTo(i)}>
-                    {i === maze.goal && <span className="goal" />}
-                    {i === maze.start && i !== currentPos && <span className="start-mark" />}
+                    {i === maze.goal && <span className="goal-emoji">🚩</span>}
+                    {i === maze.start && i !== maze.goal && currentPos !== i && <span className="start-mark">S</span>}
                     {currentPos === i && <span className="token" />}
                   </div>
                 );
@@ -251,10 +251,8 @@ export default function Shortcut({ onBack, onFinish }) {
               <span>
                 <span className="swatch-dot" style={{ background: "var(--amber)" }} /> you
               </span>
-              <span>
-                <span className="swatch-dot" style={{ background: "var(--hippocampus)", transform: "rotate(45deg)" }} /> goal
-              </span>
-              <span>fog = unexplored</span>
+              <span>🚩 goal</span>
+              <span>striped squares = unexplored</span>
             </div>
           </>
         ) : null}

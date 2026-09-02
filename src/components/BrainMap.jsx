@@ -16,8 +16,8 @@ const CALLOUTS = [
   {
     region: "auditory",
     title: "Auditory cortex",
-    stat: "1.8th percentile · right transverse temporal",
-    body: "Heschl's gyrus, where raw sound first gets processed, is thin on both sides (right worse than left).",
+    stat: "1.8th %ile thickness (R) · 99.9th %ile surface area (L)",
+    body: "Heschl's gyrus, where raw sound first gets processed, is thin on both sides — but its surface area is enormous (left 99.9th percentile). Thin and wide, not simply small.",
   },
   {
     region: "motor",

@@ -1,19 +1,23 @@
 // Renders a set of "peaks" (landmarks placed at angles around a full circle)
 // as seen from one viewing angle — a cheap trig-based stand-in for a real 3D
 // camera, good enough to make the same arrangement look genuinely different
-// from two different angles (near/far occlusion, left-right reordering).
-
-const FOV = 100; // degrees of the horizon visible at once
+// from two different angles (left-right reordering, relative spacing).
+//
+// Deliberately never culls a landmark by field of view: an earlier version
+// hid anything outside a 100° window, which — combined with a 75° rotation
+// between study and test — could silently drop a landmark from every choice
+// (the actual bug behind "it showed blue, all four choices were orange").
+// Landmarks are placed in a compact arc (see FourPeaks.jsx) specifically so
+// the full 360° mapping below still reads as one coherent skyline.
 
 function normalize180(deg) {
   return ((deg % 360) + 540) % 360 - 180;
 }
 
 function project(landmark, viewAngle) {
-  const rel = normalize180(landmark.angle - viewAngle);
-  if (Math.abs(rel) > FOV / 2) return null;
-  const xPct = 50 + (rel / (FOV / 2)) * 47;
-  const edgeFactor = 1 - 0.3 * (Math.abs(rel) / (FOV / 2));
+  const rel = normalize180(landmark.angle - viewAngle); // -180..180, never dropped
+  const xPct = ((rel + 180) / 360) * 100;
+  const edgeFactor = 1 - 0.15 * Math.min(1, Math.abs(rel) / 90);
   const scale = landmark.dist * edgeFactor;
   return { xPct, scale, rel };
 }
@@ -21,7 +25,6 @@ function project(landmark, viewAngle) {
 export default function Landscape({ landmarks, viewAngle, size = "big" }) {
   const projected = landmarks
     .map((l) => ({ l, p: project(l, viewAngle) }))
-    .filter((x) => x.p)
     .sort((a, b) => a.l.dist - b.l.dist); // farthest (smallest dist) painted first
 
   const vb = { w: 400, h: 200 };

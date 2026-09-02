@@ -6,7 +6,8 @@ import Landscape from "../components/Landscape.jsx";
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
 const TOTAL = 8;
-const ROTATION = 75; // how far the camera moves between study and test — fixed; distractor subtlety is the difficulty knob
+const ARC = 80; // landmarks cluster inside this arc so they read as one skyline, not scattered dots
+const ROTATION = 50; // how far the camera moves between study and test — fixed; distractor subtlety is the difficulty knob
 const COLORS = ["var(--visual)", "var(--auditory)", "var(--motor)", "var(--wordform)", "var(--amber)"];
 
 // Hippocampus — allocentric spatial memory (the Four Mountains Test format).
@@ -31,11 +32,19 @@ export default function FourPeaks({ onBack, onFinish }) {
     timers.current = [];
   }
 
-  function makeLandmarks(n) {
+  // Landmarks cluster inside a compact arc around baseAngle — a coherent
+  // "one skyline" shape — rather than being scattered anywhere on the full
+  // circle. Critically, the camera (studyAngle) is pointed AT that same
+  // baseAngle, so the study view actually shows the mountains instead of
+  // a viewpoint that happens to be looking at empty sky.
+  function makeLandmarks(n, baseAngle) {
+    const minSep = ARC / (n + 1);
     const angles = [];
-    while (angles.length < n) {
-      const a = rnd(360);
-      if (angles.every((x) => Math.abs(normalize180(x - a)) > 35)) angles.push(a);
+    let guard = 0;
+    while (angles.length < n && guard < 500) {
+      guard++;
+      const a = baseAngle + (Math.random() * ARC - ARC / 2);
+      if (angles.every((x) => Math.abs(x - a) > minSep)) angles.push(a);
     }
     return angles.map((angle, i) => ({
       angle,
@@ -45,26 +54,24 @@ export default function FourPeaks({ onBack, onFinish }) {
     }));
   }
 
-  function normalize180(deg) {
-    return (((deg % 360) + 540) % 360) - 180;
-  }
-
   function nextRound() {
     clearTimers();
     const e = eng.current;
     if (e.round >= TOTAL) return finish();
     e.round++;
     setUiRound(e.round);
-    const landmarks = makeLandmarks(e.itemCount);
-    const studyAngle = rnd(360);
+    const baseAngle = rnd(360);
+    const landmarks = makeLandmarks(e.itemCount, baseAngle);
+    const studyAngle = baseAngle;
     const testAngle = studyAngle + (rnd(2) ? 1 : -1) * ROTATION;
+    const jitter = () => rnd(13) - 6;
 
-    const correctChoice = { landmarks, angle: testAngle + rnd(21) - 10, isCorrect: true };
+    const correctChoice = { landmarks, angle: testAngle + jitter(), isCorrect: true };
     const distractors = Array.from({ length: 3 }, () => {
       const clone = landmarks.map((l) => ({ ...l }));
       const idx = rnd(clone.length);
       clone[idx] = { ...clone[idx], angle: clone[idx].angle + (rnd(2) ? 1 : -1) * e.perturb };
-      return { landmarks: clone, angle: testAngle + rnd(21) - 10, isCorrect: false };
+      return { landmarks: clone, angle: testAngle + jitter(), isCorrect: false };
     });
     const all = [correctChoice, ...distractors].sort(() => Math.random() - 0.5);
 
