@@ -61,8 +61,8 @@ function backProfile(h) {
   // rotate 180°: mirror of the front
   return frontProfile(h).slice().reverse();
 }
-function rightProfile(h) {
-  // viewer at +x looking −x: columns are y, front (y=0) on the left
+// depth silhouette: for each depth row y, the tallest cube across x
+function depthProfile(h) {
   const n = N(h);
   const out = [];
   for (let y = 0; y < n; y++) {
@@ -70,11 +70,16 @@ function rightProfile(h) {
     for (let x = 0; x < n; x++) m = Math.max(m, h[x][y]);
     out.push(m);
   }
-  return out;
+  return out; // ordered y = 0 (back) .. n-1 (front)
 }
 function leftProfile(h) {
-  // viewer at −x looking +x: mirror of the right view
-  return rightProfile(h).slice().reverse();
+  // stand on the left (−x) looking across (+x): the BACK row (y=0) is on your
+  // left, so columns read left→right as y = 0 .. n-1
+  return depthProfile(h);
+}
+function rightProfile(h) {
+  // stand on the right: the back row is on your right — mirror of the left view
+  return depthProfile(h).slice().reverse();
 }
 
 const VIEWS = {
