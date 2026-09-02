@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
+import { cheer } from "../data/praise.js";
 
 // Block Builder — mental rotation / perspective-taking (allocentric spatial,
 // a Hippocampus function). A random cube structure is shown in 3D from the
@@ -148,7 +149,7 @@ function buildChoices(heights, targetKey) {
 const TW = 34; // top-face diamond width
 const TH = 17; // top-face diamond height (2:1 iso)
 const CH = 22; // cube vertical height
-const FACE = { top: "#c9a8f0", left: "#a274d6", right: "#7f4fbf", stroke: "#4c2d75" };
+const FACE = { top: "#8fe1ea", left: "#45c0cf", right: "#2f97a3", stroke: "#1e6870" }; // parietal cyan cube
 
 function project(gx, gy, gz) {
   return [(gx - gy) * (TW / 2), (gx + gy) * (TH / 2) - gz * CH];
@@ -252,6 +253,7 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
     if (correct) {
       eng.current.streak += 1;
       eng.current.best = Math.max(eng.current.best, eng.current.streak);
+      cheer();
       timer.current = setTimeout(newRound, 1100);
     } else {
       timer.current = setTimeout(finish, 1900);
@@ -284,7 +286,7 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Block Builder" title="Block Builder" onBack={onBack}>
+      <GameHeader color="var(--parietal)" regionLabel="Parietal Cortex Network · Block Builder" title="Block Builder" onBack={onBack}>
         <span className="stat-pill">
           Streak <b className="mono">{eng.current.streak}</b>
         </span>
@@ -307,7 +309,7 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
             <>
               <IsoStructure heights={round.heights} />
               <p className="stage-msg big">
-                Which is the view from <b style={{ color: "var(--hippocampus)" }}>{VIEWS[round.targetKey].label}</b>?
+                Which is the view from <b style={{ color: "var(--parietal)" }}>{VIEWS[round.targetKey].label}</b>?
               </p>
               <div className="bb-choices">
                 {grids.map((grid, i) => {

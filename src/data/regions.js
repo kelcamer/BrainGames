@@ -9,6 +9,7 @@ export const REGIONS = {
   motor: { name: "Putamen (Motor)", color: "var(--motor)", game: "motorchain", label: "MOTOR CHAIN" },
   wordform: { name: "Word-Form Area", color: "var(--wordform)", game: "wordblitz", label: "WORD BLITZ" },
   hippocampus: { name: "Hippocampus", color: "var(--hippocampus)", game: "tracemap", label: "TRACE MAP" },
+  parietal: { name: "Parietal Cortex Network", color: "var(--parietal)", game: "blockbuilder", label: "BLOCK BUILDER" },
 };
 
 // Secondary drills for a region that already has a primary card above.
@@ -17,7 +18,6 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
   { regionKey: "hippocampus", gameId: "magicnumber", title: "MAGIC NUMBER" },
-  { regionKey: "hippocampus", gameId: "blockbuilder", title: "BLOCK BUILDER" },
 ];
 
 export const GAME_BLURB = {
@@ -53,7 +53,7 @@ export const GAME_REGION = {
   rhythmrecall: "hippocampus",
   constellation: "hippocampus",
   magicnumber: "hippocampus",
-  blockbuilder: "hippocampus",
+  blockbuilder: "parietal",
 };
 
 export function levelFromXp(xp) {

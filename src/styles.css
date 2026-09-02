@@ -16,6 +16,7 @@
   --motor: #e88a94;
   --wordform: #5ecf9e;
   --hippocampus: #b98ce6;
+  --parietal: #3fc8d6;
   --danger: #e6626e;
   --radius: 10px;
   --radius-lg: 16px;
@@ -286,13 +287,13 @@ button { font-family: inherit; cursor: pointer; }
   cursor: pointer;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.bb-choice:hover:not(:disabled) { border-color: var(--hippocampus); }
+.bb-choice:hover:not(:disabled) { border-color: var(--parietal); }
 .bb-choice:disabled { cursor: default; }
 .bb-choice.correct { border-color: var(--wordform); box-shadow: 0 0 12px rgba(94, 207, 158, 0.35); }
 .bb-choice.wrong { border-color: var(--danger); box-shadow: 0 0 12px rgba(230, 98, 110, 0.35); }
 .bb-elev { display: grid; gap: 3px; width: min(84px, 22vw); aspect-ratio: 1 / 1; }
 .bb-cell { background: transparent; border: 1px solid var(--line); border-radius: 2px; }
-.bb-cell.on { background: var(--hippocampus); border-color: var(--hippocampus); box-shadow: 0 0 6px rgba(185, 140, 230, 0.5); }
+.bb-cell.on { background: var(--parietal); border-color: var(--parietal); box-shadow: 0 0 6px rgba(63, 200, 214, 0.5); }
 
 /* Magic Number (Hippocampus — forward digit span) */
 .magic-display {
@@ -363,3 +364,27 @@ button { font-family: inherit; cursor: pointer; }
 footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .disclaimer { font-size: 11.5px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; max-width: 70ch; }
 .reset-row { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+
+/* Encouragement toast — fires on every correct answer, any game */
+.praise-toast {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px) scale(0.96);
+  background: var(--panel-3);
+  border: 1px solid var(--amber);
+  color: var(--ink);
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 60;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(245, 185, 77, 0.25);
+  white-space: nowrap;
+}
+.praise-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+@media (prefers-reduced-motion: reduce) { .praise-toast { transition: opacity 0.18s ease; } }

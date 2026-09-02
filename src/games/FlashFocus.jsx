@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
+import { cheer } from "../data/praise.js";
 
 const TOTAL = 12;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -76,6 +77,7 @@ export default function FlashFocus({ onBack, onFinish }) {
     if (isCorrect) {
       e.correct++;
       e.streak++;
+      cheer();
       setUiStreak(e.streak);
       if (e.streak > 0 && e.streak % 6 === 0) e.gridSize = clamp(e.gridSize + (e.gridSize < 16 ? 7 : 0), 9, 16);
       e.exposure = clamp(e.exposure - 30, 160, 900);

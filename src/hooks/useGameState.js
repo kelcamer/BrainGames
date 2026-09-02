@@ -5,7 +5,7 @@ const STORAGE_KEY = "cortexConsoleV1";
 
 function defaultState() {
   return {
-    xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0 },
+    xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0 },
     best: {
       flashfocus: { accuracy: 0, minExposure: 9999, plays: 0 },
       tonetrace: { maxSeq: 0, minPitchDiff: 9999, plays: 0 },

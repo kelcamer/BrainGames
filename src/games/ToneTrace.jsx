@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import { playTone } from "../audio/tones.js";
+import { cheer } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -78,6 +79,7 @@ function SequenceMode({ onFinish, onBack }) {
       e.playerPos++;
       if (e.playerPos >= e.sequence.length) {
         setMsg("nice — next round");
+        cheer();
         timers.current.push(setTimeout(growSequence, 700));
       }
     } else {
@@ -174,6 +176,7 @@ function PitchDuel({ onFinish }) {
     setStreak(eng.current.streak);
     setDiff(Math.round(eng.current.pitchDiff));
     if (correct) {
+      cheer();
       onFinish({
         xpEarned: 6,
         updateBest: (prev) => ({ ...prev, minPitchDiff: Math.min(prev.minPitchDiff, eng.current.pitchDiff) }),
