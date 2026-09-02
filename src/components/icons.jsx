@@ -91,6 +91,16 @@ export function ConstellationIcon() {
   );
 }
 
+export function BlockBuilderIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+      <path d="M12 3 19 7v10l-7 4-7-4V7l7-4Z" />
+      <path d="M12 3v8M12 11l7-4M12 11l-7-4" />
+      <path d="M12 11v10" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -101,4 +111,5 @@ export const GAME_ICONS = {
   rhythmrecall: RhythmRecallIcon,
   constellation: ConstellationIcon,
   magicnumber: MagicNumberIcon,
+  blockbuilder: BlockBuilderIcon,
 };

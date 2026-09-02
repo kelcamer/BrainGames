@@ -270,6 +270,30 @@ button { font-family: inherit; cursor: pointer; }
 .rr-dot.miss { background: var(--danger); }
 .rr-countin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders Display", sans-serif; font-size: 96px; color: var(--amber); background: rgba(12, 22, 19, 0.75); border-radius: var(--radius-lg); }
 
+/* Block Builder (Hippocampus — mental rotation / perspective-taking) */
+.bb-iso { width: min(300px, 78vw); height: auto; max-height: 210px; display: block; }
+.bb-facing { fill: var(--ink-faint); font-family: "JetBrains Mono", monospace; font-size: 7px; letter-spacing: 0.14em; }
+.bb-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: min(340px, 88vw); }
+.bb-choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  min-height: 92px;
+  background: var(--panel-2);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.bb-choice:hover:not(:disabled) { border-color: var(--hippocampus); }
+.bb-choice:disabled { cursor: default; }
+.bb-choice.correct { border-color: var(--wordform); box-shadow: 0 0 12px rgba(94, 207, 158, 0.35); }
+.bb-choice.wrong { border-color: var(--danger); box-shadow: 0 0 12px rgba(230, 98, 110, 0.35); }
+.bb-elev { display: grid; gap: 3px; width: min(84px, 22vw); aspect-ratio: 1 / 1; }
+.bb-cell { background: transparent; border: 1px solid var(--line); border-radius: 2px; }
+.bb-cell.on { background: var(--hippocampus); border-color: var(--hippocampus); box-shadow: 0 0 6px rgba(185, 140, 230, 0.5); }
+
 /* Magic Number (Hippocampus — forward digit span) */
 .magic-display {
   display: flex;

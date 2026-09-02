@@ -17,6 +17,7 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
   { regionKey: "hippocampus", gameId: "magicnumber", title: "MAGIC NUMBER" },
+  { regionKey: "hippocampus", gameId: "blockbuilder", title: "BLOCK BUILDER" },
 ];
 
 export const GAME_BLURB = {
@@ -36,6 +37,8 @@ export const GAME_BLURB = {
     "A set of squares flashes at once — pick the same set back. Get it right and the count climbs by one and the grid grows a size. A simultaneous visuospatial span test, not a sequence — closer to change-detection capacity tasks than Corsi.",
   magicnumber:
     "A number flashes, the screen blanks for a few seconds, then you type it back. Every clean recall adds a digit. The classic forward digit-span test — verbal working memory held across a delay; average adult span is about seven.",
+  blockbuilder:
+    "A 3D stack of cubes appears (with real gravity — nothing floats). Pick what it looks like from the back, left, or right. Trains mental rotation and perspective-taking — allocentric spatial reasoning, straight out of the old Cyberchase block puzzles.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -50,6 +53,7 @@ export const GAME_REGION = {
   rhythmrecall: "hippocampus",
   constellation: "hippocampus",
   magicnumber: "hippocampus",
+  blockbuilder: "hippocampus",
 };
 
 export function levelFromXp(xp) {
