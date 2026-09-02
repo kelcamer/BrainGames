@@ -103,13 +103,18 @@ export default function Shortcut({ onBack, onFinish }) {
 
   function startTest() {
     const e = eng.current;
-    const { rows, cols, start } = e.maze;
+    const { start } = e.maze;
     clearTimers();
-    setRevealed(new Array(rows * cols).fill(true));
+    // Deliberately NOT revealing the map here. Showing the whole solved
+    // layout turns this into "can you read a diagram," which any sighted
+    // person does trivially — it stops testing whether you built a real
+    // spatial model and starts testing visual search instead. You still see
+    // whatever you already walked during training; anything past that is
+    // fog until you actually step into it, same as real navigation.
     setCurrentPos(start);
     setUserPath([start]);
     setPhase("test");
-    setMsg("full map revealed — find the fastest way to the goal");
+    setMsg("no map this time — retrace what you know, or risk the unknown for a shortcut");
   }
 
   function moveTo(i) {
@@ -118,6 +123,11 @@ export default function Shortcut({ onBack, onFinish }) {
     if (phase !== "test" || e.finished) return;
     if (!adjacent(currentPos, i, cols) || !isOpen(walls, cols, currentPos, i)) return;
     setCurrentPos(i);
+    setRevealed((prev) => {
+      const next = prev.slice();
+      next[i] = true; // stepping into a cell is the only way to learn its walls
+      return next;
+    });
     setUserPath((prev) => {
       const next = [...prev, i];
       if (i === goal) {
@@ -209,7 +219,7 @@ export default function Shortcut({ onBack, onFinish }) {
               style={{ gridTemplateColumns: `repeat(${maze.cols}, 44px)`, gridTemplateRows: `repeat(${maze.rows}, 44px)` }}
             >
               {Array.from({ length: maze.rows * maze.cols }, (_, i) => {
-                const isRevealed = phase !== "learn" || revealed[i];
+                const isRevealed = revealed[i]; // fog persists into test now — only what you've actually walked is known
                 let cls = `maze-cell ${isRevealed ? "known" : "fog"}`;
                 if (isRevealed) {
                   const w = getCellWalls(maze.walls, maze.rows, maze.cols, i);
