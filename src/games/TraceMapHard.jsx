@@ -129,7 +129,17 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
                 if (phase === "input") cls += " tappable";
                 if (lit === idx) cls += " lit";
                 if (wrong === idx) cls += " wrong";
-                return <div key={idx} className={cls} onClick={() => (phase === "input" ? onTap(idx) : undefined)} />;
+                return (
+                  <div
+                    key={idx}
+                    className={cls}
+                    onPointerDown={(e) => {
+                      if (phase !== "input") return;
+                      e.preventDefault(); // stops the browser from also firing a trailing synthesized click for this tap
+                      onTap(idx);
+                    }}
+                  />
+                );
               })}
             </div>
             {phase === "hold" && <HoldBar ms={eng.current?.holdMs || 1000} />}
