@@ -68,12 +68,11 @@ export function RhythmRecallIcon() {
   );
 }
 
-export function FourPeaksIcon() {
+export function MagicNumberIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M3 18 8 9l3.5 5.5L14 11l7 7" />
-      <path d="M3 18h18" />
-      <circle cx="17.5" cy="6.5" r="1.6" />
+      <rect x="3.5" y="6.5" width="17" height="11" rx="2" />
+      <path d="M7.5 10.5v3M7.5 10.5h1.4M7.5 13.5h1.4M12 10.5v3M15.5 10.5l1.6 3 1.6-3" strokeLinecap="round" />
     </svg>
   );
 }
@@ -100,6 +99,6 @@ export const GAME_ICONS = {
   tracemap: TraceMapIcon,
   tracemaphard: TraceMapHardIcon,
   rhythmrecall: RhythmRecallIcon,
-  fourpeaks: FourPeaksIcon,
   constellation: ConstellationIcon,
+  magicnumber: MagicNumberIcon,
 };

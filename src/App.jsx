@@ -12,8 +12,8 @@ import WordBlitz from "./games/WordBlitz.jsx";
 import TraceMap from "./games/TraceMap.jsx";
 import TraceMapHard from "./games/TraceMapHard.jsx";
 import RhythmRecall from "./games/RhythmRecall.jsx";
-import FourPeaks from "./games/FourPeaks.jsx";
 import Constellation from "./games/Constellation.jsx";
+import MagicNumber from "./games/MagicNumber.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -23,8 +23,8 @@ const GAME_COMPONENTS = {
   tracemap: TraceMap,
   tracemaphard: TraceMapHard,
   rhythmrecall: RhythmRecall,
-  fourpeaks: FourPeaks,
   constellation: Constellation,
+  magicnumber: MagicNumber,
 };
 
 export default function App() {

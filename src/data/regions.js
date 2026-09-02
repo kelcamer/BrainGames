@@ -15,8 +15,8 @@ export const REGIONS = {
 export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP: HARD MODE" },
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
-  { regionKey: "hippocampus", gameId: "fourpeaks", title: "FOUR PEAKS" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
+  { regionKey: "hippocampus", gameId: "magicnumber", title: "MAGIC NUMBER" },
 ];
 
 export const GAME_BLURB = {
@@ -32,10 +32,10 @@ export const GAME_BLURB = {
     "Identical blank tiles light up in a growing sequence — no shape, no color, nothing to whisper to yourself. This is the real Corsi block-tapping test, the clinical standard for spatial memory span.",
   rhythmrecall:
     "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo — the working-memory-to-motor-pattern handoff, live.",
-  fourpeaks:
-    "Study a mountain skyline, then pick the same skyline from a rotated viewpoint. Modeled on the Four Mountains Test — the clinical gold standard for allocentric (viewpoint-independent) spatial memory.",
   constellation:
     "A set of squares flashes at once — pick the same set back. Get it right and the count climbs by one and the grid grows a size. A simultaneous visuospatial span test, not a sequence — closer to change-detection capacity tasks than Corsi.",
+  magicnumber:
+    "A number flashes, the screen blanks for a few seconds, then you type it back. Every clean recall adds a digit. The classic forward digit-span test — verbal working memory held across a delay; average adult span is about seven.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -48,8 +48,8 @@ export const GAME_REGION = {
   tracemap: "hippocampus",
   tracemaphard: "hippocampus",
   rhythmrecall: "hippocampus",
-  fourpeaks: "hippocampus",
   constellation: "hippocampus",
+  magicnumber: "hippocampus",
 };
 
 export function levelFromXp(xp) {

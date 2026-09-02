@@ -270,15 +270,37 @@ button { font-family: inherit; cursor: pointer; }
 .rr-dot.miss { background: var(--danger); }
 .rr-countin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders Display", sans-serif; font-size: 96px; color: var(--amber); background: rgba(12, 22, 19, 0.75); border-radius: var(--radius-lg); }
 
-/* Four Peaks (Hippocampus — allocentric spatial memory) */
-.peaks-svg { width: 100%; display: block; border-radius: 8px; aspect-ratio: 2 / 1; }
-.peaks-svg--big { border: 1px solid var(--line); width: min(420px, 90vw); }
-.peaks-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: min(480px, 90vw); }
-.peaks-choice { border: 2px solid var(--line); border-radius: 8px; overflow: hidden; cursor: pointer; background: none; padding: 0; display: block; transition: border-color 0.15s ease; }
-.peaks-choice:hover { border-color: var(--hippocampus); }
-.peaks-choice.correct { border-color: var(--wordform); }
-.peaks-choice.wrong { border-color: var(--danger); }
-.peaks-choice:disabled { cursor: default; }
+/* Magic Number (Hippocampus — forward digit span) */
+.magic-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  width: min(420px, 90vw);
+}
+.magic-number { font-size: clamp(34px, 11vw, 60px); font-weight: 600; letter-spacing: 0.12em; color: var(--ink); }
+.magic-number--ghost { color: var(--ink-faint); letter-spacing: 0.22em; }
+.magic-number--ok { color: var(--wordform); }
+.magic-number--bad { color: var(--danger); font-size: clamp(24px, 7vw, 40px); }
+.magic-vs { color: var(--ink-dim); font-size: 0.6em; letter-spacing: 0.04em; }
+.magic-dots { font-size: clamp(28px, 9vw, 48px); color: var(--ink-faint); letter-spacing: 0.3em; animation: magic-pulse 1.4s ease-in-out infinite; }
+@keyframes magic-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.8; } }
+.magic-entry { display: flex; gap: 10px; align-items: center; }
+.magic-input {
+  font-size: clamp(24px, 7vw, 36px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-align: center;
+  width: min(260px, 62vw);
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.magic-input:focus { border-color: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); }
 
 /* Constellation (Hippocampus — simultaneous visuospatial span) */
 /* Fixed square footprint on purpose — as the grid grows (more rows/cols),
