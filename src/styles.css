@@ -56,6 +56,7 @@ button { font-family: inherit; cursor: pointer; }
 .app-shell {
   position: relative;
   min-height: 100vh;
+  overflow-x: clip; /* a long HUD tag etc. must never widen the page and throw off 100%/vw sizing */
   background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 34px 34px;
   background-position: -1px -1px;
@@ -82,6 +83,7 @@ button { font-family: inherit; cursor: pointer; }
 .hud__brand { display: flex; align-items: baseline; gap: 10px; }
 .hud__brand .display { font-size: 22px; letter-spacing: 0.03em; }
 .hud__brand .tag { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.14em; }
+@media (max-width: 480px) { .hud__brand .tag { display: none; } }
 .hud__stats { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .stat-pill {
   display: flex; align-items: center; gap: 6px;
@@ -370,18 +372,20 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 
 /* Go / No-Go (Prefrontal Executive — response inhibition) */
 .gng-stage {
-  width: min(280px, 80vw); height: min(280px, 80vw);
+  width: min(600px, 100%); height: min(62vh, 600px);
   display: flex; align-items: center; justify-content: center;
   background: var(--panel-2); border: 2px solid var(--line); border-radius: var(--radius-lg);
   transition: background 0.1s ease, border-color 0.1s ease;
+  touch-action: manipulation; /* kill double-tap zoom so fast taps register cleanly */
+  -webkit-tap-highlight-color: transparent;
 }
 .gng-stage.gng-hit { border-color: var(--wordform); }
 .gng-stage.gng-cr { border-color: var(--wordform); }
 .gng-stage.gng-fa { border-color: var(--danger); background: rgba(230, 98, 110, 0.14); }
 .gng-stage.gng-miss { border-color: var(--amber); }
 .gng-shape { display: block; }
-.gng-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--executive); box-shadow: 0 0 24px rgba(217, 111, 208, 0.5); }
-.gng-triangle { width: 0; height: 0; border-left: 66px solid transparent; border-right: 66px solid transparent; border-bottom: 118px solid var(--danger); filter: drop-shadow(0 0 14px rgba(230, 98, 110, 0.4)); }
+.gng-circle { width: min(180px, 42vw); height: min(180px, 42vw); border-radius: 50%; background: var(--executive); box-shadow: 0 0 24px rgba(217, 111, 208, 0.5); }
+.gng-triangle { width: 0; height: 0; border-left: min(95px, 22vw) solid transparent; border-right: min(95px, 22vw) solid transparent; border-bottom: min(170px, 40vw) solid var(--danger); filter: drop-shadow(0 0 14px rgba(230, 98, 110, 0.4)); }
 
 /* N-Back (Prefrontal Executive — working memory) */
 .nb-card {
@@ -421,3 +425,10 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .fr-options .btn { text-transform: capitalize; font-size: 15px; }
 .fr-options .btn.fr-correct { border-color: var(--wordform); color: var(--wordform); }
 .fr-options .btn.fr-wrong { border-color: var(--danger); color: var(--danger); }
+
+/* Mobile: reclaim horizontal space so tap-heavy games get a near-full-width stage */
+@media (max-width: 480px) {
+  .view { padding-left: 10px; padding-right: 10px; }
+  .game-stage { padding: 12px; }
+  .gng-stage { height: min(66vh, 640px); }
+}
