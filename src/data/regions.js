@@ -17,7 +17,7 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP: HARD MODE" },
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
-  { regionKey: "hippocampus", gameId: "magicnumber", title: "MAGIC NUMBER" },
+  { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
 ];
 
 export const GAME_BLURB = {
@@ -52,7 +52,7 @@ export const GAME_REGION = {
   tracemaphard: "hippocampus",
   rhythmrecall: "hippocampus",
   constellation: "hippocampus",
-  magicnumber: "hippocampus",
+  magicnumber: "parietal",
   blockbuilder: "parietal",
 };
 

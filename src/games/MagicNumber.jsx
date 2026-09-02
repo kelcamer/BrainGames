@@ -13,7 +13,10 @@ function makeNumber(len) {
   return s;
 }
 
-// Hippocampus — forward digit span. A number flashes, the screen blanks for a
+// Parietal Cortex Network — forward digit span. Verbal working memory (the
+// phonological loop: left inferior frontal rehearsal + a left inferior-parietal
+// / supramarginal store), not a hippocampal long-term-memory task.
+// A number flashes, the screen blanks for a
 // few seconds (the maintenance delay), then you type it back. Each clean recall
 // adds one digit. This is the classic forward digit-span test: the span you
 // reach is the length you held through the blank, and average adult span is ~7.
@@ -112,7 +115,7 @@ export default function MagicNumber({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Magic Number" title="Magic Number" onBack={onBack}>
+      <GameHeader color="var(--parietal)" regionLabel="Parietal Cortex Network · Magic Number" title="Magic Number" onBack={onBack}>
         <span className="stat-pill">
           Digits <b className="mono">{shownLen}</b>
         </span>
@@ -125,7 +128,7 @@ export default function MagicNumber({ onBack, onFinish, best }) {
           <SessionSummary
             eyebrow="run complete"
             bigNum={summary.achieved}
-            detail={`digits held through the delay, at your best · +${summary.xpEarned} xp to Hippocampus`}
+            detail={`digits held through the delay, at your best · +${summary.xpEarned} xp to Parietal Cortex Network`}
             onAgain={start}
             againLabel="Try Again"
             onBack={onBack}

@@ -325,7 +325,7 @@ button { font-family: inherit; cursor: pointer; }
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.magic-input:focus { border-color: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); }
+.magic-input:focus { border-color: var(--parietal); box-shadow: 0 0 10px var(--parietal); }
 
 /* Constellation (Hippocampus — simultaneous visuospatial span) */
 /* Fixed square footprint on purpose — as the grid grows (more rows/cols),
