@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
-import { cheer } from "../data/praise.js";
 
 const START_DIGITS = 4;
 const SHOW_MS = (len) => 700 + len * 350; // longer numbers get a little longer to read
@@ -69,7 +68,6 @@ export default function MagicNumber({ onBack, onFinish, best }) {
     setPhase("result");
     if (correct) {
       e.achievedSpan = e.len;
-      cheer();
       setMsg("correct — one more digit");
       timers.current.push(
         setTimeout(() => {

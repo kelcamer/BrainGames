@@ -345,6 +345,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* summary card shared */
 .summary { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.summary .praise-line { font-family: "Big Shoulders Display", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; font-size: 22px; color: var(--amber); }
 .summary .big-num { font-family: "JetBrains Mono", monospace; font-size: 36px; color: var(--amber); font-weight: 600; }
 
 /* ============ MODAL ============ */
@@ -365,26 +366,3 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .disclaimer { font-size: 11.5px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; max-width: 70ch; }
 .reset-row { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
 
-/* Encouragement toast — fires on every correct answer, any game */
-.praise-toast {
-  position: fixed;
-  top: 76px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px) scale(0.96);
-  background: var(--panel-3);
-  border: 1px solid var(--amber);
-  color: var(--ink);
-  padding: 9px 18px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.01em;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 60;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(245, 185, 77, 0.25);
-  white-space: nowrap;
-}
-.praise-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-@media (prefers-reduced-motion: reduce) { .praise-toast { transition: opacity 0.18s ease; } }

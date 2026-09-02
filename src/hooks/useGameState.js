@@ -20,6 +20,7 @@ function defaultState() {
     },
     streak: 0,
     lastPlayDate: null,
+    lastPlayed: {}, // gameId -> timestamp of most recent session, for ordering the grid
     totalSessions: 0,
     badges: [],
   };
@@ -37,6 +38,7 @@ function load() {
     });
     d.streak = parsed.streak || 0;
     d.lastPlayDate = parsed.lastPlayDate || null;
+    d.lastPlayed = parsed.lastPlayed || {};
     d.totalSessions = parsed.totalSessions || 0;
     d.badges = parsed.badges || [];
     return d;
@@ -116,6 +118,7 @@ export function useGameState() {
       if (xpEarned) next.xp = { ...next.xp, [region]: (next.xp[region] || 0) + Math.max(0, Math.round(xpEarned)) };
       if (updateBest) next.best = { ...next.best, [gameId]: updateBest({ ...next.best[gameId] }) };
       if (registerSession) {
+        next.lastPlayed = { ...next.lastPlayed, [gameId]: Date.now() };
         next = withStreakUpdate(next);
         next = withBadgesChecked(next);
       }

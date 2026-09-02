@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
-import { cheer } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -72,7 +71,6 @@ export default function WordBlitz({ onBack, onFinish }) {
     if (isCorrect) {
       e.streak++;
       e.correct++;
-      cheer();
       setUiStreak(e.streak);
       e.exposure = clamp(e.exposure - 25, 220, 700);
     } else {

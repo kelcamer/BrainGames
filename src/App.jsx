@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useGameState } from "./hooks/useGameState.js";
 import { GAME_REGION } from "./data/regions.js";
 import Hud from "./components/Hud.jsx";
-import PraiseToast from "./components/PraiseToast.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import ScanModal from "./components/ScanModal.jsx";
 import ResetModal from "./components/ResetModal.jsx";
@@ -42,10 +41,9 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <PraiseToast />
       <Hud state={state} onOpenScan={() => setScanOpen(true)} />
 
-      {view === "dashboard" && <Dashboard xp={state.xp} badges={state.badges} onPlay={setView} />}
+      {view === "dashboard" && <Dashboard xp={state.xp} badges={state.badges} lastPlayed={state.lastPlayed} onPlay={setView} />}
 
       {GameComponent && (
         <main className="view view-enter" key={view}>

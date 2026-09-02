@@ -42,10 +42,3 @@ export function randomPraise() {
   return PRAISE[i];
 }
 
-export const PRAISE_EVENT = "cortex:praise";
-
-// Fire from any game on a correct answer — PraiseToast (mounted once at the app
-// level) listens for this and pops a random line.
-export function cheer() {
-  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(PRAISE_EVENT));
-}

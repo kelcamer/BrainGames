@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import HoldBar from "../components/HoldBar.jsx";
-import { cheer } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -72,7 +71,6 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
       e.playerPos++;
       if (e.playerPos >= e.sequence.length) {
         setMsg("clean — next round");
-        cheer();
         e.holdMs = clamp(e.holdMs + 200, 800, 5000);
         timers.current.push(setTimeout(grow, 700));
       }

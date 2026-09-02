@@ -1,6 +1,12 @@
+import { useMemo } from "react";
+import { randomPraise } from "../data/praise.js";
+
 export default function SessionSummary({ eyebrow, bigNum, detail, onAgain, againLabel = "Play Again", onBack }) {
+  // one encouragement per results screen (picked once when it mounts)
+  const praise = useMemo(() => randomPraise(), []);
   return (
     <div className="summary">
+      <span className="praise-line">{praise}</span>
       <span className="eyebrow">{eyebrow}</span>
       <div className="big-num mono">{bigNum}</div>
       <p>{detail}</p>

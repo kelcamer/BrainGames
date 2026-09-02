@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import { DRUMS, KEYMAP, hit, resume, now } from "../audio/drums.js";
-import { cheer } from "../data/praise.js";
+import { randomPraise } from "../data/praise.js";
 
 const ORDER = DRUMS.map((d) => d.id);
 const MAX_BPM = 150;
@@ -150,7 +150,6 @@ export default function RhythmRecall({ onBack, onFinish, best }) {
         if (st.input === st.seq.length) {
           st.accepting = false;
           setMsg({ text: `✅ Nailed it — round ${st.round} clear!`, cls: "win" });
-          cheer();
           setTimeout(nextRound, 850);
         }
       } else {
@@ -158,7 +157,7 @@ export default function RhythmRecall({ onBack, onFinish, best }) {
         setDot(st.input, "miss");
         hit("crash");
         setMsg({
-          text: `✂️ Missed at hit ${st.input + 1} — expected <b>${expect.toUpperCase()}</b>. Reached round ${st.round}.`,
+          text: `${randomPraise()} Missed at hit ${st.input + 1} — expected <b>${expect.toUpperCase()}</b>. Reached round ${st.round}.`,
           cls: "fail",
         });
         setLocked(false);

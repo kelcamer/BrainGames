@@ -28,14 +28,20 @@ function GameCard({ regionKey, gameId, title, xp, onPlay }) {
   );
 }
 
-export default function GameGrid({ xp, onPlay }) {
+export default function GameGrid({ xp, onPlay, lastPlayed = {} }) {
+  // every drill (region primaries + secondary drills) as one flat list…
+  const cards = [
+    ...Object.entries(REGIONS).map(([key, r]) => ({ regionKey: key, gameId: r.game, title: r.label })),
+    ...EXTRA_GAMES.map((g) => ({ regionKey: g.regionKey, gameId: g.gameId, title: g.title })),
+  ];
+  // …ordered most-recently-played first. Sort is stable, so never-played drills
+  // keep their original order (all tie at 0) and sit after the ones you've played.
+  const ordered = cards.slice().sort((a, b) => (lastPlayed[b.gameId] || 0) - (lastPlayed[a.gameId] || 0));
+
   return (
     <div className="game-grid">
-      {Object.entries(REGIONS).map(([key, r]) => (
-        <GameCard key={r.game} regionKey={key} gameId={r.game} title={r.label} xp={xp[key] || 0} onPlay={onPlay} />
-      ))}
-      {EXTRA_GAMES.map((g) => (
-        <GameCard key={g.gameId} regionKey={g.regionKey} gameId={g.gameId} title={g.title} xp={xp[g.regionKey] || 0} onPlay={onPlay} />
+      {ordered.map((c) => (
+        <GameCard key={c.gameId} regionKey={c.regionKey} gameId={c.gameId} title={c.title} xp={xp[c.regionKey] || 0} onPlay={onPlay} />
       ))}
     </div>
   );

@@ -10,13 +10,13 @@ const CALLOUTS = [
   {
     region: "visual",
     title: "Visual cortex",
-    stat: "0.01st percentile · left pericalcarine thickness",
-    body: "Primary sight processing (pericalcarine, cuneus, lateral occipital, lingual gyrus) is thin across the board — the single most extreme cluster on the whole scan.",
+    stat: "L pericalcarine · 0.01st percentile thickness · 0.8th percentile surface area",
+    body: "Primary sight processing (pericalcarine, cuneus, lateral occipital, lingual gyrus) is thin across the board. Left pericalcarine is low on both thickness and surface area — the one place where the reliable measure (area) agrees, not just the artifact-prone thickness.",
   },
   {
     region: "auditory",
     title: "Auditory cortex",
-    stat: "1.8th %ile thickness (R) · 99.9th %ile surface area (L)",
+    stat: "1.8th percentile thickness (R) · 99.9th percentile surface area (L)",
     body: "Heschl's gyrus, where raw sound first gets processed, is thin on both sides — but its surface area is enormous (left 99.9th percentile). Thin and wide, not simply small.",
   },
   {

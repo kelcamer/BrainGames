@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
-import { cheer } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -96,7 +95,6 @@ export default function Constellation({ onBack, onFinish, best }) {
     setPhase("result");
     if (correct) {
       setMsg("clean — next round");
-      cheer();
       e.achievedSpan = e.litCount;
       timers.current.push(
         setTimeout(() => {

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
-import { cheer } from "../data/praise.js";
 
 // Block Builder — mental rotation / perspective-taking (allocentric spatial,
 // a Hippocampus function). A random cube structure is shown in 3D from the
@@ -253,7 +252,6 @@ export default function BlockBuilder({ onBack, onFinish, best }) {
     if (correct) {
       eng.current.streak += 1;
       eng.current.best = Math.max(eng.current.best, eng.current.streak);
-      cheer();
       timer.current = setTimeout(newRound, 1100);
     } else {
       timer.current = setTimeout(finish, 1900);

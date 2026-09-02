@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import HoldBar from "../components/HoldBar.jsx";
-import { cheer } from "../data/praise.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const shuffle = (arr) => arr.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((p) => p[1]);
@@ -129,7 +128,6 @@ export default function TraceMap({ onBack, onFinish }) {
     e.accSum += acc;
     setMsg(`${correct} / ${e.itemCount} correct`);
     if (acc >= 0.8) {
-      cheer();
       e.goodStreak++;
       e.delayMs = clamp(e.delayMs + 150, 1000, 4500); // the hold gets longer right away — that's the point of the drill
       if (e.goodStreak >= 2) {
