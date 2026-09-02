@@ -78,17 +78,6 @@ export function FourPeaksIcon() {
   );
 }
 
-export function ShortcutIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M4 19c4 0 3-9 7-9h6" strokeDasharray="2 2.4" />
-      <path d="M4 19c9 0 5-14 13-14" />
-      <circle cx="4" cy="19" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="17" cy="5" r="1.4" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -98,5 +87,4 @@ export const GAME_ICONS = {
   tracemaphard: TraceMapHardIcon,
   rhythmrecall: RhythmRecallIcon,
   fourpeaks: FourPeaksIcon,
-  shortcut: ShortcutIcon,
 };

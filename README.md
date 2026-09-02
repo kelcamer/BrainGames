@@ -1,6 +1,6 @@
 # 🧠 Cortex Console
 
-A personal, MRI-informed brain-training arcade — nine drills, each targeting
+A personal, MRI-informed brain-training arcade — eight drills, each targeting
 a specific region measured on a real FreeSurfer scan (30F, Potvin 2016 +
 CentileBrain 2024 normative comparison). Progress (XP, levels, badges,
 streak) is stored in the browser's `localStorage`.
@@ -21,7 +21,6 @@ This is a full React rewrite of an earlier single-file prototype, with
 | Hippocampus | **Trace Map: Hard Mode** | The real Corsi block-tapping test — identical tiles, position only, nothing to name |
 | Hippocampus | **Rhythm Recall** | Simon-says on a synthesized 5-piece drum kit — working memory into motor pattern |
 | Hippocampus | **Four Peaks** | The Four Mountains Test format — recognize the same skyline from a rotated viewpoint. Allocentric spatial memory specifically |
-| Hippocampus | **Shortcut** | Learn one maze route, then get the full map revealed — do you retrace the habit or find the shortcut? Spatial-map vs. response-habit strategy |
 
 ## Run it
 
@@ -60,8 +59,6 @@ brain_games/
     ├── audio/
     │   ├── tones.js           # pure-tone synth for Tone Trace
     │   └── drums.js           # synthesized 5-piece drum kit for Rhythm Recall
-    ├── utils/
-    │   └── maze.js            # perfect-maze generation + guaranteed shortcut, for Shortcut
     ├── components/            # Hud, Dashboard, BrainMap, GameGrid, Badges, Landscape,
     │                           # ScanModal, ResetModal, GameHeader, HoldBar, icons
     └── games/                 # one file per drill

@@ -280,25 +280,6 @@ button { font-family: inherit; cursor: pointer; }
 .peaks-choice.wrong { border-color: var(--danger); }
 .peaks-choice:disabled { cursor: default; }
 
-/* Shortcut (Hippocampus — route learning / cognitive-map vs. habit) */
-.maze-grid { display: inline-grid; gap: 0; border: 2px solid var(--line-bright); border-radius: 4px; background: var(--ground); }
-.maze-cell { width: 38px; height: 38px; position: relative; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-.maze-cell.fog { background: repeating-linear-gradient(135deg, var(--panel-2) 0 6px, var(--panel) 6px 12px); }
-.maze-cell.known { background: var(--panel-2); }
-.maze-cell.wall-top { border-top: 2px solid var(--line-bright); }
-.maze-cell.wall-right { border-right: 2px solid var(--line-bright); }
-.maze-cell.wall-bottom { border-bottom: 2px solid var(--line-bright); }
-.maze-cell.wall-left { border-left: 2px solid var(--line-bright); }
-.maze-cell.tappable { cursor: pointer; }
-.maze-cell.tappable:hover { background: var(--panel-3); }
-.maze-cell { gap: 2px; }
-.maze-cell .token { width: 18px; height: 18px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); flex: none; }
-.maze-cell .goal-emoji { font-size: 20px; line-height: 1; filter: drop-shadow(0 0 4px var(--hippocampus)); }
-.maze-cell .start-mark { font-size: 11px; font-weight: 700; color: var(--ink-faint); }
-.maze-legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: var(--ink-dim); }
-.maze-legend span { display: flex; align-items: center; gap: 6px; }
-.maze-legend .swatch-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
-
 /* summary card shared */
 .summary { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
 .summary .big-num { font-family: "JetBrains Mono", monospace; font-size: 36px; color: var(--amber); font-weight: 600; }
