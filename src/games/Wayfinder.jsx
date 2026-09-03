@@ -9,6 +9,7 @@ const LADDER = [
   [1, 2], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4],
 ];
 const PASS = 85; // navigation score that unlocks the next map size
+const STUDY_SECS = 20; // seconds to memorise the full map before it vanishes
 const KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
 const ARROWS = { up: "↑", right: "→", down: "↓", left: "←" };
 const DIRS = ["up", "right", "down", "left"];
@@ -112,9 +113,10 @@ function WayMap({ rows, cols, cells, yourIdx, bestIdx, from, to }) {
 export default function Wayfinder({ onBack, onFinish, best }) {
   useNoScroll();
   const eng = useRef(null);
-  const [phase, setPhase] = useState("explore"); // explore | deliver | point | summary
+  const [phase, setPhase] = useState("select"); // select | explore | study | deliver | point | summary
   const [pos, setPos] = useState(0);
   const [found, setFound] = useState(1);
+  const [studyLeft, setStudyLeft] = useState(STUDY_SECS);
   const [task, setTask] = useState(null);
   const [msg, setMsg] = useState("");
   const [flash, setFlash] = useState(null); // ok | bad | wall
@@ -129,8 +131,13 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     flashTimer.current = setTimeout(() => setFlash(null), 320);
   }
 
+  // Entry point (also "New City"): pick a size first.
   function start() {
-    const level = clamp(best.level ?? 0, 0, LADDER.length - 1);
+    setSummary(null);
+    setPhase("select");
+  }
+
+  function chooseSize(level) {
     const [rows, cols] = LADDER[level];
     const count = rows * cols;
     const grid = shuffle(LANDMARKS).slice(0, count).map(([emoji, name]) => ({ emoji, name }));
@@ -168,12 +175,17 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       points, pIdx: 0, pCorrect: 0, busy: false,
     };
     setSummary(null);
-    setPhase("explore");
     setPos(startPos);
     setFound(1);
     setTask(null);
     setFlash(null);
-    setMsg(`explore all ${count} places — no map will be shown, so build one in your head`);
+    beginStudy();
+  }
+
+  function beginStudy() {
+    setStudyLeft(STUDY_SECS);
+    setMsg("study the whole map — it vanishes when the timer runs out, then you navigate from memory");
+    setPhase("study");
   }
 
   function beginDeliveries() {
@@ -229,13 +241,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     if (nb == null) { doFlash("wall"); return; }
     e.pos = nb;
     setPos(nb);
-    if (phaseRef.current === "explore") {
-      if (!e.visited.has(nb)) {
-        e.visited.add(nb);
-        setFound(e.visited.size);
-        if (e.visited.size >= e.count) setMsg("every place found — ready when you are");
-      }
-    } else if (phaseRef.current === "deliver") {
+    if (phaseRef.current === "deliver") {
       e.moves += 1;
       e.path.push(nb);
       if (nb === e.deliveries[e.dIdx].to) completeDelivery();
@@ -277,13 +283,10 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     const routeAvg = e.routeScores.length ? e.routeScores.reduce((s, v) => s + v, 0) / e.routeScores.length : 0;
     const pointAcc = e.points.length ? e.pCorrect / e.points.length : 0;
     const scoreVal = Math.round((0.7 * routeAvg + 0.3 * pointAcc) * 100);
-    const maxLevel = LADDER.length - 1;
-    const advanced = scoreVal >= PASS && e.level < maxLevel;
-    const newLevel = advanced ? e.level + 1 : e.level;
+    const cleared = scoreVal >= PASS;
     const prevBest = best.bestScore;
     const isBest = scoreVal > 0 && scoreVal > prevBest;
     const xpEarned = 20 + scoreVal;
-    const [nr, nc] = LADDER[newLevel];
     // routes where you didn't take the shortest path — shown on a map of the
     // city (which you never saw while navigating) with your path drawn on it
     const routes = e.deliveryRecords
@@ -313,14 +316,14 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       xpEarned,
       updateBest: (prev) => ({
         bestScore: Math.max(prev.bestScore, scoreVal),
-        level: Math.max(prev.level ?? 0, newLevel),
+        level: cleared ? Math.max(prev.level ?? 0, e.level) : prev.level ?? 0,
         plays: prev.plays + 1,
       }),
     });
     setSummary({
       scoreVal, routePct: Math.round(routeAvg * 100), pCorrect: e.pCorrect, nPoints: e.points.length,
       rows: e.rows, cols: e.cols, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
-      advanced, nextSize: `${nr}×${nc}`, routes, firstAway, totalDeliveries,
+      cleared, routes, firstAway, totalDeliveries,
     });
     setPhase("summary");
   }
@@ -334,6 +337,15 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Study-peek countdown: tick down each second, then start deliveries.
+  useEffect(() => {
+    if (phase !== "study") return;
+    if (studyLeft <= 0) { beginDeliveries(); return; }
+    const t = setTimeout(() => setStudyLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, studyLeft]);
 
   const g = eng.current;
   const grid = g?.grid;
@@ -354,10 +366,10 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       <div className="game-stage">
         {summary ? (
           <SessionSummary
-            praise={summary.advanced ? `Unlocked the ${summary.nextSize} map! 🗺️` : summary.isBest ? "New personal best! 🏆" : undefined}
-            eyebrow={summary.advanced ? "level up!" : summary.isBest ? "new high score!" : "route complete"}
+            praise={summary.cleared ? `Cleared the ${summary.rows}×${summary.cols} map! ⭐` : summary.isBest ? "New personal best! 🏆" : undefined}
+            eyebrow={summary.cleared ? "cleared!" : summary.isBest ? "new high score!" : "route complete"}
             bigNum={summary.scoreVal}
-            detail={`navigation score on the ${summary.rows}×${summary.cols} map · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right${summary.advanced ? ` · next map ${summary.nextSize}` : ` · reach ${PASS} to grow the map`} · +${summary.xpEarned} xp`}
+            detail={`navigation score on the ${summary.rows}×${summary.cols} map · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right · best ${summary.bestShown} · +${summary.xpEarned} xp`}
             onAgain={start}
             againLabel="New City"
             onBack={onBack}
@@ -386,6 +398,39 @@ export default function Wayfinder({ onBack, onFinish, best }) {
               </div>
             )}
           </SessionSummary>
+        ) : phase === "select" ? (
+          <div className="wf-select">
+            <p className="stage-msg">choose your city size</p>
+            <div className="wf-size-grid">
+              {LADDER.map(([r, c], lvl) => (
+                <button key={lvl} className="btn wf-size-btn" onClick={() => chooseSize(lvl)}>
+                  <b className="mono">{r}×{c}</b>
+                  <span>{r * c} places</span>
+                </button>
+              ))}
+            </div>
+            <p className="stage-msg mono">no map is shown while you navigate — bigger is harder</p>
+          </div>
+        ) : phase === "study" ? (
+          <div className="wf-study-wrap">
+            <p className="stage-msg">{msg}</p>
+            <div className="wf-study" style={{ gridTemplateColumns: `repeat(${g.cols}, 1fr)` }}>
+              {g.grid.map((p, i) => (
+                <div className="wf-study-cell" key={i}>
+                  <span className="wf-study-emoji">{p.emoji}</span>
+                  <span className="wf-study-name">{p.name}</span>
+                </div>
+              ))}
+            </div>
+            <div className="wf-study-foot">
+              <span className="stat-pill">
+                Study <b className="mono">{studyLeft}s</b>
+              </span>
+              <button className="btn btn--primary" onClick={beginDeliveries}>
+                I'm ready
+              </button>
+            </div>
+          </div>
         ) : (
           <>
             <p className="stage-msg">{msg}</p>
@@ -426,21 +471,12 @@ export default function Wayfinder({ onBack, onFinish, best }) {
                 <div className="wf-here">
                   <span className="wf-here-emoji">{here?.emoji}</span>
                   <span className="wf-here-name">{here?.name}</span>
-                  {phase === "explore" && g && <span className="wf-here-sub mono">found {found}/{g.count}</span>}
                   {phase === "deliver" && task && <span className="wf-here-sub">Go to {grid[task.to].emoji} {grid[task.to].name}</span>}
                 </div>
               </div>
             )}
 
-            {phase === "explore" &&
-              (g && found >= g.count ? (
-                <button className="btn btn--primary" onClick={beginDeliveries}>
-                  Start deliveries
-                </button>
-              ) : (
-                <p className="stage-msg mono">move with ← ↑ → ↓ or tap the doors</p>
-              ))}
-            {phase === "deliver" && <p className="stage-msg mono">navigate from memory — no map</p>}
+            {phase === "deliver" && <p className="stage-msg mono">navigate from memory — no map · ← ↑ → ↓ or tap</p>}
             {isPoint && <p className="stage-msg mono">tap the compass direction to the target (8 ways)</p>}
           </>
         )}
