@@ -19,6 +19,7 @@ import GoNoGo from "./games/GoNoGo.jsx";
 import NBack from "./games/NBack.jsx";
 import TaskSwitch from "./games/TaskSwitch.jsx";
 import WordRush from "./games/WordRush.jsx";
+import EbbFlow from "./games/EbbFlow.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -35,6 +36,7 @@ const GAME_COMPONENTS = {
   nback: NBack,
   taskswitch: TaskSwitch,
   wordrush: WordRush,
+  ebbflow: EbbFlow,
 };
 
 export default function App() {

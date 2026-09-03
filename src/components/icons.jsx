@@ -138,6 +138,16 @@ export function WordRushIcon() {
   );
 }
 
+export function EbbFlowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M4 15c3.5-8 12.5-8 16 0-3.5 5-12.5 5-16 0Z" />
+      <path d="M4 15c4 2.5 12 2.5 16 0" />
+      <path d="M2.5 15H4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -153,4 +163,5 @@ export const GAME_ICONS = {
   nback: NBackIcon,
   taskswitch: TaskSwitchIcon,
   wordrush: WordRushIcon,
+  ebbflow: EbbFlowIcon,
 };

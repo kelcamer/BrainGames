@@ -22,6 +22,7 @@ export const EXTRA_GAMES = [
   { regionKey: "executive", gameId: "nback", title: "N-BACK" },
   { regionKey: "executive", gameId: "taskswitch", title: "TASK SWITCH" },
   { regionKey: "executive", gameId: "wordrush", title: "WORD RUSH" },
+  { regionKey: "executive", gameId: "ebbflow", title: "EBB AND FLOW" },
 ];
 
 export const GAME_BLURB = {
@@ -51,6 +52,8 @@ export const GAME_BLURB = {
     "The rule flips between COLOR and SHAPE — answer by whichever is showing now. Trains cognitive flexibility / set-shifting; the stumble right after a switch is the classic measure.",
   wordrush:
     "One letter, 60 seconds — type as many words as you can that start with it. Phonemic verbal fluency, a left inferior-frontal (Broca's) task with heavy executive retrieval. Plays to a verbal strength.",
+  ebbflow:
+    "A leaf points one way and drifts another. Green leaf: press where it points. Orange leaf: press where it's drifting. The rule flips with the colour and the two directions often disagree — the Ebb-and-Flow set-shifting task, cognitive flexibility plus response inhibition.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -70,6 +73,7 @@ export const GAME_REGION = {
   nback: "executive",
   taskswitch: "executive",
   wordrush: "executive",
+  ebbflow: "executive",
 };
 
 export function levelFromXp(xp) {
