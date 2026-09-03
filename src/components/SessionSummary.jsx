@@ -1,14 +1,20 @@
 import { useMemo } from "react";
-import { randomPraise } from "../data/praise.js";
+import { randomDyer } from "../data/wayneDyer.js";
 
 export default function SessionSummary({ eyebrow, bigNum, detail, onAgain, againLabel = "Play Again", onBack, praise: praiseOverride, children }) {
-  // one encouragement per results screen (picked once when it mounts). Games
-  // whose summary appears on a miss can pass their own line so we don't
-  // celebrate a broken streak.
-  const praise = useMemo(() => praiseOverride ?? randomPraise(), [praiseOverride]);
+  // Default end-of-game reinforcement is a Wayne Dyer quote. Games can still
+  // pass their own short line (a broken-streak consolation, a new-best or
+  // level-up shout) — that takes the punchy slot instead of a quote.
+  const quote = useMemo(() => (praiseOverride ? null : randomDyer()), [praiseOverride]);
   return (
     <div className="summary">
-      <span className="praise-line">{praise}</span>
+      {praiseOverride ? (
+        <span className="praise-line">{praiseOverride}</span>
+      ) : (
+        <blockquote className="quote-line">
+          “{quote}”<cite>— Wayne Dyer</cite>
+        </blockquote>
+      )}
       <span className="eyebrow">{eyebrow}</span>
       <div className="big-num mono">{bigNum}</div>
       <p>{detail}</p>
