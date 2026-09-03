@@ -44,7 +44,6 @@ export default function WordRush({ onBack, onFinish, best }) {
       setLeft((t) => {
         if (t <= 1) {
           clearInterval(tick.current);
-          finish();
           return 0;
         }
         return t - 1;
@@ -53,6 +52,14 @@ export default function WordRush({ onBack, onFinish, best }) {
     return () => clearInterval(tick.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
+
+  // End the round when the clock hits zero. Running finish() from here (rather
+  // than inside the interval callback) means it reads the *current* words and
+  // letter — the interval closure captured the initial empty values.
+  useEffect(() => {
+    if (phase === "play" && left === 0) finish();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [left, phase]);
 
   useEffect(() => {
     if (phase === "play" && inputRef.current) inputRef.current.focus();
@@ -71,12 +78,14 @@ export default function WordRush({ onBack, onFinish, best }) {
 
   function finish() {
     const count = words.length;
+    const prevBest = best.bestCount;
+    const isBest = count > 0 && count > prevBest;
     const xpEarned = 12 + count * 5;
     onFinish({
       xpEarned,
       updateBest: (prev) => ({ bestCount: Math.max(prev.bestCount, count), plays: prev.plays + 1 }),
     });
-    setSummary({ count, letter, xpEarned });
+    setSummary({ count, letter, xpEarned, bestShown: Math.max(prevBest, count), isBest });
     setPhase("summary");
   }
 
@@ -93,9 +102,10 @@ export default function WordRush({ onBack, onFinish, best }) {
       <div className="game-stage">
         {summary ? (
           <SessionSummary
-            eyebrow="time!"
+            praise={summary.isBest ? "New personal best! 🏆" : undefined}
+            eyebrow={summary.isBest ? "new high score!" : "time's up"}
             bigNum={summary.count}
-            detail={`words starting with "${summary.letter}" in 60s · +${summary.xpEarned} xp to Prefrontal Executive Network`}
+            detail={`${summary.count === 1 ? "word" : "words"} starting with "${summary.letter}" in 60s · best ${summary.bestShown} · +${summary.xpEarned} xp`}
             onAgain={start}
             againLabel="New Letter"
             onBack={onBack}
