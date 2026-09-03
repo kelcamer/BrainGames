@@ -24,6 +24,7 @@ export const EXTRA_GAMES = [
   { regionKey: "executive", gameId: "taskswitch", title: "TASK SWITCH" },
   { regionKey: "executive", gameId: "wordrush", title: "WORD RUSH" },
   { regionKey: "executive", gameId: "ebbflow", title: "EBB AND FLOW" },
+  { regionKey: "executive", gameId: "openloops", title: "OPEN LOOPS" },
 ];
 
 export const GAME_BLURB = {
@@ -57,6 +58,8 @@ export const GAME_BLURB = {
     "A leaf points one way and drifts another. Green leaf: press where it points. Orange leaf: press where it's drifting. The rule flips with the colour and the two directions often disagree — the Ebb-and-Flow set-shifting task, cognitive flexibility plus response inhibition.",
   wayfinder:
     "Explore a landmark map with no overview, then make deliveries and call bearings entirely from memory. No minimap, no route arrow — the same allocentric map-building that grew London taxi drivers' hippocampi. The closest drill here to what actually moves the needle.",
+  openloops:
+    "Sort a stream of items while holding delayed intentions — \"when you see the fox, press ⭐.\" The cue appears trials later, through interference, with the reminder hidden. Prospective memory, the rostral-PFC system behind \"sure, I'll do it\" → forgot.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -78,6 +81,7 @@ export const GAME_REGION = {
   wordrush: "executive",
   ebbflow: "executive",
   wayfinder: "hippocampus",
+  openloops: "executive",
 };
 
 export function levelFromXp(xp) {

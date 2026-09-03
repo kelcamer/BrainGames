@@ -21,6 +21,7 @@ import TaskSwitch from "./games/TaskSwitch.jsx";
 import WordRush from "./games/WordRush.jsx";
 import EbbFlow from "./games/EbbFlow.jsx";
 import Wayfinder from "./games/Wayfinder.jsx";
+import OpenLoops from "./games/OpenLoops.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -39,6 +40,7 @@ const GAME_COMPONENTS = {
   wordrush: WordRush,
   ebbflow: EbbFlow,
   wayfinder: Wayfinder,
+  openloops: OpenLoops,
 };
 
 export default function App() {

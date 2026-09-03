@@ -159,6 +159,16 @@ export function WayfinderIcon() {
   );
 }
 
+export function OpenLoopsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M8 15a4 4 0 1 1 4-4v6" strokeLinecap="round" />
+      <circle cx="16.5" cy="16.5" r="1" fill="currentColor" stroke="none" />
+      <path d="M12 17l3.2-1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -176,4 +186,5 @@ export const GAME_ICONS = {
   wordrush: WordRushIcon,
   ebbflow: EbbFlowIcon,
   wayfinder: WayfinderIcon,
+  openloops: OpenLoopsIcon,
 };
