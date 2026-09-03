@@ -43,7 +43,7 @@ export function randomPraise() {
 }
 
 // Encouragement for results screens that appear on a *miss* (e.g. a broken
-// span in Trace Map Hard) — celebrating there would be tone-deaf, so these
+// span in Trace Map) — celebrating there would be tone-deaf, so these
 // keep it warm and forward-looking instead.
 const CONSOLATION = [
   "You'll get 'em next time!",

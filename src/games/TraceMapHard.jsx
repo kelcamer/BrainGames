@@ -8,12 +8,26 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
 const range = (n) => Array.from({ length: n }, (_, i) => i);
 const GRID_N = 16;
+const START_LEN = 4; // first round shows a 4-tile sequence, then grows by one
 
-// Hippocampus, hard mode — the real Corsi block-tapping test. Identical blank
-// tiles light up in a growing sequence; no shape or color to recode into
-// words, so position is the only information there is to hold onto.
+// Pick a tile, never repeating the one that lit immediately before it — two
+// identical adjacent tiles would look like a single flash.
+const pickTile = (prev) => {
+  const t = rnd(GRID_N);
+  return t === prev ? (t + 1) % GRID_N : t;
+};
+
+function seedSequence(n) {
+  const seq = [];
+  for (let i = 0; i < n; i++) seq.push(pickTile(seq[seq.length - 1]));
+  return seq;
+}
+
+// Hippocampus — the real Corsi block-tapping test. Identical blank tiles light
+// up in a growing sequence; no shape or color to recode into words, so position
+// is the only information there is to hold onto.
 export default function TraceMapHard({ onBack, onFinish, best }) {
-  const eng = useRef({ sequence: [], playerPos: 0, holdMs: 1000 });
+  const eng = useRef({ sequence: [], playerPos: 0, holdMs: 1000, completed: 0 });
   const timers = useRef([]);
   const [lit, setLit] = useState(-1);
   const [wrong, setWrong] = useState(-1);
@@ -28,7 +42,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
 
   function grow() {
     const e = eng.current;
-    e.sequence.push(rnd(GRID_N));
+    e.sequence.push(pickTile(e.sequence[e.sequence.length - 1]));
     e.playerPos = 0;
     playSequence();
   }
@@ -75,6 +89,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
     if (e.sequence[e.playerPos] === idx) {
       e.playerPos++;
       if (e.playerPos >= e.sequence.length) {
+        e.completed = e.sequence.length; // longest sequence reproduced so far
         setPhase("watch"); // lock input immediately until the next sequence starts
         setMsg("clean — next round");
         e.holdMs = clamp(e.holdMs + 200, 800, 5000);
@@ -88,7 +103,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
 
   function endRun() {
     const e = eng.current;
-    const achieved = e.sequence.length - 1;
+    const achieved = e.completed; // longest sequence fully reproduced this run
     const xpEarned = 20 + achieved * 14;
     onFinish({
       xpEarned,
@@ -98,7 +113,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
   }
 
   function start() {
-    eng.current = { sequence: [], playerPos: 0, holdMs: 1000 };
+    eng.current = { sequence: seedSequence(START_LEN - 1), playerPos: 0, holdMs: 1000, completed: 0 };
     setSummary(null);
     setMsg("watch closely — nothing here to name");
     timers.current.push(setTimeout(grow, 700));
@@ -112,7 +127,7 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Hard Mode" title="Trace Map: Hard Mode" onBack={onBack}>
+      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Trace Map" title="Trace Map" onBack={onBack}>
         <span className="stat-pill">
           Best span <b className="mono">{best.maxSpan}</b>
         </span>

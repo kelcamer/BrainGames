@@ -178,7 +178,7 @@ export default function TraceMap({ onBack, onFinish }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Trace Map" title="Trace Map" onBack={onBack}>
+      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Card Catalog" title="Card Catalog" onBack={onBack}>
         <span className="stat-pill">
           Round{" "}
           <b className="mono">

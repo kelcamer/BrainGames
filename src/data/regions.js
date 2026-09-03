@@ -8,14 +8,14 @@ export const REGIONS = {
   auditory: { name: "Auditory Cortex", color: "var(--auditory)", game: "tonetrace", label: "TONE TRACE" },
   motor: { name: "Putamen (Motor)", color: "var(--motor)", game: "motorchain", label: "MOTOR CHAIN" },
   wordform: { name: "Word-Form Area", color: "var(--wordform)", game: "wordblitz", label: "WORD BLITZ" },
-  hippocampus: { name: "Hippocampus", color: "var(--hippocampus)", game: "tracemap", label: "TRACE MAP" },
+  hippocampus: { name: "Hippocampus", color: "var(--hippocampus)", game: "tracemap", label: "CARD CATALOG" },
   parietal: { name: "Parietal Cortex Network", color: "var(--parietal)", game: "blockbuilder", label: "BLOCK BUILDER" },
   executive: { name: "Prefrontal Executive Network", color: "var(--executive)", game: "gonogo", label: "GO / NO-GO" },
 };
 
 // Secondary drills for a region that already has a primary card above.
 export const EXTRA_GAMES = [
-  { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP: HARD MODE" },
+  { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP" },
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
   { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
