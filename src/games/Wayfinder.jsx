@@ -37,16 +37,33 @@ function neighbor(i, dir, rows, cols) {
   return r * cols + c;
 }
 
-// Does stepping `dir` from `at` move you closer to `to`? (allocentric bearing check)
-function movesToward(at, to, dir, cols) {
+// One shortest (L-shaped) route from `from` to `to` — used to show a "best"
+// route next to the player's own when they took a detour.
+function optimalPath(from, to, cols) {
+  let [r, c] = rc(from, cols);
+  const [tr, tc] = rc(to, cols);
+  const path = [from];
+  while (r !== tr) { r += r < tr ? 1 : -1; path.push(r * cols + c); }
+  while (c !== tc) { c += c < tc ? 1 : -1; path.push(r * cols + c); }
+  return path;
+}
+
+// The exact 8-way compass bearing from `at` to `to` (e.g. "N", "SE"). Bearing
+// probes only ever use places that lie on a clean 8-way ray, so this is always
+// one unambiguous answer.
+function bearing8(at, to, cols) {
   const [ra, ca] = rc(at, cols);
   const [rt, ct] = rc(to, cols);
-  if (dir === "up") return rt < ra;
-  if (dir === "down") return rt > ra;
-  if (dir === "left") return ct < ca;
-  if (dir === "right") return ct > ca;
-  return false;
+  const dr = rt - ra, dc = ct - ca;
+  return (dr < 0 ? "N" : dr > 0 ? "S" : "") + (dc < 0 ? "W" : dc > 0 ? "E" : "");
 }
+
+const CARD_TO_8 = { up: "N", down: "S", left: "W", right: "E" };
+const COMPASS = [
+  { code: "NW", glyph: "↖", area: "nw" }, { code: "N", glyph: "↑", area: "n" }, { code: "NE", glyph: "↗", area: "ne" },
+  { code: "W", glyph: "←", area: "w" }, { code: "E", glyph: "→", area: "e" },
+  { code: "SW", glyph: "↙", area: "sw" }, { code: "S", glyph: "↓", area: "s" }, { code: "SE", glyph: "↘", area: "se" },
+];
 
 // Hippocampus — allocentric wayfinding, the London-taxi "Knowledge" mechanism.
 // Explore a landmark map with NO overview, build a cognitive map in your head,
@@ -95,13 +112,21 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     guard = 0;
     while (points.length < nPoints && guard++ < 500) {
       const at = rnd(count);
-      const to = rnd(count);
-      if (at !== to) points.push({ at, to });
+      const [ra, ca] = rc(at, cols);
+      // only targets on a clean 8-way ray from `at`, so the compass answer is exact
+      const aligned = [];
+      for (let j = 0; j < count; j++) {
+        if (j === at) continue;
+        const [rj, cj] = rc(j, cols);
+        const dr = rj - ra, dc = cj - ca;
+        if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) aligned.push(j);
+      }
+      if (aligned.length) points.push({ at, to: aligned[rnd(aligned.length)] });
     }
 
     eng.current = {
       level, rows, cols, count, grid, pos: startPos, visited: new Set([startPos]),
-      deliveries, dIdx: 0, moves: 0, mDist: 0, routeScores: [],
+      deliveries, dIdx: 0, moves: 0, mDist: 0, routeScores: [], path: [], deliveryRecords: [],
       points, pIdx: 0, pCorrect: 0, busy: false,
     };
     setSummary(null);
@@ -125,6 +150,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     e.pos = d.from;
     e.moves = 0;
     e.mDist = manhattan(d.from, d.to, e.cols);
+    e.path = [d.from];
     e.busy = false;
     setPos(d.from);
     setTask({ to: d.to });
@@ -134,6 +160,8 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   function completeDelivery() {
     const e = eng.current;
     e.busy = true;
+    const d = e.deliveries[e.dIdx];
+    e.deliveryRecords.push({ from: d.from, to: d.to, path: e.path.slice(), moves: e.moves, mDist: e.mDist });
     e.routeScores.push(clamp(e.mDist / Math.max(e.moves, e.mDist), 0, 1));
     doFlash("ok");
     e.dIdx += 1;
@@ -171,15 +199,17 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       }
     } else if (phaseRef.current === "deliver") {
       e.moves += 1;
+      e.path.push(nb);
       if (nb === e.deliveries[e.dIdx].to) completeDelivery();
     }
   }
 
-  function answerPoint(dir) {
+  function answerPoint(code) {
     const e = eng.current;
+    if (!e || e.busy) return;
     e.busy = true;
     const p = e.points[e.pIdx];
-    const ok = movesToward(p.at, p.to, dir, e.cols);
+    const ok = code === bearing8(p.at, p.to, e.cols);
     if (ok) e.pCorrect += 1;
     doFlash(ok ? "ok" : "bad");
     e.pIdx += 1;
@@ -187,11 +217,13 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     else setTimeout(() => loadPoint(e.pIdx), 550);
   }
 
+  // Movement doors / keyboard arrows. In the bearing phase a keyboard arrow is a
+  // cardinal compass answer; diagonals are tapped on the compass.
   function act(dir) {
     if (!eng.current || eng.current.busy) return;
     const ph = phaseRef.current;
     if (ph === "explore" || ph === "deliver") move(dir);
-    else if (ph === "point") answerPoint(dir);
+    else if (ph === "point") answerPoint(CARD_TO_8[dir]);
   }
 
   function onKey(ev) {
@@ -214,6 +246,18 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     const isBest = scoreVal > 0 && scoreVal > prevBest;
     const xpEarned = 20 + scoreVal;
     const [nr, nc] = LADDER[newLevel];
+    // routes where you didn't take the shortest path — shown for review
+    const routes = e.deliveryRecords
+      .filter((r) => r.moves > r.mDist)
+      .map((r) => ({
+        fromEmoji: e.grid[r.from].emoji,
+        toEmoji: e.grid[r.to].emoji,
+        toName: e.grid[r.to].name,
+        moves: r.moves,
+        mDist: r.mDist,
+        yours: r.path.map((i) => e.grid[i].emoji),
+        best: optimalPath(r.from, r.to, e.cols).map((i) => e.grid[i].emoji),
+      }));
     onFinish({
       xpEarned,
       updateBest: (prev) => ({
@@ -225,7 +269,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     setSummary({
       scoreVal, routePct: Math.round(routeAvg * 100), pCorrect: e.pCorrect, nPoints: e.points.length,
       rows: e.rows, cols: e.cols, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
-      advanced, nextSize: `${nr}×${nc}`,
+      advanced, nextSize: `${nr}×${nc}`, routes,
     });
     setPhase("summary");
   }
@@ -266,33 +310,71 @@ export default function Wayfinder({ onBack, onFinish, best }) {
             onAgain={start}
             againLabel="New City"
             onBack={onBack}
-          />
+          >
+            {summary.routes.length > 0 && (
+              <div className="wf-routes">
+                <div className="wf-routes-title">detours — your route vs the shortest</div>
+                {summary.routes.map((r, i) => (
+                  <div className="wf-route" key={i}>
+                    <div className="wf-route-head">
+                      {r.fromEmoji} → {r.toEmoji} {r.toName} · you took {r.moves}, best {r.mDist}
+                    </div>
+                    <div className="wf-route-line">
+                      <span className="wf-route-tag">you</span> {r.yours.join(" → ")}
+                    </div>
+                    <div className="wf-route-line wf-route-best">
+                      <span className="wf-route-tag">best</span> {r.best.join(" → ")}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </SessionSummary>
         ) : (
           <>
             <p className="stage-msg">{msg}</p>
-            <div className={"wf-cross" + (flash ? ` wf-${flash}` : "")}>
-              {DIRS.map((dir) => {
-                const open = doorOpen(dir);
-                return (
+            {isPoint ? (
+              <div className={"wf-compass" + (flash ? ` wf-${flash}` : "")}>
+                {COMPASS.map((c) => (
                   <button
-                    key={dir}
-                    className={`wf-door ${dir}` + (open ? "" : " wf-closed")}
-                    disabled={!open}
-                    onPointerDown={(ev) => { ev.preventDefault(); act(dir); }}
-                    aria-label={dir}
+                    key={c.code}
+                    className={`wf-comp ${c.area}`}
+                    onPointerDown={(ev) => { ev.preventDefault(); answerPoint(c.code); }}
+                    aria-label={c.code}
                   >
-                    {open ? ARROWS[dir] : ""}
+                    {c.glyph}
                   </button>
-                );
-              })}
-              <div className="wf-here">
-                <span className="wf-here-emoji">{here?.emoji}</span>
-                <span className="wf-here-name">{here?.name}</span>
-                {phase === "explore" && g && <span className="wf-here-sub mono">found {found}/{g.count}</span>}
-                {phase === "deliver" && task && <span className="wf-here-sub">Go to {grid[task.to].emoji} {grid[task.to].name}</span>}
-                {isPoint && task && <span className="wf-here-sub">point to {grid[task.to].emoji}</span>}
+                ))}
+                <div className="wf-here">
+                  <span className="wf-here-emoji">{here?.emoji}</span>
+                  <span className="wf-here-name">{here?.name}</span>
+                  {task && <span className="wf-here-sub">point to {grid[task.to].emoji} {grid[task.to].name}</span>}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className={"wf-cross" + (flash ? ` wf-${flash}` : "")}>
+                {DIRS.map((dir) => {
+                  const open = doorOpen(dir);
+                  return (
+                    <button
+                      key={dir}
+                      className={`wf-door ${dir}` + (open ? "" : " wf-closed")}
+                      disabled={!open}
+                      onPointerDown={(ev) => { ev.preventDefault(); act(dir); }}
+                      aria-label={dir}
+                    >
+                      {open ? ARROWS[dir] : ""}
+                    </button>
+                  );
+                })}
+                <div className="wf-here">
+                  <span className="wf-here-emoji">{here?.emoji}</span>
+                  <span className="wf-here-name">{here?.name}</span>
+                  {phase === "explore" && g && <span className="wf-here-sub mono">found {found}/{g.count}</span>}
+                  {phase === "deliver" && task && <span className="wf-here-sub">Go to {grid[task.to].emoji} {grid[task.to].name}</span>}
+                </div>
+              </div>
+            )}
 
             {phase === "explore" &&
               (g && found >= g.count ? (
@@ -303,7 +385,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
                 <p className="stage-msg mono">move with ← ↑ → ↓ or tap the doors</p>
               ))}
             {phase === "deliver" && <p className="stage-msg mono">navigate from memory — no map</p>}
-            {isPoint && <p className="stage-msg mono">press the direction, don't walk there</p>}
+            {isPoint && <p className="stage-msg mono">tap the compass direction to the target (8 ways)</p>}
           </>
         )}
       </div>

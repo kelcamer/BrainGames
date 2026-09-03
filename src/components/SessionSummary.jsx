@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { randomPraise } from "../data/praise.js";
 
-export default function SessionSummary({ eyebrow, bigNum, detail, onAgain, againLabel = "Play Again", onBack, praise: praiseOverride }) {
+export default function SessionSummary({ eyebrow, bigNum, detail, onAgain, againLabel = "Play Again", onBack, praise: praiseOverride, children }) {
   // one encouragement per results screen (picked once when it mounts). Games
   // whose summary appears on a miss can pass their own line so we don't
   // celebrate a broken streak.
@@ -12,6 +12,7 @@ export default function SessionSummary({ eyebrow, bigNum, detail, onAgain, again
       <span className="eyebrow">{eyebrow}</span>
       <div className="big-num mono">{bigNum}</div>
       <p>{detail}</p>
+      {children}
       <div style={{ display: "flex", gap: 10 }}>
         <button className="btn btn--primary" onClick={onAgain}>
           {againLabel}
