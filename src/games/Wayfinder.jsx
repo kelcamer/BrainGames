@@ -289,6 +289,12 @@ export default function Wayfinder({ onBack, onFinish, best }) {
         from: r.from,
         to: r.to,
       }));
+    // how often your very first step headed away from the goal (the 180° tell)
+    let firstAway = 0;
+    e.deliveryRecords.forEach((r) => {
+      if (r.path.length >= 2 && manhattan(r.path[1], r.to, e.cols) > manhattan(r.from, r.to, e.cols)) firstAway += 1;
+    });
+    const totalDeliveries = e.deliveryRecords.length;
     onFinish({
       xpEarned,
       updateBest: (prev) => ({
@@ -300,7 +306,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     setSummary({
       scoreVal, routePct: Math.round(routeAvg * 100), pCorrect: e.pCorrect, nPoints: e.points.length,
       rows: e.rows, cols: e.cols, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
-      advanced, nextSize: `${nr}×${nc}`, routes,
+      advanced, nextSize: `${nr}×${nc}`, routes, firstAway, totalDeliveries,
     });
     setPhase("summary");
   }
@@ -342,6 +348,10 @@ export default function Wayfinder({ onBack, onFinish, best }) {
             againLabel="New City"
             onBack={onBack}
           >
+            <p className={"wf-firststat" + (summary.firstAway > 0 ? " wf-firststat--hit" : "")}>
+              first move <b>away</b> from the goal · <b>{summary.firstAway}/{summary.totalDeliveries}</b>
+              {summary.firstAway > 0 ? " — pause and check the bearing first" : " — nice, you set off the right way every time"}
+            </p>
             {summary.routes.length > 0 && (
               <div className="wf-routes">
                 <div className="wf-routes-title">the map you couldn't see — and where you went</div>
