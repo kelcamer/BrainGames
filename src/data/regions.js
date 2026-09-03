@@ -18,6 +18,7 @@ export const EXTRA_GAMES = [
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP" },
   { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
+  { regionKey: "hippocampus", gameId: "wayfinder", title: "WAYFINDER" },
   { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
   { regionKey: "executive", gameId: "nback", title: "N-BACK" },
   { regionKey: "executive", gameId: "taskswitch", title: "TASK SWITCH" },
@@ -54,6 +55,8 @@ export const GAME_BLURB = {
     "One letter, 60 seconds — type as many words as you can that start with it. Phonemic verbal fluency, a left inferior-frontal (Broca's) task with heavy executive retrieval. Plays to a verbal strength.",
   ebbflow:
     "A leaf points one way and drifts another. Green leaf: press where it points. Orange leaf: press where it's drifting. The rule flips with the colour and the two directions often disagree — the Ebb-and-Flow set-shifting task, cognitive flexibility plus response inhibition.",
+  wayfinder:
+    "Explore a landmark map with no overview, then make deliveries and call bearings entirely from memory. No minimap, no route arrow — the same allocentric map-building that grew London taxi drivers' hippocampi. The closest drill here to what actually moves the needle.",
 };
 
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
@@ -74,6 +77,7 @@ export const GAME_REGION = {
   taskswitch: "executive",
   wordrush: "executive",
   ebbflow: "executive",
+  wayfinder: "hippocampus",
 };
 
 export function levelFromXp(xp) {

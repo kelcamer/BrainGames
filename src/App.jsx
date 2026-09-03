@@ -20,6 +20,7 @@ import NBack from "./games/NBack.jsx";
 import TaskSwitch from "./games/TaskSwitch.jsx";
 import WordRush from "./games/WordRush.jsx";
 import EbbFlow from "./games/EbbFlow.jsx";
+import Wayfinder from "./games/Wayfinder.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -37,6 +38,7 @@ const GAME_COMPONENTS = {
   taskswitch: TaskSwitch,
   wordrush: WordRush,
   ebbflow: EbbFlow,
+  wayfinder: Wayfinder,
 };
 
 export default function App() {

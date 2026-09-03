@@ -148,6 +148,17 @@ export function EbbFlowIcon() {
   );
 }
 
+export function WayfinderIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 3v18" strokeLinecap="round" />
+      <path d="M12 5h6l2 2-2 2h-6z" />
+      <path d="M12 11H6l-2 2 2 2h6z" />
+      <circle cx="12" cy="21" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
   tonetrace: ToneTraceIcon,
@@ -164,4 +175,5 @@ export const GAME_ICONS = {
   taskswitch: TaskSwitchIcon,
   wordrush: WordRushIcon,
   ebbflow: EbbFlowIcon,
+  wayfinder: WayfinderIcon,
 };
