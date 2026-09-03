@@ -66,11 +66,16 @@ export default function TraceMapHard({ onBack, onFinish, best }) {
 
   function onTap(idx) {
     const e = eng.current;
+    // Round already completed — ignore stray taps during the pause before the
+    // next sequence plays, otherwise they score against a finished sequence and
+    // wrongly end the run right after a clean round.
+    if (e.playerPos >= e.sequence.length) return;
     setLit(idx);
     timers.current.push(setTimeout(() => setLit((cur) => (cur === idx ? -1 : cur)), 200));
     if (e.sequence[e.playerPos] === idx) {
       e.playerPos++;
       if (e.playerPos >= e.sequence.length) {
+        setPhase("watch"); // lock input immediately until the next sequence starts
         setMsg("clean — next round");
         e.holdMs = clamp(e.holdMs + 200, 800, 5000);
         timers.current.push(setTimeout(grow, 700));

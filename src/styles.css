@@ -235,13 +235,14 @@ button { font-family: inherit; cursor: pointer; }
 .tm-cell.dim { opacity: 0.3; }
 .tm-cell.slot { border-color: var(--hippocampus); border-style: dashed; cursor: pointer; }
 .tm-cell.filled { border-style: solid; }
-.tm-cell.selected { border-color: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.tm-cell.selected { border-color: var(--hippocampus); box-shadow: 0 0 10px var(--hippocampus); }
 .tm-cell.tappable { cursor: pointer; }
-/* Hover-tint only on devices that truly hover — on touch, :hover sticks to the
-   last-tapped tile and leaves an amber border behind after selection. */
+/* Desktop-only hover cue: never on touch (where :hover sticks to the last-tapped
+   tile) and never amber — the yellow left a highlight behind that read as a stuck
+   selection. A quiet border brighten is enough to signal "interactive". */
 @media (hover: hover) {
-  .tm-cell.slot:hover { border-color: var(--amber); }
-  .tm-cell.tappable:hover { border-color: var(--amber); }
+  .tm-cell.slot:hover { border-color: var(--line-bright); }
+  .tm-cell.tappable:hover { border-color: var(--line-bright); }
 }
 .tm-cell.lit { background: var(--hippocampus); border-color: var(--hippocampus); box-shadow: 0 0 18px var(--hippocampus); }
 .tm-cell.correct { border-color: var(--wordform); box-shadow: 0 0 0 2px var(--wordform) inset; }
