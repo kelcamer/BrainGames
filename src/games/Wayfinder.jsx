@@ -65,6 +65,31 @@ const COMPASS = [
   { code: "SW", glyph: "↙", area: "sw" }, { code: "S", glyph: "↓", area: "s" }, { code: "SE", glyph: "↘", area: "se" },
 ];
 
+// The review map: the whole city (every landmark in its real position) with the
+// route you actually walked drawn on top, plus the shortest route dashed.
+function WayMap({ rows, cols, cells, yourIdx, bestIdx, from, to }) {
+  const cell = 44;
+  const w = cols * cell;
+  const h = rows * cell;
+  const cx = (i) => ((i % cols) + 0.5) * cell;
+  const cy = (i) => (Math.floor(i / cols) + 0.5) * cell;
+  const poly = (idxs) => idxs.map((i) => `${cx(i)},${cy(i)}`).join(" ");
+  return (
+    <svg className="wf-map" viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label="route map">
+      {cells.map((emoji, i) => (
+        <g key={i}>
+          <rect x={(i % cols) * cell + 2} y={Math.floor(i / cols) * cell + 2} width={cell - 4} height={cell - 4} rx="7" className="wf-map-cell" />
+          <text x={cx(i)} y={cy(i)} className="wf-map-emoji" textAnchor="middle" dominantBaseline="central" fontSize={cell * 0.5}>{emoji}</text>
+        </g>
+      ))}
+      <polyline points={poly(bestIdx)} className="wf-map-best" fill="none" />
+      <polyline points={poly(yourIdx)} className="wf-map-you" fill="none" />
+      <circle cx={cx(from)} cy={cy(from)} r="6" className="wf-map-start" />
+      <circle cx={cx(to)} cy={cy(to)} r="10" className="wf-map-end" fill="none" />
+    </svg>
+  );
+}
+
 // Hippocampus — allocentric wayfinding, the London-taxi "Knowledge" mechanism.
 // Explore a landmark map with NO overview, build a cognitive map in your head,
 // then navigate between landmarks from memory and call bearings. No minimap, no
@@ -246,7 +271,8 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     const isBest = scoreVal > 0 && scoreVal > prevBest;
     const xpEarned = 20 + scoreVal;
     const [nr, nc] = LADDER[newLevel];
-    // routes where you didn't take the shortest path — shown for review
+    // routes where you didn't take the shortest path — shown on a map of the
+    // city (which you never saw while navigating) with your path drawn on it
     const routes = e.deliveryRecords
       .filter((r) => r.moves > r.mDist)
       .map((r) => ({
@@ -255,8 +281,13 @@ export default function Wayfinder({ onBack, onFinish, best }) {
         toName: e.grid[r.to].name,
         moves: r.moves,
         mDist: r.mDist,
-        yours: r.path.map((i) => e.grid[i].emoji),
-        best: optimalPath(r.from, r.to, e.cols).map((i) => e.grid[i].emoji),
+        rows: e.rows,
+        cols: e.cols,
+        cells: e.grid.map((g) => g.emoji),
+        yourIdx: r.path.slice(),
+        bestIdx: optimalPath(r.from, r.to, e.cols),
+        from: r.from,
+        to: r.to,
       }));
     onFinish({
       xpEarned,
@@ -313,17 +344,18 @@ export default function Wayfinder({ onBack, onFinish, best }) {
           >
             {summary.routes.length > 0 && (
               <div className="wf-routes">
-                <div className="wf-routes-title">detours — your route vs the shortest</div>
+                <div className="wf-routes-title">the map you couldn't see — and where you went</div>
                 {summary.routes.map((r, i) => (
                   <div className="wf-route" key={i}>
                     <div className="wf-route-head">
                       {r.fromEmoji} → {r.toEmoji} {r.toName} · you took {r.moves}, best {r.mDist}
                     </div>
-                    <div className="wf-route-line">
-                      <span className="wf-route-tag">you</span> {r.yours.join(" → ")}
-                    </div>
-                    <div className="wf-route-line wf-route-best">
-                      <span className="wf-route-tag">best</span> {r.best.join(" → ")}
+                    <WayMap {...r} />
+                    <div className="wf-map-legend">
+                      <span className="wf-lg wf-lg-you">your route</span>
+                      <span className="wf-lg wf-lg-best">shortest</span>
+                      <span className="wf-lg wf-lg-start">start</span>
+                      <span className="wf-lg wf-lg-end">goal</span>
                     </div>
                   </div>
                 ))}
