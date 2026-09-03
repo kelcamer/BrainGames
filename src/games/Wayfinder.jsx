@@ -9,7 +9,6 @@ const LADDER = [
   [1, 2], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4],
 ];
 const PASS = 85; // navigation score that unlocks the next map size
-const STUDY_SECS = 20; // seconds to memorise the full map before it vanishes
 const KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
 const ARROWS = { up: "↑", right: "→", down: "↓", left: "←" };
 const DIRS = ["up", "right", "down", "left"];
@@ -116,12 +115,12 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   const [phase, setPhase] = useState("select"); // select | explore | study | deliver | point | summary
   const [pos, setPos] = useState(0);
   const [found, setFound] = useState(1);
-  const [studyLeft, setStudyLeft] = useState(STUDY_SECS);
   const [task, setTask] = useState(null);
   const [msg, setMsg] = useState("");
   const [flash, setFlash] = useState(null); // ok | bad | wall
   const [summary, setSummary] = useState(null);
   const flashTimer = useRef(null);
+  const lastCity = useRef(null); // { level, grid } of the most recent run, for "replay same city"
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
@@ -138,9 +137,22 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   }
 
   function chooseSize(level) {
+    buildRun(level, null);
+  }
+
+  // Rebuild the same city (same landmark layout), but with fresh deliveries and
+  // bearing probes — re-study and re-test the map you're trying to learn.
+  function replaySameCity() {
+    const lc = lastCity.current;
+    if (lc) buildRun(lc.level, lc.grid);
+    else start();
+  }
+
+  function buildRun(level, presetGrid) {
     const [rows, cols] = LADDER[level];
     const count = rows * cols;
-    const grid = shuffle(LANDMARKS).slice(0, count).map(([emoji, name]) => ({ emoji, name }));
+    const grid = presetGrid || shuffle(LANDMARKS).slice(0, count).map(([emoji, name]) => ({ emoji, name }));
+    lastCity.current = { level, grid };
     const startPos = rnd(count);
     const nDeliveries = clamp(Math.round(count * 0.6), 2, 5);
     const nPoints = clamp(Math.round(count / 3), 1, 3);
@@ -183,8 +195,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   }
 
   function beginStudy() {
-    setStudyLeft(STUDY_SECS);
-    setMsg("study the whole map — it vanishes when the timer runs out, then you navigate from memory");
+    setMsg("study the map as long as you like — press Continue when you've got it, then it's gone");
     setPhase("study");
   }
 
@@ -338,14 +349,6 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Study-peek countdown: tick down each second, then start deliveries.
-  useEffect(() => {
-    if (phase !== "study") return;
-    if (studyLeft <= 0) { beginDeliveries(); return; }
-    const t = setTimeout(() => setStudyLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, studyLeft]);
 
   const g = eng.current;
   const grid = g?.grid;
@@ -400,7 +403,12 @@ export default function Wayfinder({ onBack, onFinish, best }) {
           </SessionSummary>
         ) : phase === "select" ? (
           <div className="wf-select">
-            <p className="stage-msg">choose your city size</p>
+            {lastCity.current && (
+              <button className="btn btn--primary wf-replay-btn" onClick={replaySameCity}>
+                ↺ Replay last city ({LADDER[lastCity.current.level][0]}×{LADDER[lastCity.current.level][1]}) — re-study & retest
+              </button>
+            )}
+            <p className="stage-msg">{lastCity.current ? "…or start a new city" : "choose your city size"}</p>
             <div className="wf-size-grid">
               {LADDER.map(([r, c], lvl) => (
                 <button key={lvl} className="btn wf-size-btn" onClick={() => chooseSize(lvl)}>
@@ -423,11 +431,8 @@ export default function Wayfinder({ onBack, onFinish, best }) {
               ))}
             </div>
             <div className="wf-study-foot">
-              <span className="stat-pill">
-                Study <b className="mono">{studyLeft}s</b>
-              </span>
               <button className="btn btn--primary" onClick={beginDeliveries}>
-                I'm ready
+                Continue
               </button>
             </div>
           </div>

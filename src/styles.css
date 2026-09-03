@@ -464,6 +464,7 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .wf-size-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 8px; height: auto; }
 .wf-size-btn b { font-size: 20px; }
 .wf-size-btn span { font-size: 11px; color: var(--ink-dim); }
+.wf-replay-btn { width: min(360px, 92vw); font-size: 13px; }
 .wf-study { display: grid; gap: 6px; width: min(360px, 92vw); }
 .wf-study-cell { background: var(--panel-2); border: 1px solid var(--line-bright); border-radius: 10px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .wf-study-emoji { font-size: 30px; line-height: 1; }
