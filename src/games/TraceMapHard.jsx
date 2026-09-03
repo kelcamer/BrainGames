@@ -3,6 +3,7 @@ import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import HoldBar from "../components/HoldBar.jsx";
 import { randomConsolation } from "../data/praise.js";
+import { useNoScroll } from "../hooks/useNoScroll.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -27,6 +28,7 @@ function seedSequence(n) {
 // up in a growing sequence; no shape or color to recode into words, so position
 // is the only information there is to hold onto.
 export default function TraceMapHard({ onBack, onFinish, best }) {
+  useNoScroll();
   const eng = useRef({ sequence: [], playerPos: 0, holdMs: 1000, completed: 0 });
   const timers = useRef([]);
   const [lit, setLit] = useState(-1);

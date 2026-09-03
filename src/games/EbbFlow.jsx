@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
+import { useNoScroll } from "../hooks/useNoScroll.js";
 
 const TOTAL = 30;
 const KEYMAP = { ArrowLeft: "L", ArrowRight: "R" };
@@ -31,6 +32,7 @@ function Leaf({ className }) {
 }
 
 export default function EbbFlow({ onBack, onFinish, best }) {
+  useNoScroll();
   const eng = useRef({ trial: 0, correct: 0, answered: 0, rtSum: 0, incCorrect: 0, incTotal: 0, timeouts: 0, stim: null, awaiting: false, t0: 0 });
   const timers = useRef([]);
   const [count, setCount] = useState(0);

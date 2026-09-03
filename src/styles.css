@@ -35,6 +35,9 @@ body {
   min-height: 100vh;
   margin: 0;
 }
+/* Applied by useNoScroll while certain games are on screen — kills wheel/touch
+   scroll, iOS rubber-band, and pull-to-refresh so gameplay isn't disturbed. */
+body.no-scroll { overflow: hidden; overscroll-behavior: none; touch-action: none; }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
