@@ -289,7 +289,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
                 <span className="wf-here-emoji">{here?.emoji}</span>
                 <span className="wf-here-name">{here?.name}</span>
                 {phase === "explore" && g && <span className="wf-here-sub mono">found {found}/{g.count}</span>}
-                {phase === "deliver" && task && <span className="wf-here-sub">→ {grid[task.to].emoji} {grid[task.to].name}</span>}
+                {phase === "deliver" && task && <span className="wf-here-sub">Go to {grid[task.to].emoji} {grid[task.to].name}</span>}
                 {isPoint && task && <span className="wf-here-sub">point to {grid[task.to].emoji}</span>}
               </div>
             </div>
