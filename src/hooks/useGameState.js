@@ -22,7 +22,7 @@ function defaultState() {
       taskswitch: { accuracy: 0, plays: 0 },
       wordrush: { bestCount: 0, plays: 0 },
       ebbflow: { bestScore: 0, accuracy: 0, plays: 0 },
-      wayfinder: { bestScore: 0, plays: 0 },
+      wayfinder: { bestScore: 0, level: 0, plays: 0 },
     },
     streak: 0,
     lastPlayDate: null,
