@@ -480,18 +480,21 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .wf-route-head { font-size: 12px; color: var(--ink-dim); }
 .wf-map { display: block; height: auto; max-width: 100%; }
 .wf-map-cell { fill: var(--panel-3); stroke: var(--line); }
+.wf-map-cell-start { fill: rgba(185, 140, 230, 0.22); stroke: var(--hippocampus); stroke-width: 2.5; }
+.wf-map-cell-goal { fill: rgba(230, 98, 110, 0.22); stroke: var(--danger); stroke-width: 2.5; }
 .wf-map-best { stroke: var(--wordform); stroke-width: 2; stroke-dasharray: 3 4; stroke-linejoin: round; stroke-linecap: round; opacity: 0.7; }
 .wf-map-you { stroke: var(--amber); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
-.wf-map-start { fill: var(--hippocampus); }
-.wf-map-end { stroke: var(--danger); stroke-width: 2.5; }
+.wf-badge-start { fill: var(--hippocampus); }
+.wf-badge-goal { fill: var(--danger); }
+.wf-badge-text { fill: #10201b; font-weight: 800; }
 .wf-map-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; font-size: 10px; color: var(--ink-dim); }
 .wf-lg { display: inline-flex; align-items: center; gap: 4px; }
 .wf-lg::before { content: ""; width: 12px; height: 0; border-top-width: 3px; border-top-style: solid; }
 .wf-lg-you::before { border-top-color: var(--amber); }
 .wf-lg-best::before { border-top-color: var(--wordform); border-top-style: dashed; }
-.wf-lg-start::before, .wf-lg-end::before { width: 9px; height: 9px; border: 0; border-radius: 50%; }
-.wf-lg-start::before { background: var(--hippocampus); }
-.wf-lg-end::before { border: 2px solid var(--danger); }
+.wf-lg-start::before, .wf-lg-end::before { width: 10px; height: 10px; border-radius: 3px; border-top: 0; }
+.wf-lg-start::before { background: rgba(185, 140, 230, 0.22); border: 2px solid var(--hippocampus); }
+.wf-lg-end::before { background: rgba(230, 98, 110, 0.22); border: 2px solid var(--danger); }
 
 /* Word Rush (Prefrontal Executive — verbal fluency) */
 .wr-letter { font-size: clamp(56px, 18vw, 88px); font-weight: 700; color: var(--executive); text-transform: uppercase; line-height: 1; }

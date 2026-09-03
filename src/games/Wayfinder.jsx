@@ -74,18 +74,31 @@ function WayMap({ rows, cols, cells, yourIdx, bestIdx, from, to }) {
   const cx = (i) => ((i % cols) + 0.5) * cell;
   const cy = (i) => (Math.floor(i / cols) + 0.5) * cell;
   const poly = (idxs) => idxs.map((i) => `${cx(i)},${cy(i)}`).join(" ");
+  const badge = (i, cls, label) => {
+    const x = (i % cols) * cell;
+    const y = Math.floor(i / cols) * cell;
+    return (
+      <g>
+        <circle cx={x + 11} cy={y + 11} r="8" className={cls} />
+        <text x={x + 11} y={y + 11} className="wf-badge-text" textAnchor="middle" dominantBaseline="central" fontSize="10">{label}</text>
+      </g>
+    );
+  };
   return (
     <svg className="wf-map" viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label="route map">
-      {cells.map((emoji, i) => (
-        <g key={i}>
-          <rect x={(i % cols) * cell + 2} y={Math.floor(i / cols) * cell + 2} width={cell - 4} height={cell - 4} rx="7" className="wf-map-cell" />
-          <text x={cx(i)} y={cy(i)} className="wf-map-emoji" textAnchor="middle" dominantBaseline="central" fontSize={cell * 0.5}>{emoji}</text>
-        </g>
-      ))}
+      {cells.map((emoji, i) => {
+        const cls = "wf-map-cell" + (i === from ? " wf-map-cell-start" : "") + (i === to ? " wf-map-cell-goal" : "");
+        return (
+          <g key={i}>
+            <rect x={(i % cols) * cell + 2} y={Math.floor(i / cols) * cell + 2} width={cell - 4} height={cell - 4} rx="7" className={cls} />
+            <text x={cx(i)} y={cy(i)} className="wf-map-emoji" textAnchor="middle" dominantBaseline="central" fontSize={cell * 0.5}>{emoji}</text>
+          </g>
+        );
+      })}
       <polyline points={poly(bestIdx)} className="wf-map-best" fill="none" />
       <polyline points={poly(yourIdx)} className="wf-map-you" fill="none" />
-      <circle cx={cx(from)} cy={cy(from)} r="6" className="wf-map-start" />
-      <circle cx={cx(to)} cy={cy(to)} r="10" className="wf-map-end" fill="none" />
+      {badge(from, "wf-badge-start", "S")}
+      {badge(to, "wf-badge-goal", "G")}
     </svg>
   );
 }
@@ -277,6 +290,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       .filter((r) => r.moves > r.mDist)
       .map((r) => ({
         fromEmoji: e.grid[r.from].emoji,
+        fromName: e.grid[r.from].name,
         toEmoji: e.grid[r.to].emoji,
         toName: e.grid[r.to].name,
         moves: r.moves,
@@ -358,14 +372,14 @@ export default function Wayfinder({ onBack, onFinish, best }) {
                 {summary.routes.map((r, i) => (
                   <div className="wf-route" key={i}>
                     <div className="wf-route-head">
-                      {r.fromEmoji} → {r.toEmoji} {r.toName} · you took {r.moves}, best {r.mDist}
+                      start <b>{r.fromEmoji} {r.fromName}</b> → goal <b>{r.toEmoji} {r.toName}</b> · you took {r.moves}, best {r.mDist}
                     </div>
                     <WayMap {...r} />
                     <div className="wf-map-legend">
                       <span className="wf-lg wf-lg-you">your route</span>
                       <span className="wf-lg wf-lg-best">shortest</span>
-                      <span className="wf-lg wf-lg-start">start</span>
-                      <span className="wf-lg wf-lg-end">goal</span>
+                      <span className="wf-lg wf-lg-start">S = start</span>
+                      <span className="wf-lg wf-lg-end">G = goal</span>
                     </div>
                   </div>
                 ))}
