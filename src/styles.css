@@ -357,8 +357,6 @@ button { font-family: inherit; cursor: pointer; }
 /* summary card shared */
 .summary { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
 .summary .praise-line { font-family: "Big Shoulders Display", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; font-size: 22px; color: var(--amber); }
-.summary .quote-line { margin: 0; max-width: min(420px, 92vw); font-size: 16px; line-height: 1.45; font-style: italic; color: var(--ink); display: flex; flex-direction: column; gap: 4px; }
-.summary .quote-line cite { font-style: normal; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--amber); }
 .summary .big-num { font-family: "JetBrains Mono", monospace; font-size: 36px; color: var(--amber); font-weight: 600; }
 
 /* ============ MODAL ============ */
