@@ -8,7 +8,7 @@ import { useNoScroll } from "../hooks/useNoScroll.js";
 const LADDER = [
   [1, 2], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4],
 ];
-const PASS = 55; // navigation score that unlocks the next map size
+const PASS = 85; // navigation score that unlocks the next map size
 const KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
 const ARROWS = { up: "↑", right: "→", down: "↓", left: "←" };
 const DIRS = ["up", "right", "down", "left"];
