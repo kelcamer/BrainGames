@@ -13,6 +13,14 @@ const KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight
 const ARROWS = { up: "↑", right: "→", down: "↓", left: "←" };
 const DIRS = ["up", "right", "down", "left"];
 
+const CITY_NAMES = [
+  "Paris", "Dallas", "Tokyo", "Cairo", "Lisbon", "Oslo", "Denver", "Prague",
+  "Nairobi", "Bogotá", "Seoul", "Austin", "Venice", "Dublin", "Boston", "Lima",
+  "Athens", "Berlin", "Miami", "Sydney", "Toronto", "Madrid", "Vienna", "Quito",
+  "Perth", "Rome", "Cusco", "Porto", "Kyoto", "Helsinki", "Bergen", "Malmö",
+  "Tulsa", "Boise", "Tacoma", "Salem", "Fargo", "Reno", "Ghent", "Naples",
+];
+
 const LANDMARKS = [
   ["🌳", "Park"], ["⛲", "Fountain"], ["🏰", "Castle"], ["🗼", "Tower"],
   ["⛪", "Church"], ["🏛️", "Museum"], ["🎡", "Wheel"], ["⚓", "Docks"],
@@ -144,15 +152,16 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   // bearing probes — re-study and re-test the map you're trying to learn.
   function replaySameCity() {
     const lc = lastCity.current;
-    if (lc) buildRun(lc.level, lc.grid);
+    if (lc) buildRun(lc.level, lc.grid, lc.name);
     else start();
   }
 
-  function buildRun(level, presetGrid) {
+  function buildRun(level, presetGrid, presetName) {
     const [rows, cols] = LADDER[level];
     const count = rows * cols;
     const grid = presetGrid || shuffle(LANDMARKS).slice(0, count).map(([emoji, name]) => ({ emoji, name }));
-    lastCity.current = { level, grid };
+    const cityName = presetName || CITY_NAMES[rnd(CITY_NAMES.length)];
+    lastCity.current = { level, grid, name: cityName };
     const startPos = rnd(count);
     const nDeliveries = clamp(Math.round(count * 0.6), 2, 5);
     const nPoints = clamp(Math.round(count / 3), 1, 3);
@@ -182,7 +191,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     }
 
     eng.current = {
-      level, rows, cols, count, grid, pos: startPos, visited: new Set([startPos]),
+      level, rows, cols, count, grid, cityName, pos: startPos, visited: new Set([startPos]),
       deliveries, dIdx: 0, moves: 0, mDist: 0, routeScores: [], path: [], deliveryRecords: [],
       points, pIdx: 0, pCorrect: 0, busy: false,
     };
@@ -195,7 +204,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   }
 
   function beginStudy() {
-    setMsg("study the map as long as you like — press Continue when you've got it, then it's gone");
+    setMsg(`${eng.current.cityName} — study the map as long as you like, then press Continue`);
     setPhase("study");
   }
 
@@ -333,7 +342,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     });
     setSummary({
       scoreVal, routePct: Math.round(routeAvg * 100), pCorrect: e.pCorrect, nPoints: e.points.length,
-      rows: e.rows, cols: e.cols, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
+      rows: e.rows, cols: e.cols, cityName: e.cityName, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
       cleared, routes, firstAway, totalDeliveries,
     });
     setPhase("summary");
@@ -360,7 +369,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     <>
       <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Wayfinder" title="Wayfinder" onBack={onBack}>
         <span className="stat-pill">
-          Map <b className="mono">{g ? `${g.rows}×${g.cols}` : "—"}</b>
+          City <b className="mono">{g ? `${g.cityName} ${g.rows}×${g.cols}` : "—"}</b>
         </span>
         <span className="stat-pill">
           Best <b className="mono">{best.bestScore}</b>
@@ -369,10 +378,10 @@ export default function Wayfinder({ onBack, onFinish, best }) {
       <div className="game-stage">
         {summary ? (
           <SessionSummary
-            praise={summary.cleared ? `Cleared the ${summary.rows}×${summary.cols} map! ⭐` : summary.isBest ? "New personal best! 🏆" : undefined}
+            praise={summary.cleared ? `You know ${summary.cityName}! ⭐` : summary.isBest ? "New personal best! 🏆" : undefined}
             eyebrow={summary.cleared ? "cleared!" : summary.isBest ? "new high score!" : "route complete"}
             bigNum={summary.scoreVal}
-            detail={`navigation score on the ${summary.rows}×${summary.cols} map · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right · best ${summary.bestShown} · +${summary.xpEarned} xp`}
+            detail={`navigation score in ${summary.cityName} (${summary.rows}×${summary.cols}) · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right · best ${summary.bestShown} · +${summary.xpEarned} xp`}
             onAgain={start}
             againLabel="New City"
             onBack={onBack}
@@ -405,7 +414,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
           <div className="wf-select">
             {lastCity.current && (
               <button className="btn btn--primary wf-replay-btn" onClick={replaySameCity}>
-                ↺ Replay last city ({LADDER[lastCity.current.level][0]}×{LADDER[lastCity.current.level][1]}) — re-study & retest
+                ↺ Replay {lastCity.current.name} ({LADDER[lastCity.current.level][0]}×{LADDER[lastCity.current.level][1]}) — re-study & retest
               </button>
             )}
             <p className="stage-msg">{lastCity.current ? "…or start a new city" : "choose your city size"}</p>
