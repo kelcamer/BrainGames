@@ -233,7 +233,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     eng.current = {
       level, rows, cols, count, grid, cityName, pos: startPos, visited: new Set([startPos]),
       deliveries, dIdx: 0, moves: 0, mDist: 0, routeScores: [], path: [], deliveryRecords: [],
-      points, pIdx: 0, pCorrect: 0, busy: false,
+      points, pIdx: 0, pCorrect: 0, goodDirs: 0, busy: false,
     };
     setSummary(null);
     setPos(startPos);
@@ -297,14 +297,20 @@ export default function Wayfinder({ onBack, onFinish, best }) {
 
   function move(dir) {
     const e = eng.current;
+    const was = e.pos;
     const nb = neighbor(e.pos, dir, e.rows, e.cols);
     if (nb == null) { doFlash("wall"); return; }
     e.pos = nb;
     setPos(nb);
     if (phaseRef.current === "deliver") {
+      const goal = e.deliveries[e.dIdx].to;
+      // a "good" direction is one that actually closed the gap to the goal —
+      // on a grid every step changes Manhattan distance by exactly 1, so this
+      // is a clean right/wrong call. Walls don't move you and don't count.
+      if (manhattan(nb, goal, e.cols) < manhattan(was, goal, e.cols)) e.goodDirs += 1;
       e.moves += 1;
       e.path.push(nb);
-      if (nb === e.deliveries[e.dIdx].to) completeDelivery();
+      if (nb === goal) completeDelivery();
     }
   }
 
@@ -344,8 +350,12 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     const pointAcc = e.points.length ? e.pCorrect / e.points.length : 0;
     const scoreVal = Math.round((0.7 * routeAvg + 0.3 * pointAcc) * 100);
     const cleared = scoreVal >= PASS;
-    const prevBest = best.bestScore;
-    const isBest = scoreVal > 0 && scoreVal > prevBest;
+    // Every direction you called correctly this run: steps that closed the gap
+    // to the goal, plus bearings you pointed the right way. This is what "Best"
+    // tracks — a count of good calls, not a percentage.
+    const dirs = e.goodDirs + e.pCorrect;
+    const prevBestDirs = best.bestDirections ?? 0;
+    const isBest = dirs > 0 && dirs > prevBestDirs;
     const xpEarned = 20 + scoreVal;
     // routes where you didn't take the shortest path — shown on a map of the
     // city (which you never saw while navigating) with your path drawn on it
@@ -375,14 +385,16 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     onFinish({
       xpEarned,
       updateBest: (prev) => ({
-        bestScore: Math.max(prev.bestScore, scoreVal),
+        bestScore: Math.max(prev.bestScore, scoreVal), // still gates the badge
+        bestDirections: Math.max(prev.bestDirections ?? 0, dirs),
         level: cleared ? Math.max(prev.level ?? 0, e.level) : prev.level ?? 0,
         plays: prev.plays + 1,
       }),
     });
     setSummary({
       scoreVal, routePct: Math.round(routeAvg * 100), pCorrect: e.pCorrect, nPoints: e.points.length,
-      rows: e.rows, cols: e.cols, cityName: e.cityName, xpEarned, isBest, bestShown: Math.max(prevBest, scoreVal),
+      rows: e.rows, cols: e.cols, cityName: e.cityName, xpEarned, isBest,
+      dirs, bestDirsShown: Math.max(prevBestDirs, dirs),
       cleared, routes, firstAway, totalDeliveries,
     });
     setPhase("summary");
@@ -412,7 +424,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
           City <b className="mono">{g ? `${g.cityName} ${g.rows}×${g.cols}` : "—"}</b>
         </span>
         <span className="stat-pill">
-          Best <b className="mono">{best.bestScore}</b>
+          Best turns <b className="mono">{best.bestDirections ?? 0}</b>
         </span>
       </GameHeader>
       <div className="game-stage">
@@ -421,7 +433,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
             praise={summary.cleared ? `You know ${summary.cityName}! ⭐` : summary.isBest ? "New personal best! 🏆" : undefined}
             eyebrow={summary.cleared ? "cleared!" : summary.isBest ? "new high score!" : "route complete"}
             bigNum={summary.scoreVal}
-            detail={`navigation score in ${summary.cityName} (${summary.rows}×${summary.cols}) · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right · best ${summary.bestShown} · +${summary.xpEarned} xp`}
+            detail={`navigation score in ${summary.cityName} (${summary.rows}×${summary.cols}) · ${summary.routePct}% route-efficient · ${summary.pCorrect}/${summary.nPoints} bearings right · ${summary.dirs} right turns this run · best ${summary.bestDirsShown} · +${summary.xpEarned} xp`}
             onAgain={start}
             againLabel="New City"
             onBack={onBack}
