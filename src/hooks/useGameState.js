@@ -148,6 +148,11 @@ export function useGameState() {
 
   const resetAll = useCallback(() => {
     setState(defaultState());
+    try {
+      localStorage.removeItem("cortexConsoleWayfinderV1"); // Wayfinder's saved cities
+    } catch {
+      /* storage unavailable — nothing was persisted to clear */
+    }
   }, []);
 
   return { state, recordProgress, resetAll };

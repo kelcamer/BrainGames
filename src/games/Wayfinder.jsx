@@ -28,6 +28,38 @@ const LANDMARKS = [
   ["🎢", "Coaster"], ["🕌", "Mosque"], ["🏭", "Factory"], ["🗿", "Statue"],
 ];
 
+// Cities you've already walked, newest first, kept across reloads. Re-studying a
+// city you half-know is the actual hippocampal exercise, so they're worth saving.
+const CITY_KEY = "cortexConsoleWayfinderV1";
+const MAX_CITIES = 12;
+
+const cityId = (name, level, grid) => `${name}|${level}|${grid.map((p) => p.emoji).join("")}`;
+
+function loadCities() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CITY_KEY) || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (c) =>
+          c && typeof c.name === "string" && LADDER[c.level] && Array.isArray(c.grid) &&
+          c.grid.length === LADDER[c.level][0] * LADDER[c.level][1] &&
+          c.grid.every((pl) => pl && pl.emoji && pl.name)
+      )
+      .slice(0, MAX_CITIES);
+  } catch {
+    return []; // storage unavailable or corrupt — you just start fresh
+  }
+}
+
+function saveCities(list) {
+  try {
+    localStorage.setItem(CITY_KEY, JSON.stringify(list));
+  } catch {
+    /* storage unavailable — the run still works, it just won't be remembered */
+  }
+}
+
 const rnd = (n) => Math.floor(Math.random() * n);
 const shuffle = (a) => { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = rnd(i + 1); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -128,7 +160,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
   const [flash, setFlash] = useState(null); // ok | bad | wall
   const [summary, setSummary] = useState(null);
   const flashTimer = useRef(null);
-  const lastCity = useRef(null); // { level, grid } of the most recent run, for "replay same city"
+  const [cities, setCities] = useState(loadCities); // every city walked before, newest first
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
@@ -148,20 +180,28 @@ export default function Wayfinder({ onBack, onFinish, best }) {
     buildRun(level, null);
   }
 
-  // Rebuild the same city (same landmark layout), but with fresh deliveries and
-  // bearing probes — re-study and re-test the map you're trying to learn.
-  function replaySameCity() {
-    const lc = lastCity.current;
-    if (lc) buildRun(lc.level, lc.grid, lc.name);
-    else start();
+  // Rebuild a city you've walked before — same landmark layout, but fresh
+  // deliveries and bearing probes, so you re-study and re-test the same map.
+  function replayCity(id) {
+    const c = cities.find((x) => x.id === id);
+    if (c) buildRun(c.level, c.grid, c.name);
   }
 
   function buildRun(level, presetGrid, presetName) {
     const [rows, cols] = LADDER[level];
     const count = rows * cols;
     const grid = presetGrid || shuffle(LANDMARKS).slice(0, count).map(([emoji, name]) => ({ emoji, name }));
-    const cityName = presetName || CITY_NAMES[rnd(CITY_NAMES.length)];
-    lastCity.current = { level, grid, name: cityName };
+    // Don't hand out a name already used at this size — two different "Paris 2×2"
+    // layouts in the dropdown would be impossible to tell apart.
+    const taken = new Set(cities.filter((c) => c.level === level).map((c) => c.name));
+    const free = CITY_NAMES.filter((n) => !taken.has(n));
+    const cityName = presetName || (free.length ? free[rnd(free.length)] : CITY_NAMES[rnd(CITY_NAMES.length)]);
+    const entry = { id: cityId(cityName, level, grid), name: cityName, level, grid };
+    setCities((prev) => {
+      const next = [entry, ...prev.filter((c) => c.id !== entry.id)].slice(0, MAX_CITIES);
+      saveCities(next);
+      return next;
+    });
     const startPos = rnd(count);
     const nDeliveries = clamp(Math.round(count * 0.6), 2, 5);
     const nPoints = clamp(Math.round(count / 3), 1, 3);
@@ -412,12 +452,29 @@ export default function Wayfinder({ onBack, onFinish, best }) {
           </SessionSummary>
         ) : phase === "select" ? (
           <div className="wf-select">
-            {lastCity.current && (
-              <button className="btn btn--primary wf-replay-btn" onClick={replaySameCity}>
-                ↺ Replay {lastCity.current.name} ({LADDER[lastCity.current.level][0]}×{LADDER[lastCity.current.level][1]}) — re-study & retest
-              </button>
+            {cities.length > 0 && (
+              <div className="wf-city-pick">
+                <label className="wf-city-label" htmlFor="wf-city">
+                  ↺ go back to a city you've already mapped
+                </label>
+                <select
+                  id="wf-city"
+                  className="wf-city-select"
+                  value=""
+                  onChange={(ev) => replayCity(ev.target.value)}
+                >
+                  <option value="" disabled>
+                    choose a city…
+                  </option>
+                  {cities.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} — {LADDER[c.level][0]}×{LADDER[c.level][1]} · {c.grid.length} places
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
-            <p className="stage-msg">{lastCity.current ? "…or start a new city" : "choose your city size"}</p>
+            <p className="stage-msg">{cities.length > 0 ? "…or start a new city" : "choose your city size"}</p>
             <div className="wf-size-grid">
               {LADDER.map(([r, c], lvl) => (
                 <button key={lvl} className="btn wf-size-btn" onClick={() => chooseSize(lvl)}>
