@@ -8,9 +8,11 @@ const MAX_BPM = 150;
 const BASE_BPM = 90;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Hippocampus × striatum — a Simon-says drum kit. I play a beat, you play it
-// back, and every round adds one more hit and nudges the tempo up — the
-// working-memory-to-motor-pattern handoff, live. Ported from the original
+// Putamen (motor) — a Simon-says drum kit. I play a beat, you play it back, and
+// every round adds one more hit and nudges the tempo up. Beat-based timing is a
+// putamen/striatal job (Grahn & Brett 2007), so XP feeds the motor pool, not the
+// hippocampus — holding the sequence is the means, keeping time is the target.
+// Ported from the original
 // Rhythm Recall prototype; all sounds are synthesized with Web Audio, no
 // samples to load.
 export default function RhythmRecall({ onBack, onFinish, best }) {
@@ -209,7 +211,7 @@ export default function RhythmRecall({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus × Percussion · Rhythm Recall" title="Rhythm Recall" onBack={onBack}>
+      <GameHeader color="var(--motor)" regionLabel="Putamen (Motor) · Rhythm Recall" title="Rhythm Recall" onBack={onBack}>
         <span className="stat-pill">
           Best round <b className="mono">{best.maxRound}</b>
         </span>

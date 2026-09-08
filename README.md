@@ -14,12 +14,13 @@ This is a full React rewrite of an earlier single-file prototype, with
 | Region | Drill | What it trains |
 |---|---|---|
 | Visual Cortex | **Flash Focus** | Rapid orientation discrimination — spot the odd-angled tile before it vanishes |
+| Visual Cortex | **Drift** | Random-dot motion coherence with a 2-down-1-up staircase — reports your global-motion threshold (V5/MT) |
 | Auditory Cortex | **Tone Trace** | Growing tone-sequence recall, plus a pitch-discrimination staircase |
 | Putamen (Motor) | **Motor Chain** | Directional sequence learning — watch reaction time drop across identical reps |
 | Word-Form Area | **Word Blitz** | Rapid flashed-word ID, interleaved with a Stroop ink-color trap |
 | Hippocampus | **Trace Map** | Spatial paired-associate memory — hold shape-location pairs through a growing delay, then tap-to-swap them back |
 | Hippocampus | **Trace Map: Hard Mode** | The real Corsi block-tapping test — identical tiles, position only, nothing to name |
-| Hippocampus | **Rhythm Recall** | Simon-says on a synthesized 5-piece drum kit — working memory into motor pattern |
+| Putamen (Motor) | **Rhythm Recall** | Simon-says on a synthesized 5-piece drum kit — beat-based timing, a putamen job (Grahn & Brett 2007) |
 | Hippocampus | **Four Peaks** | The Four Mountains Test format — recognize the same skyline from a rotated viewpoint. Allocentric spatial memory specifically |
 | Hippocampus | **Constellation** | Simultaneous visuospatial span — a set of squares flashes at once, pick the same set back. Get it right and both the count and the grid grow. Closer to change-detection capacity tasks than Corsi's sequence memory |
 

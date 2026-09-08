@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard.jsx";
 import ScanModal from "./components/ScanModal.jsx";
 import ResetModal from "./components/ResetModal.jsx";
 import FlashFocus from "./games/FlashFocus.jsx";
+import Drift from "./games/Drift.jsx";
 import ToneTrace from "./games/ToneTrace.jsx";
 import MotorChain from "./games/MotorChain.jsx";
 import WordBlitz from "./games/WordBlitz.jsx";
@@ -25,6 +26,7 @@ import OpenLoops from "./games/OpenLoops.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
+  drift: Drift,
   tonetrace: ToneTrace,
   motorchain: MotorChain,
   wordblitz: WordBlitz,

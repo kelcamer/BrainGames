@@ -199,6 +199,30 @@ button { font-family: inherit; cursor: pointer; }
 .ff-tile.wrong { border-color: var(--danger); box-shadow: 0 0 0 2px var(--danger) inset; }
 .ff-bar { width: 64%; height: 6px; border-radius: 3px; background: var(--visual); }
 
+/* Drift (Visual Cortex — random-dot motion coherence) */
+.dr-aperture { position: relative; border-radius: 50%; border: 1px solid var(--line); box-shadow: inset 0 0 40px -10px rgba(0, 0, 0, 0.9); overflow: hidden; }
+.dr-aperture canvas { display: block; border-radius: 50%; }
+.dr-fixation { position: absolute; inset: 0; margin: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); }
+.dr-reveal {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 84px; line-height: 1; font-weight: 700; pointer-events: none;
+}
+.dr-reveal.hit { color: var(--wordform); }
+.dr-reveal.miss { color: var(--danger); }
+.dr-pad { display: grid; grid-template-areas: ". up ." "left down right"; gap: 8px; }
+.dr-key {
+  width: 54px; height: 54px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--panel-2); color: var(--ink); font-size: 22px; line-height: 1;
+  transition: border-color 0.1s, transform 0.08s ease, opacity 0.15s;
+}
+.dr-key:hover:not(:disabled) { border-color: var(--visual); }
+.dr-key:active:not(:disabled) { transform: scale(0.94); }
+.dr-key:disabled { opacity: 0.35; cursor: default; }
+.dr-key--up { grid-area: up; }
+.dr-key--left { grid-area: left; }
+.dr-key--down { grid-area: down; }
+.dr-key--right { grid-area: right; }
+
 /* Tone Trace */
 .tt-tabs { display: flex; gap: 6px; margin-bottom: 4px; }
 .tt-tabs button { background: transparent; border: 1px solid var(--line); color: var(--ink-dim); border-radius: 999px; padding: 6px 14px; font-size: 12px; }
@@ -258,7 +282,7 @@ button { font-family: inherit; cursor: pointer; }
 .tm-tray-item.selected { border-color: var(--amber); box-shadow: 0 0 10px var(--amber); }
 .tm-tray-item.used { opacity: 0.2; pointer-events: none; }
 
-/* Rhythm Recall (Hippocampus x Percussion) */
+/* Rhythm Recall (Putamen x Percussion) */
 .rr-board { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .rr-stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 16px; text-align: center; min-width: 70px; }
 .rr-stat .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
@@ -271,14 +295,14 @@ button { font-family: inherit; cursor: pointer; }
   filter: brightness(0.85);
 }
 .rr-pad:active { transform: scale(0.95); }
-.rr-pad.lit { filter: brightness(1.6); box-shadow: 0 0 22px var(--hippocampus); border-color: var(--hippocampus); }
+.rr-pad.lit { filter: brightness(1.6); box-shadow: 0 0 22px var(--motor); border-color: var(--motor); }
 .rr-pad .key { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--ink-faint); }
-.rr-pad .disc { width: 26px; height: 26px; border-radius: 50%; background: var(--hippocampus); opacity: 0.75; }
+.rr-pad .disc { width: 26px; height: 26px; border-radius: 50%; background: var(--motor); opacity: 0.75; }
 .rr-pad .lbl { font-size: 10.5px; color: var(--ink-dim); }
 .rr-seqrow { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: min(460px, 90vw); }
 .rr-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--panel-3); border: 1px solid var(--line); }
 .rr-dot.cur { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
-.rr-dot.done { background: var(--hippocampus); }
+.rr-dot.done { background: var(--motor); }
 .rr-dot.miss { background: var(--danger); }
 .rr-countin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders Display", sans-serif; font-size: 96px; color: var(--amber); background: rgba(12, 22, 19, 0.75); border-radius: var(--radius-lg); }
 

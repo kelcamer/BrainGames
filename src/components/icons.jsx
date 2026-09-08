@@ -169,8 +169,21 @@ export function OpenLoopsIcon() {
   );
 }
 
+export function DriftIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M6.5 9.5h6M6.5 14.5h4" strokeLinecap="round" />
+      <path d="M13 12.2 16.5 12l-1.2-1.4M14.5 7.6l2 .1" strokeLinecap="round" />
+      <circle cx="9" cy="7" r="0.9" fill="currentColor" stroke="none" />
+      <circle cx="15.5" cy="16" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
   flashfocus: FlashFocusIcon,
+  drift: DriftIcon,
   tonetrace: ToneTraceIcon,
   motorchain: MotorChainIcon,
   wordblitz: WordBlitzIcon,

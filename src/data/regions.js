@@ -15,10 +15,11 @@ export const REGIONS = {
 
 // Secondary drills for a region that already has a primary card above.
 export const EXTRA_GAMES = [
+  { regionKey: "visual", gameId: "drift", title: "DRIFT" },
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP" },
-  { regionKey: "hippocampus", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
   { regionKey: "hippocampus", gameId: "wayfinder", title: "WAYFINDER" },
+  { regionKey: "motor", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
   { regionKey: "executive", gameId: "nback", title: "N-BACK" },
   { regionKey: "executive", gameId: "taskswitch", title: "TASK SWITCH" },
@@ -30,6 +31,8 @@ export const EXTRA_GAMES = [
 export const GAME_BLURB = {
   flashfocus:
     "Spot the odd-angled tile before it's gone. Trains rapid orientation discrimination — a core V1 function.",
+  drift:
+    "A cloud of dots — some drifting together, the rest scattering at random. Call the drift direction. Every right call makes the drift fainter, so the run converges on your motion-coherence threshold (adults usually land near 5-15%). Global motion is pooled in V5/MT off pericalcarine and lateral-occipital input — the 0.01st and 0.17th percentile tissue on the scan, and the one thing no other drill here touches.",
   tonetrace: "Repeat growing tone sequences, or call the higher pitch. Trains raw auditory discrimination.",
   motorchain:
     "Learn a directional sequence and watch your reaction time drop with reps — literal procedural learning.",
@@ -39,7 +42,7 @@ export const GAME_BLURB = {
   tracemaphard:
     "Identical blank tiles light up in a growing sequence — no shape, no color, nothing to whisper to yourself. This is the real Corsi block-tapping test, the clinical standard for spatial memory span.",
   rhythmrecall:
-    "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo — the working-memory-to-motor-pattern handoff, live.",
+    "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo up. Beat-based timing runs through the putamen (Grahn & Brett 2007) — the weakest structure on the scan at the 0.7th percentile — so this counts as a motor drill, not a memory one.",
   constellation:
     "A set of squares flashes at once — pick the same set back. Get it right and the count climbs by one and the grid grows a size. A simultaneous visuospatial span test, not a sequence — closer to change-detection capacity tasks than Corsi.",
   magicnumber:
@@ -66,12 +69,13 @@ export const GAME_BLURB = {
 // need a parallel switch statement.
 export const GAME_REGION = {
   flashfocus: "visual",
+  drift: "visual",
   tonetrace: "auditory",
   motorchain: "motor",
   wordblitz: "wordform",
   tracemap: "hippocampus",
   tracemaphard: "hippocampus",
-  rhythmrecall: "hippocampus",
+  rhythmrecall: "motor",
   constellation: "hippocampus",
   magicnumber: "parietal",
   blockbuilder: "parietal",

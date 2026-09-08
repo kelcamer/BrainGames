@@ -8,6 +8,7 @@ function defaultState() {
     xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
     best: {
       flashfocus: { accuracy: 0, minExposure: 9999, plays: 0 },
+      drift: { bestThreshold: 999, minCoherence: 999, accuracy: 0, plays: 0 },
       tonetrace: { maxSeq: 0, minPitchDiff: 9999, plays: 0 },
       motorchain: { maxSeqLen: 0, bestGainPct: 0, plays: 0 },
       wordblitz: { bestStreak: 0, accuracy: 0, plays: 0 },
@@ -64,6 +65,9 @@ function save(state) {
 
 export const BADGES = [
   { id: "first-flash", label: "First Flash", test: (s) => s.best.flashfocus.plays >= 1 },
+  { id: "first-drift", label: "First Drift Run", test: (s) => s.best.drift.plays >= 1 },
+  { id: "drift-15", label: "Motion Threshold 15% (Adult Range)", test: (s) => s.best.drift.bestThreshold <= 15 },
+  { id: "drift-8", label: "Motion Threshold 8%", test: (s) => s.best.drift.bestThreshold <= 8 },
   { id: "first-tone", label: "First Tone", test: (s) => s.best.tonetrace.plays >= 1 },
   { id: "first-chain", label: "First Chain", test: (s) => s.best.motorchain.plays >= 1 },
   { id: "first-word", label: "First Word", test: (s) => s.best.wordblitz.plays >= 1 },
