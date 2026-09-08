@@ -66,7 +66,7 @@ function save(state) {
 export const BADGES = [
   { id: "first-flash", label: "First Flash", test: (s) => s.best.flashfocus.plays >= 1 },
   { id: "first-drift", label: "First Drift Run", test: (s) => s.best.drift.plays >= 1 },
-  { id: "drift-15", label: "Motion Threshold 15% (Adult Range)", test: (s) => s.best.drift.bestThreshold <= 15 },
+  { id: "drift-15", label: "Motion Threshold 15%", test: (s) => s.best.drift.bestThreshold <= 15 },
   { id: "drift-8", label: "Motion Threshold 8%", test: (s) => s.best.drift.bestThreshold <= 8 },
   { id: "first-tone", label: "First Tone", test: (s) => s.best.tonetrace.plays >= 1 },
   { id: "first-chain", label: "First Chain", test: (s) => s.best.motorchain.plays >= 1 },

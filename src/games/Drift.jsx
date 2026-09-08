@@ -25,7 +25,8 @@ import { useNoScroll } from "../hooks/useNoScroll.js";
 // Nothing else here tests motion at all.
 const TOTAL = 26;
 const N_DOTS = 170;
-const MOTION_MS = 1000;
+const MOTION_MS = 1300;
+const EARLY_GUARD_MS = 180; // ignore a press in the first moments of motion
 const RESPOND_MS = 4000;
 const DOT_LIFE_MS = 260;
 const START_COH = 55;
@@ -212,6 +213,7 @@ export default function Drift({ onBack, onFinish, best }) {
     setReveal(null);
     seedDots();
     setMsg("watch…");
+    e.motionStart = performance.now();
     setPhaseBoth("motion");
     timers.current.push(
       setTimeout(() => {
@@ -271,19 +273,40 @@ export default function Drift({ onBack, onFinish, best }) {
     [startTrial]
   );
 
+  // One entry point for both the keyboard and the arrow pad. The first version
+  // only accepted a press during the "respond" phase, which silently swallowed
+  // anything pressed in the ~2s of motion + feedback around it — so a press that
+  // felt like a real answer did nothing and had to be repeated.
+  const press = useCallback(
+    (dirId) => {
+      const e = eng.current;
+      const phase = phaseRef.current;
+      if (phase === "respond") return answer(dirId);
+      if (phase === "motion") {
+        // call it as soon as you're sure — you're only spending your own evidence.
+        // The guard drops a press carried over from the previous trial's rhythm.
+        if (performance.now() - e.motionStart >= EARLY_GUARD_MS) answer(dirId);
+        return;
+      }
+      if (phase === "feedback") startTrial(); // skip the rest of the feedback beat
+    },
+    [answer, startTrial]
+  );
+
   useEffect(() => {
     const onKey = (ev) => {
+      if (ev.repeat) return;
       const d = DIRS.find((x) => x.key === ev.key);
       if (!d) return;
       ev.preventDefault();
-      if (phaseRef.current === "respond") answer(d.id);
+      press(d.id);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [answer]);
+  }, [press]);
 
   const start = useCallback(() => {
-    eng.current = { trial: 0, correct: 0, coh: START_COH, dir: 0, run: 0, coarse: true, reversals: [], lastChange: null, minCorrect: 999, answered: false };
+    eng.current = { trial: 0, correct: 0, coh: START_COH, dir: 0, run: 0, coarse: true, reversals: [], lastChange: null, minCorrect: 999, answered: false, motionStart: 0 };
     setSummary(null);
     startTrial();
   }, [startTrial]);
@@ -323,8 +346,9 @@ export default function Drift({ onBack, onFinish, best }) {
             onAgain={start}
             onBack={onBack}
           >
-            <p className="stage-msg" style={{ maxWidth: "48ch" }}>
-              Healthy adults usually land somewhere around 5–15% on translational global motion. Lower is sharper.
+            <p className="stage-msg" style={{ maxWidth: "52ch" }}>
+              Lower is sharper — but compare this against <em>your own</em> past runs, not against published numbers. Lab studies quote 5–15%, on calibrated screens at a fixed viewing distance,
+              usually with an easier noise type. This drill re-rolls every dot every frame so none can be tracked, which pushes the same eyes to a higher number.
             </p>
           </SessionSummary>
         ) : (
@@ -346,8 +370,8 @@ export default function Drift({ onBack, onFinish, best }) {
                 <button
                   key={d.id}
                   className={`dr-key dr-key--${d.label}`}
-                  disabled={phase !== "respond"}
-                  onClick={() => answer(d.id)}
+                  disabled={phase === "done"}
+                  onClick={() => press(d.id)}
                   aria-label={d.label}
                 >
                   {d.glyph}
@@ -356,7 +380,8 @@ export default function Drift({ onBack, onFinish, best }) {
             </div>
 
             <p className="stage-msg">
-              Most of the dots are noise. Don't chase one — let the whole cloud tell you. Every right call makes the drift fainter; after your first miss it takes two in a row.
+              Most of the dots are noise. Don't chase one — let the whole cloud tell you. Call it the moment you're sure, you don't have to wait for the dots to stop. Every right call makes the
+              drift fainter; after your first miss it takes two in a row.
             </p>
           </>
         )}

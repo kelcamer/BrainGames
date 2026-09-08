@@ -32,7 +32,7 @@ export const GAME_BLURB = {
   flashfocus:
     "Spot the odd-angled tile before it's gone. Trains rapid orientation discrimination — a core V1 function.",
   drift:
-    "A cloud of dots — some drifting together, the rest scattering at random. Call the drift direction. Every right call makes the drift fainter, so the run converges on your motion-coherence threshold (adults usually land near 5-15%). Global motion is pooled in V5/MT off pericalcarine and lateral-occipital input — the 0.01st and 0.17th percentile tissue on the scan, and the one thing no other drill here touches.",
+    "A cloud of dots — some drifting together, the rest scattering at random. Call the drift direction. Every right call makes the drift fainter, so the run converges on your motion-coherence threshold. Read it against your own past runs — lab studies quote 5-15% on calibrated screens with an easier noise type, and this one re-rolls every dot every frame so none can be tracked. Global motion is pooled in V5/MT off pericalcarine and lateral-occipital input — the 0.01st and 0.17th percentile tissue on the scan, and the one thing no other drill here touches.",
   tonetrace: "Repeat growing tone sequences, or call the higher pitch. Trains raw auditory discrimination.",
   motorchain:
     "Learn a directional sequence and watch your reaction time drop with reps — literal procedural learning.",
