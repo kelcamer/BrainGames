@@ -43,7 +43,20 @@ const DIRS = [
   { id: 3, dx: 0, dy: 1, key: "ArrowDown", glyph: "↓", label: "down" },
 ];
 
+// Everything above and below the aperture inside a locked viewport: the HUD,
+// the game header, the stage padding, the message line, the arrow pad and the
+// hint text. Scrolling is off, so anything past the fold is unreachable — the
+// circle has to give up the room instead.
+const CHROME_Y = 380;
+const MAX_SIZE = 420;
+const MIN_SIZE = 200;
+
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+function fitSize() {
+  if (typeof window === "undefined") return MAX_SIZE;
+  return clamp(Math.min(MAX_SIZE, window.innerWidth - 48, window.innerHeight - CHROME_Y), MIN_SIZE, MAX_SIZE);
+}
 const rnd = (n) => Math.floor(Math.random() * n);
 const fmt = (v) => (v >= 10 ? Math.round(v) : Math.round(v * 10) / 10);
 
@@ -56,7 +69,7 @@ export default function Drift({ onBack, onFinish, best }) {
   const timers = useRef([]);
   const eng = useRef(null);
 
-  const [size, setSize] = useState(() => Math.min(420, Math.max(240, (typeof window === "undefined" ? 420 : window.innerWidth) - 48)));
+  const [size, setSize] = useState(fitSize);
   const [trial, setTrial] = useState(0);
   const [coh, setCoh] = useState(START_COH);
   const [phase, setPhase] = useState("motion");
@@ -70,7 +83,7 @@ export default function Drift({ onBack, onFinish, best }) {
   };
 
   useEffect(() => {
-    const onResize = () => setSize(Math.min(420, Math.max(240, window.innerWidth - 48)));
+    const onResize = () => setSize(fitSize());
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
