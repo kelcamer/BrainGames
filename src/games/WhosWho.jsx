@@ -3,43 +3,46 @@ import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import { FACES } from "../data/faces.js";
 
-// Left temporal pole — learning and retrieving the names of specific people.
-// Meet a few made-up people (face, name, job, hometown), then two kinds of question:
-//   • face → name: "who is this?" — the proper-name retrieval step
-//   • name → fact: "Maya Brenner is the…"
-// Name lures are recombinations of the other people's first and last names, so
-// "I've seen Maya and I've seen Brenner" isn't enough: you have to know they go
-// together on the same person.
+// Left temporal pole — face-name association. Study faces paired with made-up
+// names, at your own pace, then name each face from four options. Lures are
+// recombinations of the other people's first and last names, so "I've seen Maya
+// and I've seen Brenner" isn't enough: you have to know they go on this face.
 //
-// Why this task: people with left temporal pole damage can recognise and
-// describe familiar people but can't retrieve their names (Damasio et al. 1996,
-// doi:10.1038/380499a0; Tranel 2009, doi:10.1080/02687030802586498). Left
-// temporal pole is the 1st percentile on the scan (range 0-6th after the
+// Why face -> name and nothing else: people with left temporal pole damage can
+// still recognise a familiar face and say what the person does — what they lose
+// is the name (Damasio et al. 1996, doi:10.1038/380499a0; Tranel 2009,
+// doi:10.1080/02687030802586498). An earlier version also quizzed job and
+// hometown, which is the part that survives, so it only diluted the drill.
+// Left temporal pole is the 1st percentile on the scan (range 0-6th after the
 // conversion uncertainty — low either way).
+//
+// Study is self-paced: a timer measured reading speed, not memory.
+// Starts at 5 faces; every run at 90%+ adds one, up to MAX_PEOPLE.
 //
 // Faces are AI-generated (thispersonnotexist.org, terms allow reuse), bundled in
 // public/faces by scripts/fetch_faces.py. First names are matched to each face.
 
 const FIRST = {
-  F: ["Maya", "Priya", "Ines", "Lena", "Sana", "Nadia", "Freya", "Yuki", "Amara", "Leila", "Clara", "Mirela"],
-  M: ["Theo", "Jonas", "Kofi", "Rafael", "Otto", "Emeka", "Diego", "Hugo", "Felix", "Mateo", "Anton", "Idris"],
+  F: [
+    "Maya", "Priya", "Ines", "Lena", "Sana", "Nadia", "Freya", "Yuki", "Amara", "Leila", "Clara",
+    "Mirela", "Tova", "Rosa", "Ada", "Zora", "Nell", "Esme", "Greta", "Hana", "Iris", "Petra",
+  ],
+  M: [
+    "Theo", "Jonas", "Kofi", "Rafael", "Otto", "Emeka", "Diego", "Hugo", "Felix", "Mateo", "Anton",
+    "Idris", "Bram", "Luca", "Omar", "Silas", "Tomas", "Ezra", "Viktor", "Kenji", "Nico", "Ruben",
+  ],
 };
 const LAST = [
   "Brenner", "Okafor", "Lindqvist", "Moreau", "Tanaka", "Castillo", "Novak", "Haddad", "Whitlock", "Ferreira",
   "Kowalski", "Mbeki", "Sorensen", "Delacroix", "Varga", "Ashford", "Reyes", "Holloway", "Ivanova", "Quinn",
-];
-const JOBS = [
-  "baker", "pilot", "dentist", "beekeeper", "locksmith", "violinist", "geologist", "florist", "lighthouse keeper", "tailor",
-  "zookeeper", "architect", "chef", "librarian", "surveyor", "glassblower", "ferry captain", "cartographer", "pastry judge", "rope maker",
-];
-const TOWNS = [
-  "Lisbon", "Oslo", "Denver", "Nairobi", "Osaka", "Tulsa", "Glasgow", "Perth", "Quito", "Tampere",
-  "Halifax", "Boise", "Cork", "Porto", "Hilo", "Reno", "Graz", "Bergen", "Cusco", "Split",
+  "Albescu", "Nakamura", "Petrov", "Dunmore", "Salazar", "Weller",
 ];
 
-const LADDER = [3, 4, 5, 6, 8, 10]; // people per run
-const PASS_PCT = 80;
-const STUDY_MS = 5000;
+const START_PEOPLE = 5;
+const MAX_PEOPLE = 20; // FIRST has 22 per sex and LAST 26, so a run never runs out of names
+const PASS_PCT = 90;
+const peopleFor = (level) => Math.min(START_PEOPLE + level, MAX_PEOPLE);
+const maxLevel = MAX_PEOPLE - START_PEOPLE;
 
 function shuffle(a) {
   const b = a.slice();
@@ -52,24 +55,18 @@ function shuffle(a) {
 const fullName = (p) => `${p.first} ${p.last}`;
 
 function buildRun(level) {
-  const n = LADDER[level];
+  const n = peopleFor(level);
   const faces = shuffle(FACES).slice(0, n);
   const firstPool = { F: shuffle(FIRST.F), M: shuffle(FIRST.M) };
   const lasts = shuffle(LAST).slice(0, n);
-  const jobs = shuffle(JOBS).slice(0, n);
-  const towns = shuffle(TOWNS).slice(0, n);
   const people = faces.map((face, i) => ({
     face: import.meta.env.BASE_URL + "faces/" + face.file,
     sex: face.sex,
     first: firstPool[face.sex].pop(),
     last: lasts[i],
-    job: jobs[i],
-    town: towns[i],
   }));
 
-  const questions = [];
-  people.forEach((p, i) => {
-    // face → name. Lures: recombined names first, then other people's names.
+  const questions = people.map((p, i) => {
     // Same-sex lures first — a first name that doesn't fit the face is too easy to rule out.
     const recombined = shuffle(
       people.flatMap((q, j) => (j === i ? [] : [`${p.first} ${q.last}`, ...(q.sex === p.sex ? [`${q.first} ${p.last}`] : [])]))
@@ -77,29 +74,13 @@ function buildRun(level) {
     const others = people.filter((_, j) => j !== i);
     const otherNames = [...shuffle(others.filter((q) => q.sex === p.sex)), ...shuffle(others.filter((q) => q.sex !== p.sex))].map(fullName);
     const lures = [...new Set([...recombined.slice(0, 2), ...otherNames])].slice(0, 3);
-    questions.push({
-      kind: "name",
-      face: p.face,
-      prompt: "Who is this?",
-      answer: fullName(p),
-      options: shuffle([fullName(p), ...lures]),
-    });
-    // name → fact (job or hometown, at random)
-    const askJob = Math.random() < 0.5;
-    const field = askJob ? "job" : "town";
-    const otherVals = shuffle(people.filter((_, j) => j !== i).map((q) => q[field])).slice(0, 3);
-    questions.push({
-      kind: "fact",
-      prompt: askJob ? `${fullName(p)} is the…` : `${fullName(p)} is from…`,
-      answer: p[field],
-      options: shuffle([p[field], ...otherVals]),
-    });
+    return { face: p.face, answer: fullName(p), options: shuffle([fullName(p), ...lures]) };
   });
   return { level, people, questions: shuffle(questions) };
 }
 
 export default function WhosWho({ onBack, onFinish, best }) {
-  const level = Math.min(best.level || 0, LADDER.length - 1);
+  const level = Math.min(best.level || 0, maxLevel);
   const run = useRef(buildRun(level));
   const timer = useRef(null);
   const answers = useRef([]);
@@ -114,20 +95,19 @@ export default function WhosWho({ onBack, onFinish, best }) {
     timer.current = setTimeout(fn, ms);
   }
 
-  function showPerson(i) {
-    if (i >= run.current.people.length) {
-      setPhase("pause");
-      later(() => setPhase("test"), 3000);
+  function nextPerson() {
+    if (studyIdx + 1 < run.current.people.length) {
+      setStudyIdx(studyIdx + 1);
       return;
     }
-    setStudyIdx(i);
-    later(() => showPerson(i + 1), STUDY_MS);
+    setPhase("pause");
+    later(() => setPhase("test"), 2500);
   }
 
   function answer(opt) {
     if (phase !== "test" || mark !== null) return;
     const q = run.current.questions[qIdx];
-    answers.current.push({ kind: q.kind, correct: opt === q.answer });
+    answers.current.push(opt === q.answer);
     setMark(opt);
     later(() => {
       setMark(null);
@@ -138,50 +118,42 @@ export default function WhosWho({ onBack, onFinish, best }) {
 
   function finish() {
     const r = run.current;
-    const a = answers.current;
-    const right = a.filter((x) => x.correct).length;
-    const names = a.filter((x) => x.kind === "name");
-    const namesRight = names.filter((x) => x.correct).length;
-    const pct = Math.round((right / a.length) * 100);
-    const namePct = Math.round((namesRight / names.length) * 100);
-    const leveledUp = pct >= PASS_PCT && r.level < LADDER.length - 1;
-    const xpEarned = 10 + right * 4 + namesRight * 4; // name recall is the target, so it counts double
+    const right = answers.current.filter(Boolean).length;
+    const pct = Math.round((right / answers.current.length) * 100);
+    const leveledUp = pct >= PASS_PCT && r.level < maxLevel;
+    const xpEarned = 10 + right * 8;
     onFinish({
       xpEarned,
       updateBest: (prev) => ({
         bestPct: Math.max(prev.bestPct, pct),
-        bestNamePct: Math.max(prev.bestNamePct, namePct),
+        bestNamePct: Math.max(prev.bestNamePct, pct),
         maxPeople: pct >= PASS_PCT ? Math.max(prev.maxPeople, r.people.length) : prev.maxPeople,
         level: leveledUp ? r.level + 1 : prev.level || 0,
         plays: prev.plays + 1,
       }),
     });
-    setSummary({ pct, namePct, namesRight, nameTotal: names.length, people: r.people.length, leveledUp, xpEarned, level: r.level });
+    setSummary({ pct, right, total: answers.current.length, leveledUp, xpEarned, people: r.people.length });
     setPhase("done");
   }
 
   function start() {
     clearTimeout(timer.current);
-    run.current = buildRun(Math.min(best.level || 0, LADDER.length - 1));
+    run.current = buildRun(Math.min(best.level || 0, maxLevel));
     answers.current = [];
     setSummary(null);
     setMark(null);
     setQIdx(0);
+    setStudyIdx(0);
     setPhase("study");
-    showPerson(0);
   }
 
-  useEffect(() => {
-    showPerson(0);
-    return () => clearTimeout(timer.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   useEffect(() => {
     const onKey = (ev) => {
-      if (phase === "study" && (ev.key === "Enter" || ev.key === " ")) {
+      if (phase === "study" && (ev.key === "Enter" || ev.key === " " || ev.key === "ArrowRight")) {
         ev.preventDefault();
-        showPerson(studyIdx + 1);
+        nextPerson();
       }
       if (phase !== "test") return;
       const n = Number(ev.key);
@@ -207,20 +179,20 @@ export default function WhosWho({ onBack, onFinish, best }) {
     <>
       <GameHeader color="var(--temporalpole)" regionLabel="Temporal Pole · Who's Who" title="Who's Who" onBack={onBack}>
         <span className="stat-pill">
-          <b className="mono">{LADDER[r.level]}</b> people
+          <b className="mono">{r.people.length}</b> faces
         </span>
         <span className="stat-pill">
-          Best names <b className="mono">{best.bestNamePct}%</b>
+          Most held <b className="mono">{best.maxPeople || "—"}</b>
         </span>
       </GameHeader>
       <div className="game-stage">
         {summary ? (
           <SessionSummary
             eyebrow="run complete"
-            bigNum={`${summary.namePct}% names`}
+            bigNum={`${summary.pct}%`}
             detail={
-              `named ${summary.namesRight} of ${summary.nameTotal} faces · ${summary.pct}% of all questions · +${summary.xpEarned} xp to Temporal Pole` +
-              (summary.leveledUp ? ` · level up: ${LADDER[summary.level + 1]} people next time` : ` · ${PASS_PCT}% overall to level up`)
+              `named ${summary.right} of ${summary.total} faces · +${summary.xpEarned} xp to Temporal Pole` +
+              (summary.leveledUp ? ` · level up: ${summary.people + 1} faces next time` : ` · ${PASS_PCT}% to add a face`)
             }
             onAgain={start}
             onBack={onBack}
@@ -230,15 +202,12 @@ export default function WhosWho({ onBack, onFinish, best }) {
             <div className="wh-card" key={studyIdx}>
               <img className="wh-face" src={person.face} alt="" />
               <div className="wh-name">{fullName(person)}</div>
-              <div className="wh-facts">
-                {person.job} · from {person.town}
-              </div>
             </div>
-            <button className="btn btn--ghost btn--sm" onClick={() => showPerson(studyIdx + 1)}>
-              Next person →
+            <button className="btn btn--primary" onClick={nextPerson}>
+              {studyIdx + 1 < r.people.length ? "Next person →" : "Start the test →"}
             </button>
             <p className="stage-msg">
-              Person {studyIdx + 1} of {r.people.length}. Link the face to the <b style={{ color: "var(--temporalpole)" }}>whole name</b>, then the job and town — the wrong answers mix up
+              Person {studyIdx + 1} of {r.people.length} · take as long as you like. Learn the <b style={{ color: "var(--temporalpole)" }}>whole name</b> — the wrong answers mix up
               first and last names.
             </p>
           </>
@@ -246,8 +215,8 @@ export default function WhosWho({ onBack, onFinish, best }) {
           <p className="stage-msg big">Now — who's who?</p>
         ) : q ? (
           <>
-            {q.face && <img className="wh-face wh-face--test" src={q.face} alt="" />}
-            <div className="wh-prompt">{q.prompt}</div>
+            <img className="wh-face wh-face--test" src={q.face} alt="" />
+            <div className="wh-prompt">Who is this?</div>
             <div className="wh-options">
               {q.options.map((opt, i) => (
                 <button key={opt} className={optClass(opt)} onClick={() => answer(opt)}>

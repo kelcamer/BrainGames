@@ -104,7 +104,7 @@ export const BADGES = [
   { id: "first-wherewasit", label: "First Where Was It? Run", test: (s) => s.best.wherewasit.plays >= 1 },
   { id: "wherewasit-12", label: "12 Objects Placed (80%+)", test: (s) => s.best.wherewasit.maxItems >= 12 },
   { id: "first-whoswho", label: "First Who's Who Run", test: (s) => s.best.whoswho.plays >= 1 },
-  { id: "whoswho-8", label: "Eight People Held (80%+)", test: (s) => s.best.whoswho.maxPeople >= 8 },
+  { id: "whoswho-10", label: "Ten Faces Named (90%+)", test: (s) => s.best.whoswho.maxPeople >= 10 },
   { id: "streak-3", label: "3-Day Streak", test: (s) => s.streak >= 3 },
   { id: "streak-7", label: "7-Day Streak", test: (s) => s.streak >= 7 },
   { id: "level-5", label: "Level 5, Any Region", test: (s) => Object.keys(s.xp).some((k) => levelFromXp(s.xp[k]) >= 5) },

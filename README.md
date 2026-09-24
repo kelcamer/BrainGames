@@ -15,7 +15,7 @@ This is a full React rewrite of an earlier single-file prototype, with
 |---|---|---|
 | Orbitofrontal Cortex | **Switchback** | Probabilistic reversal learning — the payoffs quietly swap; counts picks of the old winner before you switch |
 | Parahippocampal Cortex | **Where Was It?** | Object-in-context memory — which room was each object in, or was it never shown |
-| Temporal Pole | **Who's Who** | Person-name recall — made-up names, jobs and towns, with recombined-name lures |
+| Temporal Pole | **Who's Who** | Face–name association — self-paced study, then name each face; starts at 5 faces, +1 per 90% run |
 | Visual Cortex | **Flash Focus** | Rapid orientation discrimination — spot the odd-angled tile before it vanishes |
 | Visual Cortex | **Drift** | Random-dot motion coherence with a 2-down-1-up staircase — reports your global-motion threshold (V5/MT) |
 | Auditory Cortex | **Tone Trace** | Growing tone-sequence recall, plus a pitch-discrimination staircase |
