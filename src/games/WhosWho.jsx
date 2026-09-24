@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
+import { FACES } from "../data/faces.js";
 
 // Left temporal pole — learning and retrieving the names of specific people.
-// Meet a few made-up people (name, job, hometown), then two kinds of question:
-//   • about → name: "the pilot from Oslo is…" — the proper-name retrieval step
-//   • name → fact:  "Maya Brenner is the…"
+// Meet a few made-up people (face, name, job, hometown), then two kinds of question:
+//   • face → name: "who is this?" — the proper-name retrieval step
+//   • name → fact: "Maya Brenner is the…"
 // Name lures are recombinations of the other people's first and last names, so
 // "I've seen Maya and I've seen Brenner" isn't enough: you have to know they go
 // together on the same person.
@@ -14,12 +15,15 @@ import SessionSummary from "../components/SessionSummary.jsx";
 // describe familiar people but can't retrieve their names (Damasio et al. 1996,
 // doi:10.1038/380499a0; Tranel 2009, doi:10.1080/02687030802586498). Left
 // temporal pole is the 1st percentile on the scan (range 0-6th after the
-// conversion uncertainty — low either way). Text only, no faces.
+// conversion uncertainty — low either way).
+//
+// Faces are AI-generated (thispersonnotexist.org, terms allow reuse), bundled in
+// public/faces by scripts/fetch_faces.py. First names are matched to each face.
 
-const FIRST = [
-  "Maya", "Theo", "Priya", "Jonas", "Ines", "Kofi", "Lena", "Rafael", "Sana", "Otto",
-  "Nadia", "Emeka", "Freya", "Diego", "Yuki", "Hugo", "Amara", "Felix", "Leila", "Mateo",
-];
+const FIRST = {
+  F: ["Maya", "Priya", "Ines", "Lena", "Sana", "Nadia", "Freya", "Yuki", "Amara", "Leila", "Clara", "Mirela"],
+  M: ["Theo", "Jonas", "Kofi", "Rafael", "Otto", "Emeka", "Diego", "Hugo", "Felix", "Mateo", "Anton", "Idris"],
+};
 const LAST = [
   "Brenner", "Okafor", "Lindqvist", "Moreau", "Tanaka", "Castillo", "Novak", "Haddad", "Whitlock", "Ferreira",
   "Kowalski", "Mbeki", "Sorensen", "Delacroix", "Varga", "Ashford", "Reyes", "Holloway", "Ivanova", "Quinn",
@@ -49,23 +53,34 @@ const fullName = (p) => `${p.first} ${p.last}`;
 
 function buildRun(level) {
   const n = LADDER[level];
-  const firsts = shuffle(FIRST).slice(0, n);
+  const faces = shuffle(FACES).slice(0, n);
+  const firstPool = { F: shuffle(FIRST.F), M: shuffle(FIRST.M) };
   const lasts = shuffle(LAST).slice(0, n);
   const jobs = shuffle(JOBS).slice(0, n);
   const towns = shuffle(TOWNS).slice(0, n);
-  const people = firsts.map((first, i) => ({ first, last: lasts[i], job: jobs[i], town: towns[i] }));
+  const people = faces.map((face, i) => ({
+    face: import.meta.env.BASE_URL + "faces/" + face.file,
+    sex: face.sex,
+    first: firstPool[face.sex].pop(),
+    last: lasts[i],
+    job: jobs[i],
+    town: towns[i],
+  }));
 
   const questions = [];
   people.forEach((p, i) => {
-    // about → name. Lures: recombined names first, then other real people.
+    // face → name. Lures: recombined names first, then other people's names.
+    // Same-sex lures first — a first name that doesn't fit the face is too easy to rule out.
     const recombined = shuffle(
-      people.flatMap((q, j) => (j === i ? [] : [`${p.first} ${q.last}`, `${q.first} ${p.last}`]))
+      people.flatMap((q, j) => (j === i ? [] : [`${p.first} ${q.last}`, ...(q.sex === p.sex ? [`${q.first} ${p.last}`] : [])]))
     );
-    const others = shuffle(people.filter((_, j) => j !== i).map(fullName));
-    const lures = [...new Set([...recombined.slice(0, 2), ...others])].slice(0, 3);
+    const others = people.filter((_, j) => j !== i);
+    const otherNames = [...shuffle(others.filter((q) => q.sex === p.sex)), ...shuffle(others.filter((q) => q.sex !== p.sex))].map(fullName);
+    const lures = [...new Set([...recombined.slice(0, 2), ...otherNames])].slice(0, 3);
     questions.push({
       kind: "name",
-      prompt: `The ${p.job} from ${p.town} is…`,
+      face: p.face,
+      prompt: "Who is this?",
       answer: fullName(p),
       options: shuffle([fullName(p), ...lures]),
     });
@@ -204,7 +219,7 @@ export default function WhosWho({ onBack, onFinish, best }) {
             eyebrow="run complete"
             bigNum={`${summary.namePct}% names`}
             detail={
-              `named ${summary.namesRight} of ${summary.nameTotal} people from their job and town · ${summary.pct}% of all questions · +${summary.xpEarned} xp to Temporal Pole` +
+              `named ${summary.namesRight} of ${summary.nameTotal} faces · ${summary.pct}% of all questions · +${summary.xpEarned} xp to Temporal Pole` +
               (summary.leveledUp ? ` · level up: ${LADDER[summary.level + 1]} people next time` : ` · ${PASS_PCT}% overall to level up`)
             }
             onAgain={start}
@@ -213,6 +228,7 @@ export default function WhosWho({ onBack, onFinish, best }) {
         ) : phase === "study" && person ? (
           <>
             <div className="wh-card" key={studyIdx}>
+              <img className="wh-face" src={person.face} alt="" />
               <div className="wh-name">{fullName(person)}</div>
               <div className="wh-facts">
                 {person.job} · from {person.town}
@@ -222,14 +238,15 @@ export default function WhosWho({ onBack, onFinish, best }) {
               Next person →
             </button>
             <p className="stage-msg">
-              Person {studyIdx + 1} of {r.people.length}. Link the <b style={{ color: "var(--temporalpole)" }}>whole name</b> to the job and the town — the wrong answers mix up first and
-              last names.
+              Person {studyIdx + 1} of {r.people.length}. Link the face to the <b style={{ color: "var(--temporalpole)" }}>whole name</b>, then the job and town — the wrong answers mix up
+              first and last names.
             </p>
           </>
         ) : phase === "pause" ? (
           <p className="stage-msg big">Now — who's who?</p>
         ) : q ? (
           <>
+            {q.face && <img className="wh-face wh-face--test" src={q.face} alt="" />}
             <div className="wh-prompt">{q.prompt}</div>
             <div className="wh-options">
               {q.options.map((opt, i) => (

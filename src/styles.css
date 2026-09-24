@@ -587,6 +587,8 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 
 /* Who's Who (Temporal pole — person-name recall) */
 .wh-card { width: min(360px, 90vw); padding: 28px 18px; border-radius: 14px; border: 1px solid var(--temporalpole); background: var(--panel-2); text-align: center; animation: wh-in 0.25s ease; }
+.wh-face { display: block; width: min(168px, 44vw); aspect-ratio: 1; object-fit: cover; border-radius: 12px; margin: 0 auto 14px; border: 1px solid var(--line); }
+.wh-face--test { width: min(140px, 38vw); margin-bottom: 0; }
 .wh-name { font-family: "Big Shoulders Display", sans-serif; font-weight: 800; font-size: clamp(30px, 9vw, 42px); color: var(--ink); }
 .wh-facts { margin-top: 8px; font-size: 16px; color: var(--ink-dim); }
 .wh-prompt { font-size: 20px; text-align: center; max-width: 36ch; }

@@ -38,7 +38,7 @@ export const GAME_BLURB = {
   wherewasit:
     "Objects turn up one at a time, each inside a different room. Then: which room was each one in — or was it never shown? Remembering the context something happened in is the parahippocampal cortex's part of memory (Diana, Yonelinas & Ranganath 2007). Left parahippocampal is 5.8th percentile on the scan.",
   whoswho:
-    "Meet a few made-up people — a name, a job, a hometown. Then recall who's who, with lures built from the other people's first and last names. Retrieving the names of specific people is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
+    "Meet a few made-up people — a face, a name, a job, a hometown. Then put names to faces, with lures built from the other people's first and last names. Retrieving the names of specific people is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
   flashfocus:
     "Spot the odd-angled tile before it's gone. Trains rapid orientation discrimination — a core V1 function.",
   drift:
