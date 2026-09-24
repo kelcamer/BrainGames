@@ -1,64 +1,80 @@
-// Verbatim scan data — 30F, FreeSurfer + Potvin (2016) + CentileBrain (2024),
-// self-audited in three independent passes. Nothing here is summarized or rounded further.
+// Final audited scan record (24 Sep 2026). Age at scan 27, female. Siemens 1.5T,
+// T1 SPACE after contrast dye. Percentile = % of healthy women this age measured
+// smaller. Source of truth: ~/Downloads/KELSEY_BRAIN_NOTES_BLOCK_FINAL.txt.
+//
+// CentileBrain: SynthSeg / recon-all-clinical measurements converted to
+// FreeSurfer's scale, scored at age 27, corrected for the scanner offset measured
+// on 483 healthy women. Like-for-like: direct comparison with those 483 women
+// (AOMIC ID1000, ages 20-26), adjusted for head size and age.
+// Not used: Potvin 2016, the August FreeSurfer percentiles, cortical thickness.
 
+// [structure, CentileBrain L, CentileBrain R, like-for-like L, like-for-like R]
 export const SUBCORTICAL_VOLUME = [
-  ["Thalamus", "10,007.8 mm³", "99.93rd", "9,571.0 mm³", "99.98th"],
-  ["Caudate", "4,097.3 mm³", "75.3rd", "3,883.3 mm³", "42.2nd"],
-  ["Putamen", "4,683.3 mm³", "3.9th", "4,324.9 mm³", "0.7th"],
-  ["Pallidum", "1,944.1 mm³", "42.5th", "1,983.7 mm³", "68.8th"],
-  ["Hippocampus", "4,228.9 mm³", "26.0th", "4,250.2 mm³", "19.6th"],
-  ["Amygdala", "1,768.0 mm³", "69.2nd", "1,665.6 mm³", "22.8th"],
-  ["Nucleus accumbens", "531.2 mm³", "25.4th", "536.5 mm³", "10.1th"],
-  ["Ventral DC (Potvin only)", "4,523.8 mm³", "—", "4,925.4 mm³", "—"],
-  ["Brainstem, whole (Potvin only)", "23,530.6 mm³", "—", "", ""],
+  ["Thalamus", "92.3", "96.6", "95.1", "96.1"],
+  ["Caudate", "80.5", "82", "72.9", "74.1"],
+  ["Putamen", "79.7", "87.9", "81.2", "89.5"],
+  ["Pallidum (low confidence)", "24.1", "41.9", "8.8", "26.3"],
+  ["Hippocampus", "56.4", "75.1", "50.7", "72.9"],
+  ["Amygdala", "39.9", "60.6", "26.3", "57.9"],
+  ["Accumbens", "40.9", "40.3", "43.2", "43.1"],
+  ["Ventral DC", "—", "—", "68.5", "52.7"],
+  ["Brainstem (whole)", "—", "—", "71.3", ""],
 ];
 
-export const CORTICAL_THICKNESS = [
-  ["Superior frontal", "2.98mm", "81.3rd", "2.99mm", "93.8th"],
-  ["Rostral middle frontal", "2.81mm", "~100th", "2.70mm", "~100th"],
-  ["Caudal middle frontal", "2.56mm", "8.0th", "2.77mm", "85.5th"],
-  ["Pars opercularis (Broca's)", "2.84mm", "91.0th", "2.93mm", "97.7th"],
-  ["Pars triangularis (Broca's)", "2.79mm", "97.2nd", "2.92mm", "99.9th"],
-  ["Pars orbitalis", "3.24mm", "99.6th", "3.34mm", "99.9th"],
-  ["Lateral orbitofrontal", "3.11mm", "~100th", "3.07mm", "99.9th"],
-  ["Medial orbitofrontal", "2.95mm", "~100th", "2.83mm", "99.5th"],
-  ["Frontal pole", "3.26mm", "94.6th", "3.40mm", "98.9th"],
-  ["Fusiform gyrus", "2.71mm", "38.9th", "2.43mm", "0.02nd"],
-  ["Pericalcarine (visual)", "1.22mm", "0.01st", "1.50mm", "13.1th"],
-  ["Cuneus (visual)", "1.48mm", "0.02nd", "1.71mm", "3.2nd"],
-  ["Lateral occipital (visual)", "1.98mm", "0.17th", "2.08mm", "0.63rd"],
-  ["Lingual gyrus (visual)", "1.78mm", "0.41st", "1.78mm", "0.21st"],
-  ["Transverse temporal (auditory)", "2.23mm", "6.6th", "2.12mm", "1.8th"],
-  ["Middle temporal", "3.21mm", "99.37th", "3.26mm", "99.80th"],
-  ["Superior temporal", "2.92mm", "58.88th", "3.06mm", "92.26th"],
-  ["Inferior temporal", "2.90mm", "80.43rd", "3.03mm", "93.34th"],
-  ["Bankssts", "2.77mm", "96.10th", "2.96mm", "98.42nd"],
-  ["Inferior parietal", "2.70mm", "98.24th", "2.84mm", "99.91st"],
-  ["Isthmus cingulate", "2.43mm", "39.53rd", "2.24mm", "10.55th"],
-  ["Insula", "3.05mm", "46.8th", "3.21mm", "84.6th"],
-];
-
+// ⚠ = conversion only accurate to ±11-25% for this region
 export const CORTICAL_SURFACE_AREA = [
-  ["Superior frontal", "7,326mm²", "42.4th", "6,544mm²", "8.2nd"],
-  ["Rostral middle frontal", "5,347mm²", "12.2nd", "4,980mm²", "1.2nd"],
-  ["Caudal middle frontal", "2,111mm²", "17.9th", "2,114mm²", "37.3rd"],
-  ["Pars opercularis", "1,623mm²", "41.1st", "1,400mm²", "51.7th"],
-  ["Pars triangularis", "1,248mm²", "29.8th", "1,530mm²", "45.9th"],
-  ["Pars orbitalis", "674mm²", "48.1st", "684mm²", "3.8th"],
-  ["Lateral orbitofrontal", "2,394mm²", "3.0th", "2,507mm²", "22.5th"],
-  ["Medial orbitofrontal", "1,783mm²", "20.6th", "1,956mm²", "38.3rd"],
-  ["Frontal pole", "279mm²", "89.2nd", "302mm²", "37.3rd"],
-  ["Fusiform gyrus", "3,326mm²", "61.4th", "3,153mm²", "47.7th"],
-  ["Pericalcarine (visual)", "932mm²", "0.8th", "1,622mm²", "58.5th"],
-  ["Cuneus (visual)", "1,170mm²", "1.2nd", "1,710mm²", "71.3rd"],
-  ["Transverse temporal (auditory)", "636mm²", "99.9th", "373mm²", "76.2nd"],
-  ["Isthmus cingulate", "—", "98.7th", "—", "99.99th"],
-  ["Insula", "2,793mm²", "~100th", "2,341mm²", "71.0th"],
+  ["Banks of superior temporal sulcus", "65.2", "32.1", "65.6", "35.8"],
+  ["Caudal anterior cingulate", "83.1", "47.8", "78.2", "50"],
+  ["Caudal middle frontal", "14.2", "48.5", "20.2", "52.7"],
+  ["Cuneus", "70.1", "92.4", "65.9", "87.2"],
+  ["Entorhinal ⚠", "15.7", "30.1", "23.2", "30.5"],
+  ["Frontal pole ⚠", "40.9", "36.3", "41.2", "37.4"],
+  ["Fusiform", "44", "65.3", "48.2", "64.7"],
+  ["Inferior parietal", "67.6", "68.6", "67.3", "67.1"],
+  ["Inferior temporal", "40.6", "82.5", "49", "80.2"],
+  ["Insula", "85.5", "48.5", "79.1", "48.2"],
+  ["Isthmus cingulate", "77.2", "98.5", "73.9", "97.2"],
+  ["Lateral occipital", "34.8", "72.6", "40.7", "69.1"],
+  ["Lateral orbitofrontal", "12.4", "39.4", "19.8", "44.2"],
+  ["Lingual", "40.6", "58", "42.6", "59.6"],
+  ["Medial orbitofrontal", "16", "56.4", "19.7", "58.6"],
+  ["Middle temporal", "37.4", "52", "45", "56.3"],
+  ["Paracentral", "62.6", "85.2", "65.2", "86.1"],
+  ["Parahippocampal (R ⚠)", "5.8", "50.1", "5", "50.3"],
+  ["Pars opercularis (Broca's)", "39", "72.7", "44", "71.7"],
+  ["Pars orbitalis", "18.6", "8.3", "22.3", "12"],
+  ["Pars triangularis (Broca's)", "34.7", "54.7", "42", "56.5"],
+  ["Pericalcarine, primary visual (L ⚠)", "97", "84.8", "95.4", "82"],
+  ["Postcentral (touch)", "18.1", "43.4", "28.7", "48.6"],
+  ["Posterior cingulate", "56.8", "20", "57.5", "26.7"],
+  ["Precentral (motor)", "19.2", "34.8", "28.2", "41.5"],
+  ["Precuneus", "66.5", "59.4", "62.2", "57.7"],
+  ["Rostral anterior cingulate", "13.8", "72.5", "19.8", "74.2"],
+  ["Rostral middle frontal", "63.7", "22.6", "63.2", "34.4"],
+  ["Superior frontal", "34.8", "24.4", "45.7", "35.7"],
+  ["Superior parietal", "86.4", "31.3", "82.2", "37.9"],
+  ["Superior temporal", "24.9", "53.5", "32.4", "58.6"],
+  ["Supramarginal", "96.6", "50.8", "91.5", "53.6"],
+  ["Temporal pole ⚠", "1", "50.8", "0.6", "48.6"],
+  ["Transverse temporal (Heschl's, auditory)", "60.4", "62.1", "63.1", "65.5"],
 ];
 
-export const DISCARDED_ARTIFACTS = [
-  ["Precentral gyrus (thickness)", "0.0000004th", "0.0000004th", "boundary-ambiguity artifact"],
-  ["Paracentral lobule (thickness)", "0.00th", "0.00th", "same artifact family"],
-  ["Postcentral gyrus (thickness)", "0.97th", "0.53rd", "same artifact family"],
-  ["Entorhinal cortex (area asymmetry)", "28.1th", "95.6th", "unreliable region, no matching thickness asymmetry"],
+// volBrain gives no percentiles here — only its own inside/outside-normal verdict,
+// and only findings flagged in both of its reports are kept.
+export const VOLBRAIN_BOTH_REPORTS = [
+  ["Left cerebellar white matter", "below normal"],
+  ["Postcentral gyrus (total and left)", "below normal"],
+  ["Right superior occipital gyrus", "above normal"],
+  ["Cerebellum", "right side bigger"],
+  ["Ventral DC", "right side bigger"],
+  ["Precentral gyrus, medial segment", "right side bigger"],
+];
+
+export const WITHDRAWN = [
+  ["Thalamus 99.9th, putamen 0.7th / 3.9th", "August FreeSurfer — the contrast dye made these nuclei look like white matter"],
+  ["Left insula area 99.96th", "scanner offset — now 85.5th"],
+  ["Left Heschl's area 99.9th", "scanner offset — now 60th"],
+  ["volBrain gray matter 94th", "flipped to 14th in the second report"],
+  ["All cortical thickness percentiles", "not measurable on this scan type"],
+  ["All Potvin 2016 percentiles", "fails on healthy controls"],
 ];

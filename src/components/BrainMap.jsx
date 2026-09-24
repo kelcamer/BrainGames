@@ -1,41 +1,36 @@
+// The four target regions on the audited scan (24 Sep 2026), all surface area.
+// Front of the brain is on the right of the drawing.
 const NODES = [
-  { region: "visual", cx: 95, cy: 150, delay: "0s" },
-  { region: "auditory", cx: 150, cy: 205, delay: "-.6s" },
-  { region: "motor", cx: 230, cy: 138, delay: "-1.2s" },
-  { region: "wordform", cx: 172, cy: 228, delay: "-1.8s" },
-  { region: "hippocampus", cx: 128, cy: 172, delay: "-2.4s" },
+  { region: "orbitofrontal", cx: 306, cy: 186, delay: "0s" },
+  { region: "temporalpole", cx: 262, cy: 222, delay: "-.6s" },
+  { region: "scene", cx: 180, cy: 214, delay: "-1.2s" },
+  { region: "motor", cx: 214, cy: 60, delay: "-1.8s" },
 ];
 
 const CALLOUTS = [
   {
-    region: "visual",
-    title: "Visual cortex",
-    stat: "L pericalcarine · 0.01st percentile thickness · 0.8th percentile surface area",
-    body: "Primary sight processing (pericalcarine, cuneus, lateral occipital, lingual gyrus) is thin across the board. Left pericalcarine is low on both thickness and surface area — the one place where the reliable measure (area) agrees, not just the artifact-prone thickness.",
+    region: "temporalpole",
+    title: "Temporal pole",
+    stat: "Left 1st percentile · surface area (likely range 0–6th)",
+    body: "Best known for retrieving the names of specific people — damage here leaves people able to describe someone but not name them. Trained by Who's Who.",
   },
   {
-    region: "auditory",
-    title: "Auditory cortex",
-    stat: "1.8th percentile thickness (R) · 99.9th percentile surface area (L)",
-    body: "Heschl's gyrus, where raw sound first gets processed, is thin on both sides — but its surface area is enormous (left 99.9th percentile). Thin and wide, not simply small.",
+    region: "scene",
+    title: "Parahippocampal cortex",
+    stat: "Left 5.8th percentile · surface area (483 women: 5th)",
+    body: "Holds the context around a memory — where you were when something happened, and landmarks. Trained by Where Was It? and Wayfinder.",
+  },
+  {
+    region: "orbitofrontal",
+    title: "Orbitofrontal cortex",
+    stat: "Left lateral 12.4th · left medial 16th · pars orbitalis R 8.3rd / L 18.6th",
+    body: "Tracks whether a choice is still paying off and drives the switch when it stops. Trained by Switchback.",
   },
   {
     region: "motor",
-    title: "Putamen",
-    stat: "0.7th percentile · right putamen volume",
-    body: "The striatal structure behind motor sequencing and habit automation is small on both sides.",
-  },
-  {
-    region: "wordform",
-    title: "Word-form area",
-    stat: "0.02nd percentile · right fusiform thickness",
-    body: "Right fusiform is thin, not small — its surface area is average (47.7th). Ties to rapid visual word/face recognition.",
-  },
-  {
-    region: "hippocampus",
-    title: "Hippocampus",
-    stat: "19.6th percentile · right hippocampus volume",
-    body: "Not extreme like the four above — but it's your weakest structure outside them (left 26.0th). Handles episodic and spatial memory encoding.",
+    title: "Motor cortex",
+    stat: "Left precentral 19.2nd · left caudal middle frontal 14.2nd",
+    body: "Sends movement commands and plans movement sequences. Trained by Motor Chain and Rhythm Recall.",
   },
 ];
 
@@ -44,7 +39,7 @@ export default function BrainMap() {
     <div className="scope-section">
       <div className="scope-svg-wrap">
         <div className="scope-sweep" aria-hidden="true" />
-        <svg viewBox="0 0 400 300" width="100%" height="auto" role="img" aria-label="Stylized brain diagram with five highlighted regions">
+        <svg viewBox="0 0 400 300" width="100%" height="auto" role="img" aria-label="Stylized brain diagram with four highlighted regions">
           <path
             d="M100,30 C150,6 230,6 275,32 C318,54 350,88 344,128 C362,150 366,180 344,196 C350,216 334,226 313,220 C304,246 278,256 253,250 C244,270 213,276 193,260 C168,268 142,258 132,240 C98,236 72,214 68,184 C48,174 44,148 60,128 C44,108 54,82 80,63 C90,44 106,44 100,30 Z"
             fill="var(--panel-2)"

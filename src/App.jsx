@@ -81,9 +81,9 @@ export default function App() {
 
       <footer>
         <p className="disclaimer">
-          This is a personal engagement tool, not a diagnostic or medical device. It gamifies functions <em>associated</em> with each region (visual discrimination, pitch discrimination, motor
-          sequencing, rapid word recognition, spatial/episodic memory) — practicing a function may sharpen it, but that isn't the same as verified structural change to brain tissue. Percentiles
-          are from a FreeSurfer + Potvin (2016) + CentileBrain (2024) normative comparison, self-audited in three passes. Progress is stored only in this browser's local storage.
+          This is a personal engagement tool, not a diagnostic or medical device. It gamifies functions <em>associated</em> with each region — practicing a function may sharpen it, but
+          that isn't the same as verified structural change to brain tissue. Percentiles are from the audited 24 Sep 2026 record: CentileBrain at age 27, cross-checked against 483
+          healthy women. Progress is stored only in this browser's local storage.
         </p>
         <div className="reset-row">
           <button className="btn btn--ghost btn--sm" onClick={() => setResetOpen(true)}>

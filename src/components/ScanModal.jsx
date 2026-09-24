@@ -1,4 +1,4 @@
-import { SUBCORTICAL_VOLUME, CORTICAL_THICKNESS, CORTICAL_SURFACE_AREA, DISCARDED_ARTIFACTS } from "../data/scanData.js";
+import { SUBCORTICAL_VOLUME, CORTICAL_SURFACE_AREA, VOLBRAIN_BOTH_REPORTS, WITHDRAWN } from "../data/scanData.js";
 
 function Table({ head, rows, pctlCols = [2, 4] }) {
   return (
@@ -38,35 +38,40 @@ export default function ScanModal({ open, onClose }) {
             Close
           </button>
         </div>
-        <p style={{ fontSize: 12 }}>30F · FreeSurfer + Potvin 2016 + CentileBrain 2024 · audited by 3 independent verification passes.</p>
+        <p style={{ fontSize: 12 }}>
+          Age 27 · female · percentiles vs healthy women this age · CentileBrain, cross-checked against 483 healthy women measured the same way · audited 24 Sep 2026.
+        </p>
 
         <div className="scan-section">
-          <h4>Subcortical volume</h4>
-          <Table head={["Structure", "Left", "%ile L", "Right", "%ile R"]} rows={SUBCORTICAL_VOLUME} />
+          <h4>Subcortical volume (percentile)</h4>
+          <Table head={["Structure", "CentileBrain L", "CentileBrain R", "483 women L", "483 women R"]} rows={SUBCORTICAL_VOLUME} pctlCols={[1, 2]} />
         </div>
 
         <div className="scan-section">
-          <h4>Cortical thickness</h4>
-          <Table head={["Region", "Left", "%ile L", "Right", "%ile R"]} rows={CORTICAL_THICKNESS} />
+          <h4>Cortical surface area (percentile) · ⚠ = conversion only good to ±11–25%</h4>
+          <Table head={["Region", "CentileBrain L", "CentileBrain R", "483 women L", "483 women R"]} rows={CORTICAL_SURFACE_AREA} pctlCols={[1, 2]} />
         </div>
 
         <div className="scan-section">
-          <h4>Cortical surface area</h4>
-          <Table head={["Region", "Left", "%ile L", "Right", "%ile R"]} rows={CORTICAL_SURFACE_AREA} />
+          <h4>volBrain — flagged in both reports</h4>
+          <Table head={["Region", "Verdict"]} rows={VOLBRAIN_BOTH_REPORTS} pctlCols={[1]} />
         </div>
 
         <div className="scan-section">
-          <h4>Discarded as artifacts</h4>
-          <Table head={["Region", "%ile L", "%ile R", "Reason"]} rows={DISCARDED_ARTIFACTS} pctlCols={[1, 2]} />
+          <h4>Withdrawn</h4>
+          <Table head={["Old number", "Why"]} rows={WITHDRAWN} pctlCols={[]} />
         </div>
 
         <div className="note-box">
-          <strong>Overall pattern:</strong> thick, extreme association cortex (frontal + lateral temporal + inferior parietal) alongside thin primary sensory cortex (occipital). Matches the
-          published sensorimotor-to-association cortical axis — a coherent whole-brain pattern, not scattered noise.
+          <strong>Cortical thickness:</strong> not measurable on this scan type (post-contrast T1 SPACE), so no thickness percentiles are listed.
           <br />
           <br />
-          <strong>Best-replicated (verified 3+ ways):</strong> (1) thalamus — extreme, two normative datasets + a dedicated re-verification tool; (2) left auditory/insular region — found 3
-          independent ways; (3) widespread association-cortex thickening across frontal, temporal, and parietal lobes.
+          <strong>Main patterns:</strong> (1) thalamus high — the most solid finding; (2) putamen and caudate above average; (3) left parietal / language-side surface large —
+          supramarginal, superior parietal, insula; (4) visual cortex surface large — pericalcarine, cuneus; (5) left medial temporal and orbitofrontal surface small —
+          parahippocampal, entorhinal, temporal pole, orbitofrontal; (6) left touch cortex (postcentral) small — CentileBrain plus both volBrain reports.
+          <br />
+          <br />
+          <strong>What would give certainty:</strong> one standard 3D T1 MPRAGE (no dye, ideally 3T, 1 mm) through standard FreeSurfer and CentileBrain.
         </div>
       </div>
     </div>
