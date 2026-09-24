@@ -1,8 +1,11 @@
 name: Deploy to GitHub Pages
 
+# Pages hosts one site, so every deploy publishes both builds together:
+# main at /BrainGames/, and the preview branch (when it exists) at
+# /BrainGames/preview/ for trying a change live before it is merged.
 on:
   push:
-    branches: [main]
+    branches: [main, preview]
   workflow_dispatch:
 
 permissions:
@@ -19,16 +22,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site-main
+      - id: preview
+        uses: actions/checkout@v4
+        continue-on-error: true # no preview branch → publish main alone
+        with:
+          ref: preview
+          path: site-preview
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run build
+          cache-dependency-path: site-main/package-lock.json
+      - run: npm ci && npm run build
+        working-directory: site-main
+      - if: steps.preview.outcome == 'success'
+        run: |
+          npm ci
+          npx vite build --base /BrainGames/preview/
+          cp -r dist ../site-main/dist/preview
+        working-directory: site-preview
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: site-main/dist
 
   deploy:
     needs: build
