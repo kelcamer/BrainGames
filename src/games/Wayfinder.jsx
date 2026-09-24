@@ -420,7 +420,7 @@ export default function Wayfinder({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--hippocampus)" regionLabel="Hippocampus · Wayfinder" title="Wayfinder" onBack={onBack}>
+      <GameHeader color="var(--scene)" regionLabel="Parahippocampal Cortex · Wayfinder" title="Wayfinder" onBack={onBack}>
         <span className="stat-pill">
           City <b className="mono">{g ? `${g.cityName} ${g.rows}×${g.cols}` : "—"}</b>
         </span>

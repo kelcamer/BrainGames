@@ -158,7 +158,7 @@ export default function MotorChain({ onBack, onFinish }) {
 
   return (
     <>
-      <GameHeader color="var(--motor)" regionLabel="Putamen · Motor Chain" title="Motor Chain" onBack={onBack}>
+      <GameHeader color="var(--motor)" regionLabel="Motor Cortex · Motor Chain" title="Motor Chain" onBack={onBack}>
         <span className="stat-pill">
           Sequence{" "}
           <b className="mono">
@@ -177,7 +177,7 @@ export default function MotorChain({ onBack, onFinish }) {
           <SessionSummary
             eyebrow="chain complete"
             bigNum={`${summary.gainPct > 0 ? "+" : ""}${summary.gainPct}%`}
-            detail={`faster on the last rep than the first · reached sequence length ${summary.seqLen} · +${summary.xpEarned} xp to Putamen`}
+            detail={`faster on the last rep than the first · reached sequence length ${summary.seqLen} · +${summary.xpEarned} xp to Motor Cortex`}
             onAgain={start}
             againLabel="Run Again"
             onBack={onBack}

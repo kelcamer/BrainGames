@@ -4,9 +4,13 @@
 export const XP_PER_LEVEL = 150;
 
 export const REGIONS = {
+  // The three regions the audited scan (24 Sep 2026) puts lowest on surface area.
+  orbitofrontal: { name: "Orbitofrontal Cortex", color: "var(--orbitofrontal)", game: "switchback", label: "SWITCHBACK" },
+  scene: { name: "Parahippocampal Cortex", color: "var(--scene)", game: "wherewasit", label: "WHERE WAS IT?" },
+  temporalpole: { name: "Temporal Pole", color: "var(--temporalpole)", game: "whoswho", label: "WHO'S WHO" },
   visual: { name: "Visual Cortex", color: "var(--visual)", game: "flashfocus", label: "FLASH FOCUS" },
   auditory: { name: "Auditory Cortex", color: "var(--auditory)", game: "tonetrace", label: "TONE TRACE" },
-  motor: { name: "Putamen (Motor)", color: "var(--motor)", game: "motorchain", label: "MOTOR CHAIN" },
+  motor: { name: "Motor Cortex", color: "var(--motor)", game: "motorchain", label: "MOTOR CHAIN" },
   wordform: { name: "Word-Form Area", color: "var(--wordform)", game: "wordblitz", label: "WORD BLITZ" },
   hippocampus: { name: "Hippocampus", color: "var(--hippocampus)", game: "tracemap", label: "CARD CATALOG" },
   parietal: { name: "Parietal Cortex Network", color: "var(--parietal)", game: "blockbuilder", label: "BLOCK BUILDER" },
@@ -18,7 +22,7 @@ export const EXTRA_GAMES = [
   { regionKey: "visual", gameId: "drift", title: "DRIFT" },
   { regionKey: "hippocampus", gameId: "tracemaphard", title: "TRACE MAP" },
   { regionKey: "hippocampus", gameId: "constellation", title: "CONSTELLATION" },
-  { regionKey: "hippocampus", gameId: "wayfinder", title: "WAYFINDER" },
+  { regionKey: "scene", gameId: "wayfinder", title: "WAYFINDER" },
   { regionKey: "motor", gameId: "rhythmrecall", title: "RHYTHM RECALL" },
   { regionKey: "parietal", gameId: "magicnumber", title: "MAGIC NUMBER" },
   { regionKey: "executive", gameId: "nback", title: "N-BACK" },
@@ -29,20 +33,26 @@ export const EXTRA_GAMES = [
 ];
 
 export const GAME_BLURB = {
+  switchback:
+    "Two cards. One pays off most of the time, the other rarely — but not always, so a single loss proves nothing. Once you've locked on, the payoffs quietly swap. Notice and switch. This is probabilistic reversal learning, the standard orbitofrontal task: people with orbitofrontal damage keep picking the old winner (Fellows & Farah 2003). Left lateral orbitofrontal is 12th percentile on the scan.",
+  wherewasit:
+    "Objects turn up one at a time, each inside a different room. Then: which room was each one in — or was it never shown? Remembering the context something happened in is the parahippocampal cortex's part of memory (Diana, Yonelinas & Ranganath 2007). Left parahippocampal is 5.8th percentile on the scan.",
+  whoswho:
+    "Meet a few made-up people — a name, a job, a hometown. Then recall who's who, with lures built from the other people's first and last names. Retrieving the names of specific people is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
   flashfocus:
     "Spot the odd-angled tile before it's gone. Trains rapid orientation discrimination — a core V1 function.",
   drift:
-    "A cloud of dots — some drifting together, the rest scattering at random. Call the drift direction. Every right call makes the drift fainter, so the run converges on your motion-coherence threshold. Read it against your own past runs — lab studies quote 5-15% on calibrated screens with an easier noise type, and this one re-rolls every dot every frame so none can be tracked. Global motion is pooled in V5/MT off pericalcarine and lateral-occipital input — the 0.01st and 0.17th percentile tissue on the scan, and the one thing no other drill here touches.",
+    "A cloud of dots — some drifting together, the rest scattering at random. Call the drift direction. Every right call makes the drift fainter, so the run converges on your motion-coherence threshold. Read it against your own past runs — lab studies quote 5-15% on calibrated screens with an easier noise type, and this one re-rolls every dot every frame so none can be tracked. Global motion is pooled in V5/MT off pericalcarine and lateral-occipital input — the one thing no other drill here touches. Those regions measure large on the audited scan (left pericalcarine 97th), so this plays to a strength.",
   tonetrace: "Repeat growing tone sequences, or call the higher pitch. Trains raw auditory discrimination.",
   motorchain:
-    "Learn a directional sequence and watch your reaction time drop with reps — literal procedural learning.",
+    "Learn a directional sequence and watch your reaction time drop with reps — literal procedural learning. Left precentral (motor) cortex is 19th percentile on the scan.",
   wordblitz: "Catch a flashed word, or beat the ink-color Stroop trap. Trains rapid visual word-form recognition.",
   tracemap:
     "Watch shapes appear on a grid, hold them through a delay, then place them back from memory. Trains hippocampal spatial/episodic memory.",
   tracemaphard:
     "Identical blank tiles light up in a growing sequence — no shape, no color, nothing to whisper to yourself. This is the real Corsi block-tapping test, the clinical standard for spatial memory span.",
   rhythmrecall:
-    "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo up. Beat-based timing runs through the putamen (Grahn & Brett 2007) — the weakest structure on the scan at the 0.7th percentile — so this counts as a motor drill, not a memory one.",
+    "A Simon-says drum kit. I play a beat, you play it back, and every round adds one more hit and nudges the tempo up. Beat-based timing runs through the putamen and motor cortex (Grahn & Brett 2007), so this counts as a motor drill, not a memory one. Left precentral (motor) cortex is 19th percentile on the scan.",
   constellation:
     "A set of squares flashes at once — pick the same set back. Get it right and the count climbs by one and the grid grows a size. A simultaneous visuospatial span test, not a sequence — closer to change-detection capacity tasks than Corsi.",
   magicnumber:
@@ -60,7 +70,7 @@ export const GAME_BLURB = {
   ebbflow:
     "A leaf points one way and drifts another. Green leaf: press where it points. Orange leaf: press where it's drifting. The rule flips with the colour and the two directions often disagree — the Ebb-and-Flow set-shifting task, cognitive flexibility plus response inhibition.",
   wayfinder:
-    "Explore a landmark map with no overview, then make deliveries and call bearings entirely from memory. No minimap, no route arrow — the same allocentric map-building that grew London taxi drivers' hippocampi. The closest drill here to what actually moves the needle.",
+    "Explore a landmark map with no overview, then make deliveries and call bearings entirely from memory. No minimap, no route arrow — the same allocentric map-building that grew London taxi drivers' hippocampi. Landmarks are parahippocampal territory (Epstein & Kanwisher 1998), so this now feeds the Parahippocampal pool.",
   openloops:
     "Sort a stream of items while holding delayed intentions — \"when you see the fox, press ⭐.\" The cue appears trials later, through interference, with the reminder hidden. Prospective memory, the rostral-PFC system behind \"sure, I'll do it\" → forgot.",
 };
@@ -68,6 +78,9 @@ export const GAME_BLURB = {
 // Which region's XP pool each drill feeds — derived once so App.jsx doesn't
 // need a parallel switch statement.
 export const GAME_REGION = {
+  switchback: "orbitofrontal",
+  wherewasit: "scene",
+  whoswho: "temporalpole",
   flashfocus: "visual",
   drift: "visual",
   tonetrace: "auditory",
@@ -84,7 +97,7 @@ export const GAME_REGION = {
   taskswitch: "executive",
   wordrush: "executive",
   ebbflow: "executive",
-  wayfinder: "hippocampus",
+  wayfinder: "scene",
   openloops: "executive",
 };
 

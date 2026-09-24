@@ -211,7 +211,7 @@ export default function RhythmRecall({ onBack, onFinish, best }) {
 
   return (
     <>
-      <GameHeader color="var(--motor)" regionLabel="Putamen (Motor) · Rhythm Recall" title="Rhythm Recall" onBack={onBack}>
+      <GameHeader color="var(--motor)" regionLabel="Motor Cortex · Rhythm Recall" title="Rhythm Recall" onBack={onBack}>
         <span className="stat-pill">
           Best round <b className="mono">{best.maxRound}</b>
         </span>
