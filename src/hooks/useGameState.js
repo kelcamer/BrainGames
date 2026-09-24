@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { levelFromXp } from "../data/regions.js";
+import { storageKey } from "../storage.js";
 
-const STORAGE_KEY = "cortexConsoleV1";
+const STORAGE_KEY = storageKey("cortexConsoleV1");
 
 function defaultState() {
   return {
@@ -153,7 +154,7 @@ export function useGameState() {
   const resetAll = useCallback(() => {
     setState(defaultState());
     try {
-      localStorage.removeItem("cortexConsoleWayfinderV1"); // Wayfinder's saved cities
+      localStorage.removeItem(storageKey("cortexConsoleWayfinderV1")); // Wayfinder's saved cities
     } catch {
       /* storage unavailable — nothing was persisted to clear */
     }

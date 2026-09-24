@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
 import { useNoScroll } from "../hooks/useNoScroll.js";
+import { storageKey } from "../storage.js";
 
 // Difficulty ladder — grid grows as you prove yourself, so the first runs are
 // gentle and the map load ramps up only once you can handle it.
@@ -30,7 +31,7 @@ const LANDMARKS = [
 
 // Cities you've already walked, newest first, kept across reloads. Re-studying a
 // city you half-know is the actual hippocampal exercise, so they're worth saving.
-const CITY_KEY = "cortexConsoleWayfinderV1";
+const CITY_KEY = storageKey("cortexConsoleWayfinderV1");
 const MAX_CITIES = 12;
 
 const cityId = (name, level, grid) => `${name}|${level}|${grid.map((p) => p.emoji).join("")}`;
