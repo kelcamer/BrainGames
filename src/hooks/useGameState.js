@@ -6,7 +6,7 @@ const STORAGE_KEY = storageKey("cortexConsoleV1");
 
 function defaultState() {
   return {
-    xp: { visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
+    xp: { orbitofrontal: 0, scene: 0, temporalpole: 0, visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
     best: {
       flashfocus: { accuracy: 0, minExposure: 9999, plays: 0 },
       drift: { bestThreshold: 999, minCoherence: 999, accuracy: 0, plays: 0 },
@@ -26,6 +26,9 @@ function defaultState() {
       ebbflow: { bestScore: 0, accuracy: 0, plays: 0 },
       wayfinder: { bestScore: 0, bestDirections: 0, level: 0, plays: 0 },
       openloops: { bestPct: 0, plays: 0 },
+      switchback: { maxReversals: 0, bestPersev: 999, level: 0, plays: 0 },
+      wherewasit: { bestPct: 0, maxItems: 0, level: 0, plays: 0 },
+      whoswho: { bestPct: 0, bestNamePct: 0, maxPeople: 0, level: 0, plays: 0 },
     },
     streak: 0,
     lastPlayDate: null,
@@ -96,6 +99,12 @@ export const BADGES = [
   { id: "wayfinder-90", label: "The Knowledge (90+ nav score)", test: (s) => s.best.wayfinder.bestScore >= 90 },
   { id: "first-openloops", label: "First Open Loops Run", test: (s) => s.best.openloops.plays >= 1 },
   { id: "openloops-100", label: "Nothing Forgotten (100%)", test: (s) => s.best.openloops.bestPct >= 100 },
+  { id: "first-switchback", label: "First Switchback Run", test: (s) => s.best.switchback.plays >= 1 },
+  { id: "switchback-5", label: "Five Reversals in a Run", test: (s) => s.best.switchback.maxReversals >= 5 },
+  { id: "first-wherewasit", label: "First Where Was It? Run", test: (s) => s.best.wherewasit.plays >= 1 },
+  { id: "wherewasit-12", label: "12 Objects Placed (80%+)", test: (s) => s.best.wherewasit.maxItems >= 12 },
+  { id: "first-whoswho", label: "First Who's Who Run", test: (s) => s.best.whoswho.plays >= 1 },
+  { id: "whoswho-8", label: "Eight People Held (80%+)", test: (s) => s.best.whoswho.maxPeople >= 8 },
   { id: "streak-3", label: "3-Day Streak", test: (s) => s.streak >= 3 },
   { id: "streak-7", label: "7-Day Streak", test: (s) => s.streak >= 7 },
   { id: "level-5", label: "Level 5, Any Region", test: (s) => Object.keys(s.xp).some((k) => levelFromXp(s.xp[k]) >= 5) },

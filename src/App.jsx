@@ -23,6 +23,9 @@ import WordRush from "./games/WordRush.jsx";
 import EbbFlow from "./games/EbbFlow.jsx";
 import Wayfinder from "./games/Wayfinder.jsx";
 import OpenLoops from "./games/OpenLoops.jsx";
+import Switchback from "./games/Switchback.jsx";
+import WhereWasIt from "./games/WhereWasIt.jsx";
+import WhosWho from "./games/WhosWho.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -43,6 +46,9 @@ const GAME_COMPONENTS = {
   ebbflow: EbbFlow,
   wayfinder: Wayfinder,
   openloops: OpenLoops,
+  switchback: Switchback,
+  wherewasit: WhereWasIt,
+  whoswho: WhosWho,
 };
 
 export default function App() {

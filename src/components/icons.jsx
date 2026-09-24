@@ -181,7 +181,41 @@ export function DriftIcon() {
   );
 }
 
+export function SwitchbackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="3" y="5" width="7" height="10" rx="1.5" />
+      <rect x="14" y="9" width="7" height="10" rx="1.5" />
+      <path d="M7 18c0 2 2 3 5 3M17 6c0-2-2-3-5-3" strokeLinecap="round" />
+      <path d="M10.5 19.5 12 21l-1.5 1.5M13.5 1.5 12 3l1.5 1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function WhereWasItIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M3 11 12 4l9 7v9H3z" strokeLinejoin="round" />
+      <circle cx="12" cy="14" r="2.4" />
+      <path d="M13.8 15.8 16 18" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function WhosWhoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M7 10h6M7 14h10" strokeLinecap="round" />
+      <circle cx="17" cy="10" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
+  switchback: SwitchbackIcon,
+  wherewasit: WhereWasItIcon,
+  whoswho: WhosWhoIcon,
   flashfocus: FlashFocusIcon,
   drift: DriftIcon,
   tonetrace: ToneTraceIcon,
