@@ -38,7 +38,7 @@ export const GAME_BLURB = {
   wherewasit:
     "Objects turn up one at a time, each inside a different room. Then: which room was each one in — or was it never shown? Remembering the context something happened in is the parahippocampal cortex's part of memory (Diana, Yonelinas & Ranganath 2007). Left parahippocampal is 5.8th percentile on the scan.",
   whoswho:
-    "Faces with made-up names — study them at your own pace, then name each one. The wrong answers mix up the other people's first and last names. Starts at 5 faces; every run at 90%+ adds one. Putting a name to a face is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
+    "Faces with made-up first names — study them at your own pace, then name each one. The wrong answers are the other faces' names. Starts at 5 faces; every run at 90%+ adds one. Putting a name to a face is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
   flashfocus:
     "Spot the odd-angled tile before it's gone. Trains rapid orientation discrimination — a core V1 function.",
   drift:

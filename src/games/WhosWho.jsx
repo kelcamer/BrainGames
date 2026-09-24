@@ -4,9 +4,13 @@ import SessionSummary from "../components/SessionSummary.jsx";
 import { FACES } from "../data/faces.js";
 
 // Left temporal pole — face-name association. Study faces paired with made-up
-// names, at your own pace, then name each face from four options. Lures are
-// recombinations of the other people's first and last names, so "I've seen Maya
-// and I've seen Brenner" isn't enough: you have to know they go on this face.
+// first names, at your own pace, then name each face from four options. Lures
+// are the other faces' names first (so knowing the set of names isn't enough —
+// you have to know which face owns which), always matching the face's sex.
+//
+// First names only: a first name is as much a proper name as a full one, and
+// proper-name retrieval is the temporal pole job. Surnames added arbitrary extra
+// load without targeting anything; difficulty now comes from the face count.
 //
 // Why face -> name and nothing else: people with left temporal pole damage can
 // still recognise a familiar face and say what the person does — what they lose
@@ -32,14 +36,9 @@ const FIRST = {
     "Idris", "Bram", "Luca", "Omar", "Silas", "Tomas", "Ezra", "Viktor", "Kenji", "Nico", "Ruben",
   ],
 };
-const LAST = [
-  "Brenner", "Okafor", "Lindqvist", "Moreau", "Tanaka", "Castillo", "Novak", "Haddad", "Whitlock", "Ferreira",
-  "Kowalski", "Mbeki", "Sorensen", "Delacroix", "Varga", "Ashford", "Reyes", "Holloway", "Ivanova", "Quinn",
-  "Albescu", "Nakamura", "Petrov", "Dunmore", "Salazar", "Weller",
-];
 
 const START_PEOPLE = 5;
-const MAX_PEOPLE = 20; // FIRST has 22 per sex and LAST 26, so a run never runs out of names
+const MAX_PEOPLE = 20; // FIRST has 22 per sex, so even an all-one-sex run keeps 2 spare names for lures
 const PASS_PCT = 90;
 const peopleFor = (level) => Math.min(START_PEOPLE + level, MAX_PEOPLE);
 const maxLevel = MAX_PEOPLE - START_PEOPLE;
@@ -52,29 +51,23 @@ function shuffle(a) {
   }
   return b;
 }
-const fullName = (p) => `${p.first} ${p.last}`;
 
 function buildRun(level) {
   const n = peopleFor(level);
   const faces = shuffle(FACES).slice(0, n);
   const firstPool = { F: shuffle(FIRST.F), M: shuffle(FIRST.M) };
-  const lasts = shuffle(LAST).slice(0, n);
-  const people = faces.map((face, i) => ({
+  const people = faces.map((face) => ({
     face: import.meta.env.BASE_URL + "faces/" + face.file,
     sex: face.sex,
-    first: firstPool[face.sex].pop(),
-    last: lasts[i],
+    name: firstPool[face.sex].pop(),
   }));
 
   const questions = people.map((p, i) => {
-    // Same-sex lures first — a first name that doesn't fit the face is too easy to rule out.
-    const recombined = shuffle(
-      people.flatMap((q, j) => (j === i ? [] : [`${p.first} ${q.last}`, ...(q.sex === p.sex ? [`${q.first} ${p.last}`] : [])]))
-    );
-    const others = people.filter((_, j) => j !== i);
-    const otherNames = [...shuffle(others.filter((q) => q.sex === p.sex)), ...shuffle(others.filter((q) => q.sex !== p.sex))].map(fullName);
-    const lures = [...new Set([...recombined.slice(0, 2), ...otherNames])].slice(0, 3);
-    return { face: p.face, answer: fullName(p), options: shuffle([fullName(p), ...lures]) };
+    // Lures always match the face's sex (a name that doesn't fit is too easy to
+    // rule out): other faces' names in this run first, then unused names.
+    const studied = shuffle(people.filter((q, j) => j !== i && q.sex === p.sex).map((q) => q.name));
+    const lures = [...studied, ...firstPool[p.sex]].slice(0, 3);
+    return { face: p.face, answer: p.name, options: shuffle([p.name, ...lures]) };
   });
   return { level, people, questions: shuffle(questions) };
 }
@@ -201,14 +194,14 @@ export default function WhosWho({ onBack, onFinish, best }) {
           <>
             <div className="wh-card" key={studyIdx}>
               <img className="wh-face" src={person.face} alt="" />
-              <div className="wh-name">{fullName(person)}</div>
+              <div className="wh-name">{person.name}</div>
             </div>
             <button className="btn btn--primary" onClick={nextPerson}>
               {studyIdx + 1 < r.people.length ? "Next person →" : "Start the test →"}
             </button>
             <p className="stage-msg">
-              Person {studyIdx + 1} of {r.people.length} · take as long as you like. Learn the <b style={{ color: "var(--temporalpole)" }}>whole name</b> — the wrong answers mix up
-              first and last names.
+              Person {studyIdx + 1} of {r.people.length} · take as long as you like. Link the <b style={{ color: "var(--temporalpole)" }}>name</b> to the face — the wrong answers
+              are the other faces' names.
             </p>
           </>
         ) : phase === "pause" ? (
