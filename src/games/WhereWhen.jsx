@@ -37,7 +37,7 @@ const LADDER = [
 const PASS_PCT = 75; // share of animals with the right room AND time within one slot of the truth
 const DAY_START = 7 * 60; // 7:00 AM, in minutes
 const DAY_END = 21 * 60; // 9:00 PM
-const STUDY_MS = 2200;
+const STUDY_MS = 3200; // Kelsey, 2026-09-30: 2.2 s was too fast
 const GAP_MS = 350;
 // phones get no keyboard, so don't advertise the number keys there
 const TOUCH = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
