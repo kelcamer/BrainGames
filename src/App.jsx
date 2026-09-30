@@ -84,8 +84,8 @@ export default function App() {
       <footer>
         <p className="disclaimer">
           This is a personal engagement tool, not a diagnostic or medical device. It gamifies functions <em>associated</em> with each region — practicing a function may sharpen it, but
-          that isn't the same as verified structural change to brain tissue. Percentiles are from the audited 24 Sep 2026 record: CentileBrain at age 27, cross-checked against 483
-          healthy women. Progress is stored only in this browser's local storage.
+          that isn't the same as verified structural change to brain tissue. Percentiles are from the 29 Sep 2026 record: plain size at age 27 against 483 healthy women and two
+          groups of women run through the same software as the scan. Progress is stored only in this browser's local storage.
         </p>
         <div className="reset-row">
           <button className="btn btn--ghost btn--sm" onClick={() => setResetOpen(true)}>

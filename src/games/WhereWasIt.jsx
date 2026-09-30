@@ -12,7 +12,8 @@ import SessionSummary from "../components/SessionSummary.jsx";
 // carries the context it was in (Diana, Yonelinas & Ranganath 2007,
 // doi:10.1016/j.tics.2007.08.001; review of parahippocampal context processing in
 // Aminoff, Kveraga & Bar 2013, doi:10.1016/j.tics.2013.06.009). Left
-// parahippocampal is the 5.8th percentile on the scan.
+// parahippocampal surface area is 9th-24th percentile on the scan (its volume
+// is large, 95th).
 //
 // Objects are picked to have nothing to do with any room — a pan in the kitchen
 // can be guessed, a sock on the beach has to be remembered.

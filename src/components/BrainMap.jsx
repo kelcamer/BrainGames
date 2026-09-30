@@ -1,4 +1,5 @@
-// The four target regions on the audited scan (24 Sep 2026), all surface area.
+// The five target regions on the 29 Sep 2026 record, all surface area. Ranges span the
+// three comparison groups (483 women + two groups run through the same software).
 // Front of the brain is on the right of the drawing.
 const NODES = [
   { region: "orbitofrontal", cx: 306, cy: 186, delay: "0s" },
@@ -11,32 +12,32 @@ const NODES = [
 const CALLOUTS = [
   {
     region: "temporalpole",
-    title: "Temporal pole",
-    stat: "Left 1st percentile · surface area (likely range 0–6th)",
-    body: "Best known for retrieving the names of specific people — damage here leaves people able to describe someone but not name them. Trained by Who's Who.",
+    title: "Temporal pole (front tip)",
+    stat: "Right tip 18th–29th (2–52 across 4 scans) · left tip above average (71st–94th)",
+    body: "Person knowledge: the left tip is best known for putting names to people, the right for recognising who someone is. Trained by Who's Who.",
   },
   {
     region: "scene",
     title: "Parahippocampal cortex",
-    stat: "Left 5.8th percentile · surface area (483 women: 5th)",
+    stat: "Left 9th–24th · surface area (its volume is large: 95th)",
     body: "Holds the context around a memory — where you were when something happened, and landmarks. Trained by Where Was It? and Wayfinder.",
   },
   {
     region: "orbitofrontal",
     title: "Orbitofrontal cortex",
-    stat: "Left lateral 12.4th · left medial 16th · pars orbitalis R 8.3rd / L 18.6th",
+    stat: "Left lateral 19th–33rd · right pars orbitalis 17th–25th · left medial average",
     body: "Tracks whether a choice is still paying off and drives the switch when it stops. Trained by Switchback.",
   },
   {
     region: "entorhinal",
     title: "Entorhinal cortex",
-    stat: "Left 10th percentile · surface area vs both same-software groups (10–35 depending on atlas)",
+    stat: "Left 8th–24th · surface area (10–35 depending on atlas: the least certain low)",
     body: "The gateway into memory: ties an item to where and when it happened before the hippocampus stores it. Trained by Where & When.",
   },
   {
     region: "motor",
     title: "Motor cortex",
-    stat: "Left precentral 19.2nd · left caudal middle frontal 14.2nd",
+    stat: "Left precentral average (25th–46th) · left caudal middle frontal 10th–21st, likely a border shift",
     body: "Sends movement commands and plans movement sequences. Trained by Motor Chain and Rhythm Recall.",
   },
 ];

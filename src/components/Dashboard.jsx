@@ -23,15 +23,16 @@ export default function Dashboard({ xp, badges, lastPlayed, onPlay }) {
 
       {/* Context about the scan these drills are based on — moved to the bottom */}
       <div className="section-head">
-        <span className="eyebrow">Trained on your own MRI · audited 24 Sep 2026</span>
+        <span className="eyebrow">Trained on your own MRI · record of 29 Sep 2026</span>
       </div>
       <h1 className="display" style={{ fontSize: 40, marginTop: 6 }}>
         Train your weakest regions.
       </h1>
       <p className="lede" style={{ marginTop: 10 }}>
-        Four regions came back at the 20th percentile or lower in surface area: left temporal pole (1st), left parahippocampal (5.8th), left orbitofrontal (12th–19th) and left
-        motor cortex (14th–19th). Smaller than peers is a measurement, not a verdict on ability — but each one maps to a job you can drill, so the first three cards target them.
-        Left touch cortex (18th) is also low, but a screen can't train touch. Everything else here plays to strengths: thalamus 92nd–97th, visual cortex, left parietal.
+        Your cortex is typical overall — fewer extreme regions than the typical woman. The mild lows that repeat across comparison groups are left entorhinal (8th–24th), left
+        parahippocampal (9th–24th, surface area only), left lateral orbitofrontal (19th–33rd), right pars orbitalis (17th–25th) and the right temporal front tip (18th–29th). Smaller
+        than peers is a measurement, not a verdict on ability — but each maps to a job you can drill, so the first four cards target them. What stands out is deep: thalamus
+        97th–99th in every group, hypothalamus 90th–99th. Visual cortex and left parietal are large too.
       </p>
 
       <BrainMap />

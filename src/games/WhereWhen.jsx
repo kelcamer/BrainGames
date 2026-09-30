@@ -13,9 +13,8 @@ import SessionSummary from "../components/SessionSummary.jsx";
 // humans, lateral entorhinal activity predicts how precisely people can place
 // a moment on the timeline of an episode (Montchal, Reagh & Yassa 2019,
 // doi:10.1038/s41593-018-0303-1). Where Was It? trains what + where; this adds
-// when. Left entorhinal is 10th percentile (surface area) against both
-// same-software groups on the scan — 10–35 depending on atlas, so the least
-// certain of the lows.
+// when. Left entorhinal surface area is 8th-24th percentile on the scan
+// (10-35 depending on atlas, so the least certain of the lows).
 //
 // Rooms are home places on purpose: the everyday version of this failure is
 // "where did I put it, and was that before or after I came in?"

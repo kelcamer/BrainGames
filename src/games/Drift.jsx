@@ -21,7 +21,8 @@ import { useNoScroll } from "../hooks/useNoScroll.js";
 //
 // Why this and not another Flash Focus: orientation is a V1 job, but global
 // motion is pooled in V5/MT, fed by the pericalcarine and lateral-occipital
-// cortex (both measure large on the audited scan — this drill plays to a strength).
+// cortex (pericalcarine measures large on the scan, lateral occipital average —
+// this drill plays to a strength).
 // Nothing else here tests motion at all.
 const TOTAL = 26;
 const N_DOTS = 170;

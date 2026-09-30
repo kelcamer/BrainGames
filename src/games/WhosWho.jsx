@@ -17,8 +17,11 @@ import { FACES } from "../data/faces.js";
 // is the name (Damasio et al. 1996, doi:10.1038/380499a0; Tranel 2009,
 // doi:10.1080/02687030802586498). An earlier version also quizzed job and
 // hometown, which is the part that survives, so it only diluted the drill.
-// Left temporal pole is the 1st percentile on the scan (range 0-6th after the
-// conversion uncertainty — low either way).
+// On the 29 Sep 2026 record the old "left temporal pole 1st" is a border
+// artifact: the tissue at the left tip is above average (71st-94th). The right
+// tip is the possible low (18th-29th; 2-52 across four scans), and the right
+// side carries knowing who a familiar person is (Gainotti 2007,
+// doi:10.1016/j.neuropsychologia.2006.12.013).
 //
 // Study is self-paced: a timer measured reading speed, not memory.
 // Starts at 5 faces; every run at 90%+ adds one, up to MAX_PEOPLE.

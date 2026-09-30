@@ -2,7 +2,7 @@
   "name": "brain-games",
   "private": true,
   "version": "1.0.0",
-  "description": "Cortex Console — a personal, MRI-informed brain-training arcade. Drills target regions measured on a real MRI, scored with CentileBrain.",
+  "description": "Cortex Console — a personal, MRI-informed brain-training arcade. Drills target regions measured on a real MRI, compared with healthy women run through the same software.",
   "type": "module",
   "scripts": {
     "dev": "vite",

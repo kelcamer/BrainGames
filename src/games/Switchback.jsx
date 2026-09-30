@@ -14,7 +14,8 @@ import { useNoScroll } from "../hooks/useNoScroll.js";
 // doi:10.1093/brain/awg180); in healthy people the lateral orbitofrontal /
 // ventrolateral PFC responds on the error that triggers the switch (Cools et al.
 // 2002, doi:10.1523/JNEUROSCI.22-11-04563.2002; O'Doherty et al. 2001,
-// doi:10.1038/82959). Left lateral orbitofrontal is the 12th percentile on the scan.
+// doi:10.1038/82959). Left lateral orbitofrontal is
+// 19th-33rd percentile on the scan.
 //
 // Why probabilistic, not 100/0: with certain payoffs one loss is proof and the
 // swap is trivial. With 80/20, one loss is noise — you have to weigh evidence

@@ -1,4 +1,17 @@
-import { SUBCORTICAL_VOLUME, CORTICAL_SURFACE_AREA, VOLBRAIN_BOTH_REPORTS, WITHDRAWN } from "../data/scanData.js";
+import {
+  RECORD_DATE,
+  N_OASIS_SAME,
+  N_AOMIC_SAME,
+  DEEP_VOLUME,
+  CORTICAL_SURFACE_AREA,
+  TEMPORAL_LOBE,
+  SMALL_STRUCTURES,
+  VOLBRAIN_BOTH_REPORTS,
+  WITHDRAWN,
+} from "../data/scanData.js";
+
+const OASIS = `${N_OASIS_SAME} OASIS · same software`;
+const AOMIC = `${N_AOMIC_SAME} AOMIC · same software`;
 
 function Table({ head, rows, pctlCols = [2, 4] }) {
   return (
@@ -39,17 +52,32 @@ export default function ScanModal({ open, onClose }) {
           </button>
         </div>
         <p style={{ fontSize: 12 }}>
-          Age 27 · female · percentiles vs healthy women this age · CentileBrain, cross-checked against 483 healthy women measured the same way · audited 24 Sep 2026.
+          Age 27 · female · plain size vs healthy women (1 = smaller than almost all, 99 = bigger than almost all) · every "L / R" is left / right · updated {RECORD_DATE}.
+          Where the OASIS (1.5T) and AOMIC (3T) groups agree, that is the answer. Trust: ✓ high · ~ uncertain · ⚠ border / label effect · ✗ unreliable.
         </p>
 
         <div className="scan-section">
-          <h4>Subcortical volume (percentile)</h4>
-          <Table head={["Structure", "CentileBrain L", "CentileBrain R", "483 women L", "483 women R"]} rows={SUBCORTICAL_VOLUME} pctlCols={[1, 2]} />
+          <h4>Whole brain &amp; deep structures (volume)</h4>
+          <Table head={["Structure", "483 women", "70 women", "Trust"]} rows={DEEP_VOLUME} pctlCols={[1, 2]} />
         </div>
 
         <div className="scan-section">
-          <h4>Cortical surface area (percentile) · ⚠ = conversion only good to ±11–25%</h4>
-          <Table head={["Region", "CentileBrain L", "CentileBrain R", "483 women L", "483 women R"]} rows={CORTICAL_SURFACE_AREA} pctlCols={[1, 2]} />
+          <h4>Cortex surface area · the two same-software columns are the more exact ones</h4>
+          <Table
+            head={["Region", "483 women", OASIS, AOMIC, "Trust"]}
+            rows={CORTICAL_SURFACE_AREA.map((r) => r.slice(0, 5))}
+            pctlCols={[1, 2, 3]}
+          />
+        </div>
+
+        <div className="scan-section">
+          <h4>Temporal lobe</h4>
+          <Table head={["Measure", "483 women", OASIS, AOMIC, "Notes"]} rows={TEMPORAL_LOBE} pctlCols={[1, 2, 3]} />
+        </div>
+
+        <div className="scan-section">
+          <h4>Thalamus sections &amp; small structures</h4>
+          <Table head={["Section / area", OASIS, AOMIC, "Notes"]} rows={SMALL_STRUCTURES} pctlCols={[1, 2]} />
         </div>
 
         <div className="scan-section">
@@ -58,7 +86,7 @@ export default function ScanModal({ open, onClose }) {
         </div>
 
         <div className="scan-section">
-          <h4>Withdrawn</h4>
+          <h4>Replaced or withdrawn</h4>
           <Table head={["Old number", "Why"]} rows={WITHDRAWN} pctlCols={[]} />
         </div>
 
@@ -66,12 +94,13 @@ export default function ScanModal({ open, onClose }) {
           <strong>Cortical thickness:</strong> not measurable on this scan type (post-contrast T1 SPACE), so no thickness percentiles are listed.
           <br />
           <br />
-          <strong>Main patterns:</strong> (1) thalamus high — the most solid finding; (2) putamen and caudate above average; (3) left parietal / language-side surface large —
-          supramarginal, superior parietal, insula; (4) visual cortex surface large — pericalcarine, cuneus; (5) left medial temporal and orbitofrontal surface small —
-          parahippocampal, entorhinal, temporal pole, orbitofrontal; (6) left touch cortex (postcentral) small — CentileBrain plus both volBrain reports.
+          <strong>Main patterns:</strong> (1) deep structures large — thalamus 97–99 in every group, large even for head size (the most solid finding); hypothalamus 90–99;
+          (2) cortex region sizes typical overall — fewer extreme regions than the typical woman; (3) large: visual cortex (pericalcarine), left parietal (supramarginal, superior
+          parietal), left insula; (4) small in both same-software groups, all mild and mostly left: entorhinal, parahippocampal (area only — its volume is large), lateral
+          orbitofrontal, caudal middle frontal (border), plus right pars orbitalis and right temporal front tip.
           <br />
           <br />
-          <strong>What would give certainty:</strong> one standard 3D T1 MPRAGE (no dye, ideally 3T, 1 mm) through standard FreeSurfer and CentileBrain.
+          <strong>What would give certainty:</strong> one standard 3D T1 MPRAGE (no dye, ideally 3T, 1 mm) through standard FreeSurfer.
         </div>
       </div>
     </div>
