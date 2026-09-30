@@ -1,10 +1,13 @@
-// Pixel animal faces for Where & When, on a 32x32 grid. Each animal is a list of
-// simple shapes (ellipses, triangles, single pixels) that get rasterised to
-// pixels, so curves come out smooth. `mirror` copies a shape to the right half
-// (faces are symmetric about x = 16). Order: `body` shapes, then a 1-pixel
+// Pixel animal faces for Where & When. Each animal is a list of simple shapes
+// (ellipses, triangles, single cells) laid out on a 32-unit design grid, then
+// rasterised at SCALE pixels per unit (64x64 at SCALE 2), so curves come out
+// smooth. `mirror` copies a shape to the right half (symmetric about x = 16). Order: `body` shapes, then an OUTLINE-pixel
 // outline is traced around them, then `face` shapes (eyes, blush, nose) on top.
 
-const N = 32;
+const U = 32; // design units
+const SCALE = 2;
+const N = U * SCALE; // pixels per side
+const OUTLINE = 2; // outline thickness in pixels
 const K = "#3a3150"; // outline
 const E = "#140e1f"; // eyes
 const W = "#ffffff";
@@ -78,7 +81,7 @@ export const ANIMALS = [
   },
   {
     name: "koala",
-    body: [ell(6, 12, 5.5, 5.5, "#9aa3ad", true), ell(6.2, 12.3, 3.4, 3.4, "#eceef2", true), head("#9aa3ad", 19.5, 11.5, 10)],
+    body: [ell(6.5, 12, 5.1, 5.1, "#9aa3ad", true), ell(6.7, 12.3, 3.2, 3.2, "#eceef2", true), head("#9aa3ad", 19.5, 11.5, 10)],
     face: [...eyes(11, 18), ...blush(22.5), ell(16, 21.5, 2.5, 3.3, "#3a3a4a")],
   },
   {
@@ -92,7 +95,7 @@ export const ANIMALS = [
   {
     name: "cow",
     body: [
-      ell(4, 15, 3.8, 1.9, "#f7f4ee", true), tri([[9, 11], [10, 5], [12.5, 10]], "#e8d8b0", true), head("#f7f4ee"),
+      ell(4.9, 15, 3.4, 1.8, "#f7f4ee", true), tri([[9, 11], [10, 5], [12.5, 10]], "#e8d8b0", true), head("#f7f4ee"),
       ell(9.5, 13.5, 3.5, 2.8, "#6b4a3a"), ell(23, 17, 2.2, 2.6, "#6b4a3a"), ell(16, 24.5, 7.5, 3.6, "#f5b3c0"),
     ],
     face: [...eyes(11.5, 18.5), ...blush(21.5), px([[13, 24], [13, 25]], "#a8506a", true)],
@@ -130,38 +133,43 @@ function inside(s, x, y) {
 }
 
 function mirrored(s) {
-  if (s.t === "e") return { ...s, cx: N - s.cx };
-  if (s.t === "t") return { ...s, pts: s.pts.map(([x, y]) => [N - x, y]) };
-  return { ...s, list: s.list.map(([x, y]) => [N - 1 - x, y]) };
+  if (s.t === "e") return { ...s, cx: U - s.cx };
+  if (s.t === "t") return { ...s, pts: s.pts.map(([x, y]) => [U - x, y]) };
+  return { ...s, list: s.list.map(([x, y]) => [U - 1 - x, y]) };
 }
 
 function paint(grid, shapes) {
   for (const s0 of shapes) {
     for (const s of s0.mirror ? [s0, mirrored(s0)] : [s0]) {
       if (s.t === "p") {
+        // a design cell is SCALE x SCALE pixels
         for (const [x0, y0] of s.list) {
-          const x = Math.floor(x0);
-          const y = Math.floor(y0);
-          if (x >= 0 && x < N && y >= 0 && y < N) grid[y][x] = s.c;
+          const bx = Math.floor(x0) * SCALE;
+          const by = Math.floor(y0) * SCALE;
+          for (let dy = 0; dy < SCALE; dy++)
+            for (let dx = 0; dx < SCALE; dx++) if (bx + dx < N && by + dy < N) grid[by + dy][bx + dx] = s.c;
         }
         continue;
       }
-      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (inside(s, x + 0.5, y + 0.5)) grid[y][x] = s.c;
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (inside(s, (x + 0.5) / SCALE, (y + 0.5) / SCALE)) grid[y][x] = s.c;
     }
   }
 }
 
 const cache = new Map();
 
-// 32 rows of 32 colours (null = transparent).
+// N rows of N colours (null = transparent).
 export function rasterize(a) {
   if (cache.has(a.name)) return cache.get(a.name);
   const grid = Array.from({ length: N }, () => Array(N).fill(null));
   paint(grid, a.body);
-  const filled = grid.map((row) => row.map((c) => c !== null));
-  for (let y = 0; y < N; y++)
-    for (let x = 0; x < N; x++)
-      if (!filled[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => filled[y + dy]?.[x + dx])) grid[y][x] = K;
+  // outline: grow the silhouette one pixel at a time, OUTLINE times
+  for (let pass = 0; pass < OUTLINE; pass++) {
+    const filled = grid.map((row) => row.map((c) => c !== null));
+    for (let y = 0; y < N; y++)
+      for (let x = 0; x < N; x++)
+        if (!filled[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => filled[y + dy]?.[x + dx])) grid[y][x] = K;
+  }
   paint(grid, a.face);
   cache.set(a.name, grid);
   return grid;
