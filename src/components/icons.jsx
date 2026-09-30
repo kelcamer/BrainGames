@@ -212,7 +212,18 @@ export function WhosWhoIcon() {
   );
 }
 
+export function WhereWhenIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M3 11 12 4l9 7v9H3z" strokeLinejoin="round" />
+      <circle cx="12" cy="14.5" r="3.2" />
+      <path d="M12 12.8v1.9l1.3.9" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export const GAME_ICONS = {
+  wherewhen: WhereWhenIcon,
   switchback: SwitchbackIcon,
   wherewasit: WhereWasItIcon,
   whoswho: WhosWhoIcon,

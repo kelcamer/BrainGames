@@ -8,6 +8,8 @@ export const REGIONS = {
   orbitofrontal: { name: "Orbitofrontal Cortex", color: "var(--orbitofrontal)", game: "switchback", label: "SWITCHBACK" },
   scene: { name: "Parahippocampal Cortex", color: "var(--scene)", game: "wherewasit", label: "WHERE WAS IT?" },
   temporalpole: { name: "Temporal Pole", color: "var(--temporalpole)", game: "whoswho", label: "WHO'S WHO" },
+  // Added 29 Sep 2026: left entorhinal is 10th percentile (surface area) against both same-software groups.
+  entorhinal: { name: "Entorhinal Cortex", color: "var(--entorhinal)", game: "wherewhen", label: "WHERE & WHEN" },
   visual: { name: "Visual Cortex", color: "var(--visual)", game: "flashfocus", label: "FLASH FOCUS" },
   auditory: { name: "Auditory Cortex", color: "var(--auditory)", game: "tonetrace", label: "TONE TRACE" },
   motor: { name: "Motor Cortex", color: "var(--motor)", game: "motorchain", label: "MOTOR CHAIN" },
@@ -37,6 +39,8 @@ export const GAME_BLURB = {
     "Two cards. One pays off most of the time, the other rarely — but not always, so a single loss proves nothing. Once you've locked on, the payoffs quietly swap. Notice and switch. This is probabilistic reversal learning, the standard orbitofrontal task: people with orbitofrontal damage keep picking the old winner (Fellows & Farah 2003). Left lateral orbitofrontal is 12th percentile on the scan.",
   wherewasit:
     "Objects turn up one at a time, each inside a different room. Then: which room was each one in — or was it never shown? Remembering the context something happened in is the parahippocampal cortex's part of memory (Diana, Yonelinas & Ranganath 2007). Left parahippocampal is 5.8th percentile on the scan.",
+  wherewhen:
+    "A day at home plays out: objects turn up one by one, each in a room. Then, for each one: which room, and when in the day did it appear? Binding an item to its place AND its moment is the entorhinal cortex's job — the gateway into memory; its lateral part tracks time within an experience (Montchal, Reagh & Yassa 2019). The everyday version: \"where did I put my keys, and was that before or after I came in?\" Left entorhinal is 10th percentile (surface area) on the scan against both comparison groups — the least certain of the lows.",
   whoswho:
     "Faces with made-up first names — study them at your own pace, then name each one. The wrong answers are the other faces' names. Starts at 5 faces; every run at 90%+ adds one. Putting a name to a face is the job the left temporal pole is best known for (Damasio et al. 1996). Left temporal pole is 1st percentile on the scan.",
   flashfocus:
@@ -81,6 +85,7 @@ export const GAME_REGION = {
   switchback: "orbitofrontal",
   wherewasit: "scene",
   whoswho: "temporalpole",
+  wherewhen: "entorhinal",
   flashfocus: "visual",
   drift: "visual",
   tonetrace: "auditory",

@@ -26,6 +26,7 @@ import OpenLoops from "./games/OpenLoops.jsx";
 import Switchback from "./games/Switchback.jsx";
 import WhereWasIt from "./games/WhereWasIt.jsx";
 import WhosWho from "./games/WhosWho.jsx";
+import WhereWhen from "./games/WhereWhen.jsx";
 
 const GAME_COMPONENTS = {
   flashfocus: FlashFocus,
@@ -49,6 +50,7 @@ const GAME_COMPONENTS = {
   switchback: Switchback,
   wherewasit: WhereWasIt,
   whoswho: WhosWho,
+  wherewhen: WhereWhen,
 };
 
 export default function App() {

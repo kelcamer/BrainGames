@@ -6,7 +6,7 @@ const STORAGE_KEY = storageKey("cortexConsoleV1");
 
 function defaultState() {
   return {
-    xp: { orbitofrontal: 0, scene: 0, temporalpole: 0, visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
+    xp: { orbitofrontal: 0, scene: 0, temporalpole: 0, entorhinal: 0, visual: 0, auditory: 0, motor: 0, wordform: 0, hippocampus: 0, parietal: 0, executive: 0 },
     best: {
       flashfocus: { accuracy: 0, minExposure: 9999, plays: 0 },
       drift: { bestThreshold: 999, minCoherence: 999, accuracy: 0, plays: 0 },
@@ -29,6 +29,7 @@ function defaultState() {
       switchback: { maxReversals: 0, bestPersev: 999, level: 0, plays: 0 },
       wherewasit: { bestPct: 0, maxItems: 0, level: 0, plays: 0 },
       whoswho: { bestPct: 0, bestNamePct: 0, maxPeople: 0, level: 0, plays: 0 },
+      wherewhen: { bestPct: 0, maxItems: 0, level: 0, plays: 0 },
     },
     streak: 0,
     lastPlayDate: null,
@@ -105,6 +106,8 @@ export const BADGES = [
   { id: "wherewasit-12", label: "12 Objects Placed (80%+)", test: (s) => s.best.wherewasit.maxItems >= 12 },
   { id: "first-whoswho", label: "First Who's Who Run", test: (s) => s.best.whoswho.plays >= 1 },
   { id: "whoswho-10", label: "Ten Faces Named (90%+)", test: (s) => s.best.whoswho.maxPeople >= 10 },
+  { id: "first-wherewhen", label: "First Where & When Run", test: (s) => s.best.wherewhen.plays >= 1 },
+  { id: "wherewhen-10", label: "A Full Day Bound (10 objects, 75%+)", test: (s) => s.best.wherewhen.maxItems >= 10 },
   { id: "streak-3", label: "3-Day Streak", test: (s) => s.streak >= 3 },
   { id: "streak-7", label: "7-Day Streak", test: (s) => s.streak >= 7 },
   { id: "level-5", label: "Level 5, Any Region", test: (s) => Object.keys(s.xp).some((k) => levelFromXp(s.xp[k]) >= 5) },

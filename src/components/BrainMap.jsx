@@ -5,6 +5,7 @@ const NODES = [
   { region: "temporalpole", cx: 262, cy: 222, delay: "-.6s" },
   { region: "scene", cx: 180, cy: 214, delay: "-1.2s" },
   { region: "motor", cx: 214, cy: 60, delay: "-1.8s" },
+  { region: "entorhinal", cx: 222, cy: 236, delay: "-2.4s" },
 ];
 
 const CALLOUTS = [
@@ -27,6 +28,12 @@ const CALLOUTS = [
     body: "Tracks whether a choice is still paying off and drives the switch when it stops. Trained by Switchback.",
   },
   {
+    region: "entorhinal",
+    title: "Entorhinal cortex",
+    stat: "Left 10th percentile · surface area vs both same-software groups (10–35 depending on atlas)",
+    body: "The gateway into memory: ties an item to where and when it happened before the hippocampus stores it. Trained by Where & When.",
+  },
+  {
     region: "motor",
     title: "Motor cortex",
     stat: "Left precentral 19.2nd · left caudal middle frontal 14.2nd",
@@ -39,7 +46,7 @@ export default function BrainMap() {
     <div className="scope-section">
       <div className="scope-svg-wrap">
         <div className="scope-sweep" aria-hidden="true" />
-        <svg viewBox="0 0 400 300" width="100%" height="auto" role="img" aria-label="Stylized brain diagram with four highlighted regions">
+        <svg viewBox="0 0 400 300" width="100%" height="auto" role="img" aria-label="Stylized brain diagram with five highlighted regions">
           <path
             d="M100,30 C150,6 230,6 275,32 C318,54 350,88 344,128 C362,150 366,180 344,196 C350,216 334,226 313,220 C304,246 278,256 253,250 C244,270 213,276 193,260 C168,268 142,258 132,240 C98,236 72,214 68,184 C48,174 44,148 60,128 C44,108 54,82 80,63 C90,44 106,44 100,30 Z"
             fill="var(--panel-2)"

@@ -21,6 +21,7 @@
   --orbitofrontal: #e6c25a;
   --scene: #a3d65c;
   --temporalpole: #8f9cf5;
+  --entorhinal: #f28fb8;
   --danger: #e6626e;
   --radius: 10px;
   --radius-lg: 16px;
@@ -603,3 +604,11 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
   .game-stage { padding: 12px; }
   .gng-stage { height: min(66vh, 640px); }
 }
+
+/* Where & When (entorhinal) */
+.wn-timeline { display: grid; gap: 6px; width: min(420px, 92vw); }
+.wn-slot { padding: 12px 0; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; cursor: pointer; }
+.wn-slot:hover { border-color: var(--entorhinal); }
+.wn-slot--truth { border-color: var(--wordform); color: var(--wordform); }
+.wn-slot--wrong { border-color: var(--danger); color: var(--danger); }
+.wn-ends { display: flex; justify-content: space-between; width: min(420px, 92vw); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; text-transform: uppercase; }
