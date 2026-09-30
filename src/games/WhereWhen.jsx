@@ -29,7 +29,7 @@ const ROOMS = [
 ];
 
 const OBJECTS = [
-  ["🔑", "keys"], ["👓", "glasses"], ["📱", "phone"], ["💊", "pill bottle"], ["🧦", "sock"],
+  ["🔑", "keys"], ["👓", "glasses"], ["📱", "phone"], ["💊", "pill"], ["🧦", "sock"],
   ["☂️", "umbrella"], ["🎧", "headphones"], ["🔦", "flashlight"], ["📎", "paperclip"], ["🧸", "teddy bear"],
   ["🎈", "balloon"], ["⏰", "alarm clock"], ["🕯️", "candle"], ["🧤", "gloves"], ["📷", "camera"],
   ["🎲", "die"], ["🧲", "magnet"], ["🧵", "thread"], ["🎁", "gift"], ["🪞", "mirror"],
@@ -43,6 +43,8 @@ const LADDER = [
 const PASS_PCT = 75; // share of objects with the right room AND time within one slot
 const STUDY_MS = 2200;
 const GAP_MS = 350;
+// phones get no keyboard, so don't advertise the number keys there
+const TOUCH = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
 
 function shuffle(a) {
   const b = a.slice();
@@ -73,11 +75,11 @@ export default function WhereWhen({ onBack, onFinish, best }) {
   const run = useRef(buildRun(level));
   const timers = useRef([]);
   const answers = useRef([]);
-  const [phase, setPhase] = useState("study"); // study | pause | where | when | done
+  const [phase, setPhase] = useState("ready"); // ready | study | pause | where | when | done
   const [studyIdx, setStudyIdx] = useState(-1);
   const [testIdx, setTestIdx] = useState(0);
   const [roomPick, setRoomPick] = useState(null);
-  const [mark, setMark] = useState(null); // { room, time } feedback after the "when" answer
+  const [mark, setMark] = useState(null); // { time } feedback after the "when" answer
   const [summary, setSummary] = useState(null);
 
   const clearTimers = () => {
@@ -162,11 +164,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
     later(() => playStudy(0), 600);
   }
 
-  useEffect(() => {
-    later(() => playStudy(0), 600);
-    return clearTimers;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => clearTimers, []);
 
   // keys: 1..n picks a room, then 1..9 (and 0 for slot 10) picks a time slot
   useEffect(() => {
@@ -188,7 +186,8 @@ export default function WhereWhen({ onBack, onFinish, best }) {
   function slotClass(t) {
     if (!mark) return "wn-slot";
     if (t === testing.time) return "wn-slot wn-slot--truth";
-    if (t === mark.time) return "wn-slot wn-slot--wrong";
+    // one step off still counts, so it gets amber, not red
+    if (t === mark.time) return Math.abs(t - testing.time) <= 1 ? "wn-slot wn-slot--close" : "wn-slot wn-slot--wrong";
     return "wn-slot";
   }
 
@@ -208,17 +207,46 @@ export default function WhereWhen({ onBack, onFinish, best }) {
             eyebrow="day replayed"
             bigNum={`${summary.pct}%`}
             detail={
-              `fully bound (right room + time within one step) for ${summary.bound} of ${summary.n} · right room ${summary.roomRight} of ${summary.n} · ` +
-              `exact time ${summary.timeExact}, within one step ${summary.timeClose} · average time error ${summary.meanErr} steps · +${summary.xpEarned} xp to Entorhinal Cortex` +
-              (summary.leveledUp ? ` · level up: ${LADDER[summary.level + 1][0]} objects, ${LADDER[summary.level + 1][1]} rooms next time` : ` · ${PASS_PCT}% to level up`)
+              `${summary.bound} of ${summary.n} fully bound (right room + time within one step) · +${summary.xpEarned} xp · ` +
+              (summary.leveledUp ? `level up: ${LADDER[summary.level + 1][0]} objects, ${LADDER[summary.level + 1][1]} rooms next time` : `${PASS_PCT}% to level up`)
             }
             onAgain={start}
             onBack={onBack}
           >
+            <div className="wn-breakdown mono">
+              <span>
+                room <b>{summary.roomRight}</b>/{summary.n}
+              </span>
+              <span>
+                time exact <b>{summary.timeExact}</b>/{summary.n}
+              </span>
+              <span>
+                one off <b>{summary.timeClose - summary.timeExact}</b>
+              </span>
+              <span>
+                avg miss <b>{summary.meanErr}</b>
+              </span>
+            </div>
             <p className="stage-msg">
               Knowing <em>where</em> but not <em>when</em> (or the reverse) is the binding gap this drill trains. Tip: link each object to the one before it with a quick story — that's the same trick as habit chains.
             </p>
           </SessionSummary>
+        ) : phase === "ready" ? (
+          <>
+            <div className="ww-scene">
+              <div className="ww-object">🏠</div>
+              <div className="ww-object-name">
+                {nItems} objects · {nRooms} rooms · one day
+              </div>
+            </div>
+            <p className="stage-msg">
+              Objects turn up one at a time, each in a room, from morning to evening. Afterwards you'll say <b style={{ color: "var(--entorhinal)" }}>where</b> each one was and{" "}
+              <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
+            </p>
+            <button className="btn btn--primary" onClick={start}>
+              Start the day
+            </button>
+          </>
         ) : phase === "study" ? (
           <>
             <div className="ww-scene" style={studying ? { background: r.rooms[studying.room].tint } : undefined}>
@@ -232,6 +260,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
                 </>
               )}
             </div>
+            <DayBar pos={studyIdx >= 0 ? studyIdx : null} n={r.day.length} />
             <p className="stage-msg">
               Remember <b style={{ color: "var(--entorhinal)" }}>where</b> each object is — and <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
             </p>
@@ -271,6 +300,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
                     </button>
                   ))}
                 </div>
+                <DayBar n={r.day.length} />
                 <div className="wn-ends">
                   <span>morning</span>
                   <span>evening</span>
@@ -278,11 +308,26 @@ export default function WhereWhen({ onBack, onFinish, best }) {
               </>
             )}
             <p className="stage-msg">
-              {testIdx + 1} / {r.test.length} · number keys work
+              {testIdx + 1} / {r.test.length}
+              {!TOUCH && " · number keys work"}
             </p>
           </>
         )}
       </div>
     </>
+  );
+}
+
+// Morning-to-evening strip. During study a sun marks where in the day this object
+// turned up; at test the same strip sits under the timeline so the two line up.
+function DayBar({ pos, n }) {
+  return (
+    <div className="wn-daybar" aria-hidden="true">
+      {pos !== null && pos !== undefined && (
+        <span className="wn-sun" style={{ left: `${((pos + 0.5) / n) * 100}%` }}>
+          ☀️
+        </span>
+      )}
+    </div>
   );
 }
