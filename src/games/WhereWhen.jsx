@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import GameHeader from "../components/GameHeader.jsx";
 import SessionSummary from "../components/SessionSummary.jsx";
+import PixelAnimal from "../components/PixelAnimal.jsx";
+import { ANIMALS } from "../data/pixelAnimals.js";
 
 // Entorhinal cortex — what + where + WHEN binding. A "day at home" plays out:
-// objects turn up one at a time, each in a room. At test, for each object:
+// pixel animals turn up one at a time, each in a room. At test, for each animal:
 // which room was it in, and where on the day's timeline did it appear?
 //
 // Why this task: the entorhinal cortex is the gateway that packages an item
@@ -28,19 +30,11 @@ const ROOMS = [
   { name: "Hallway", emoji: "🚪", tint: "#33291c" },
 ];
 
-const OBJECTS = [
-  ["🔑", "keys"], ["👓", "glasses"], ["📱", "phone"], ["💊", "pill"], ["🧦", "sock"],
-  ["☂️", "umbrella"], ["🎧", "headphones"], ["🔦", "flashlight"], ["📎", "paperclip"], ["🧸", "teddy bear"],
-  ["🎈", "balloon"], ["⏰", "alarm clock"], ["🕯️", "candle"], ["🧤", "gloves"], ["📷", "camera"],
-  ["🎲", "die"], ["🧲", "magnet"], ["🧵", "thread"], ["🎁", "gift"], ["🪞", "mirror"],
-  ["🦴", "dog bone"], ["🎸", "guitar"], ["🔔", "bell"], ["🧩", "puzzle piece"], ["⌛", "hourglass"],
-];
-
-// [objects in the day, rooms in play]. A run at PASS_PCT+ fully-bound climbs a rung.
+// [animals in the day, rooms in play]. A run at PASS_PCT+ fully-bound climbs a rung.
 const LADDER = [
   [5, 3], [6, 3], [7, 4], [8, 4], [10, 5], [12, 5], [14, 6],
 ];
-const PASS_PCT = 75; // share of objects with the right room AND time within one slot
+const PASS_PCT = 75; // share of animals with the right room AND time within one slot
 const STUDY_MS = 2200;
 const GAP_MS = 350;
 // phones get no keyboard, so don't advertise the number keys there
@@ -58,15 +52,15 @@ function shuffle(a) {
 function buildRun(level) {
   const [nItems, nRooms] = LADDER[level];
   const rooms = shuffle(ROOMS).slice(0, nRooms);
-  const pool = shuffle(OBJECTS).slice(0, nItems);
-  // spread objects evenly across rooms, and never put the same room twice in a
+  const pool = shuffle(ANIMALS).slice(0, nItems);
+  // spread animals evenly across rooms, and never put the same room twice in a
   // row (a run of "Kitchen, Kitchen" would let room order stand in for time)
   let roomOrder;
   for (let tries = 0; tries < 50; tries++) {
     roomOrder = shuffle(Array.from({ length: nItems }, (_, i) => i % nRooms));
     if (roomOrder.every((r, i) => i === 0 || r !== roomOrder[i - 1])) break;
   }
-  const day = pool.map(([emoji, name], i) => ({ emoji, name, room: roomOrder[i], time: i }));
+  const day = pool.map((animal, i) => ({ animal, name: animal.name, room: roomOrder[i], time: i }));
   return { level, rooms, day, test: shuffle(day) };
 }
 
@@ -195,7 +189,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
     <>
       <GameHeader color="var(--entorhinal)" regionLabel="Entorhinal Cortex · Where & When" title="Where & When" onBack={onBack}>
         <span className="stat-pill">
-          <b className="mono">{nItems}</b> objects · <b className="mono">{nRooms}</b> rooms
+          <b className="mono">{nItems}</b> animals · <b className="mono">{nRooms}</b> rooms
         </span>
         <span className="stat-pill">
           Best <b className="mono">{best.bestPct}%</b>
@@ -208,7 +202,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
             bigNum={`${summary.pct}%`}
             detail={
               `${summary.bound} of ${summary.n} fully bound (right room + time within one step) · +${summary.xpEarned} xp · ` +
-              (summary.leveledUp ? `level up: ${LADDER[summary.level + 1][0]} objects, ${LADDER[summary.level + 1][1]} rooms next time` : `${PASS_PCT}% to level up`)
+              (summary.leveledUp ? `level up: ${LADDER[summary.level + 1][0]} animals, ${LADDER[summary.level + 1][1]} rooms next time` : `${PASS_PCT}% to level up`)
             }
             onAgain={start}
             onBack={onBack}
@@ -228,19 +222,23 @@ export default function WhereWhen({ onBack, onFinish, best }) {
               </span>
             </div>
             <p className="stage-msg">
-              Knowing <em>where</em> but not <em>when</em> (or the reverse) is the binding gap this drill trains. Tip: link each object to the one before it with a quick story — that's the same trick as habit chains.
+              Knowing <em>where</em> but not <em>when</em> (or the reverse) is the binding gap this drill trains. Tip: link each animal to the one before it with a quick story — that's the same trick as habit chains.
             </p>
           </SessionSummary>
         ) : phase === "ready" ? (
           <>
             <div className="ww-scene">
-              <div className="ww-object">🏠</div>
+              <div className="wn-lineup">
+                {["bunny", "cat", "frog"].map((n) => (
+                  <PixelAnimal key={n} animal={ANIMALS.find((x) => x.name === n)} size={72} />
+                ))}
+              </div>
               <div className="ww-object-name">
-                {nItems} objects · {nRooms} rooms · one day
+                {nItems} animals · {nRooms} rooms · one day
               </div>
             </div>
             <p className="stage-msg">
-              Objects turn up one at a time, each in a room, from morning to evening. Afterwards you'll say <b style={{ color: "var(--entorhinal)" }}>where</b> each one was and{" "}
+              Animals turn up one at a time, each in a room, from morning to evening. Afterwards you'll say <b style={{ color: "var(--entorhinal)" }}>where</b> each one was and{" "}
               <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
             </p>
             <button className="btn btn--primary" onClick={start}>
@@ -255,14 +253,14 @@ export default function WhereWhen({ onBack, onFinish, best }) {
                   <div className="ww-room-name">
                     {r.rooms[studying.room].emoji} {r.rooms[studying.room].name}
                   </div>
-                  <div className="ww-object">{studying.emoji}</div>
+                  <PixelAnimal animal={studying.animal} size={112} />
                   <div className="ww-object-name">{studying.name}</div>
                 </>
               )}
             </div>
             <DayBar pos={studyIdx >= 0 ? studyIdx : null} n={r.day.length} />
             <p className="stage-msg">
-              Remember <b style={{ color: "var(--entorhinal)" }}>where</b> each object is — and <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
+              Remember <b style={{ color: "var(--entorhinal)" }}>where</b> each animal is — and <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
             </p>
           </>
         ) : phase === "pause" ? (
@@ -270,7 +268,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
         ) : (
           <>
             <div className="ww-scene ww-scene--test">
-              <div className="ww-object">{testing.emoji}</div>
+              <PixelAnimal animal={testing.animal} size={96} />
               <div className="ww-object-name">{testing.name}</div>
               {phase === "when" && roomPick !== null && (
                 <div className="ww-room-name">
@@ -321,7 +319,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
   );
 }
 
-// Morning-to-evening strip. During study a sun marks where in the day this object
+// Morning-to-evening strip. During study a sun marks where in the day this animal
 // turned up; at test the same strip sits under the timeline so the two line up.
 function DayBar({ pos, n }) {
   return (
