@@ -237,7 +237,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
               </span>
             </div>
             <p className="stage-msg">
-              Knowing <em>where</em> but not <em>when</em> (or the reverse) is the binding gap this drill trains. Tip: link each animal to the one before it with a quick story — that's the same trick as habit chains.
+              Knowing <em>where</em> but not <em>when</em> (or the reverse) is the binding gap this drill trains. Tip: say a tiny story that ties all three together — "the bunny hopped down the hallway at 7 AM" — or link each animal to the one before it, the same trick as habit chains.
             </p>
           </SessionSummary>
         ) : phase === "ready" ? (

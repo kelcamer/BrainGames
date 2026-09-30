@@ -610,7 +610,7 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 .wn-lineup { display: flex; gap: 10px; }
 .wn-times { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; width: min(420px, 92vw); }
 .wn-slot small { margin-left: 4px; font-size: 10px; opacity: 0.7; }
-.wn-clock { display: flex; align-items: baseline; gap: 6px; margin-top: 12px; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--line); background: #0b1411; font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--entorhinal); text-shadow: 0 0 10px rgba(242, 143, 184, 0.55); }
+.wn-clock { display: flex; align-items: baseline; justify-content: center; gap: 6px; width: 190px; box-sizing: border-box; margin-top: 12px; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--line); background: #0b1411; font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--entorhinal); text-shadow: 0 0 10px rgba(242, 143, 184, 0.55); }
 .wn-clock--off { opacity: 0.35; text-shadow: none; }
 .wn-clock-hm { font-size: 34px; font-weight: 700; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; min-width: 5ch; text-align: right; }
 .wn-clock-ampm { font-size: 14px; font-weight: 700; }
