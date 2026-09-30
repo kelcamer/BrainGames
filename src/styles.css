@@ -608,6 +608,8 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 /* Where & When (entorhinal) */
 .wn-timeline { display: grid; gap: 6px; width: min(420px, 92vw); }
 .wn-slot { padding: 12px 0; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; cursor: pointer; }
+.wn-timeline--dense { gap: 3px; }
+.wn-timeline--dense .wn-slot { padding: 18px 0; font-size: 11px; }
 .wn-slot:hover { border-color: var(--entorhinal); }
 .wn-slot--truth { border-color: var(--wordform); color: var(--wordform); }
 .wn-slot--wrong { border-color: var(--danger); color: var(--danger); }

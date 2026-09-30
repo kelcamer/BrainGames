@@ -293,7 +293,10 @@ export default function WhereWhen({ onBack, onFinish, best }) {
             ) : (
               <>
                 <p className="stage-msg">When in the day? (first → last)</p>
-                <div className="wn-timeline" style={{ gridTemplateColumns: `repeat(${r.day.length}, 1fr)` }}>
+                <div
+                  className={r.day.length > 10 ? "wn-timeline wn-timeline--dense" : "wn-timeline"}
+                  style={{ gridTemplateColumns: `repeat(${r.day.length}, 1fr)` }}
+                >
                   {r.day.map((_, t) => (
                     <button key={t} className={slotClass(t)} onClick={() => pickTime(t)} aria-label={`step ${t + 1}`}>
                       {t + 1}
@@ -325,7 +328,7 @@ function DayBar({ pos, n }) {
     <div className="wn-daybar" aria-hidden="true">
       {pos !== null && pos !== undefined && (
         <span className="wn-sun" style={{ left: `${((pos + 0.5) / n) * 100}%` }}>
-          ☀️
+          {(pos + 0.5) / n > 0.8 ? "🌙" : "☀️"}
         </span>
       )}
     </div>
