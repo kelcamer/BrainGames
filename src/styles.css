@@ -397,7 +397,7 @@ button { font-family: inherit; cursor: pointer; }
 .scan-table th { text-align: left; color: var(--ink-faint); font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-bottom: 1px solid var(--line); }
 .scan-table td { padding: 4px 8px; border-bottom: 1px solid var(--line); color: var(--ink-dim); font-family: "JetBrains Mono", monospace; }
 .scan-table tr:hover td { color: var(--ink); }
-.scan-table td.pctl { color: var(--ink); }
+.scan-table td.pctl { color: var(--ink); white-space: nowrap; }
 .table-scroll { overflow-x: auto; }
 .note-box { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 12.5px; margin-top: 10px; }
 
