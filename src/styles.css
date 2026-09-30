@@ -608,16 +608,16 @@ footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 50px; }
 /* Where & When (entorhinal) */
 .pixel-animal { display: block; image-rendering: pixelated; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.25)); }
 .wn-lineup { display: flex; gap: 10px; }
-.wn-timeline { display: grid; gap: 6px; width: min(420px, 92vw); }
+.wn-times { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; width: min(420px, 92vw); }
+.wn-slot small { margin-left: 4px; font-size: 10px; opacity: 0.7; }
+.wn-clock { display: flex; align-items: baseline; gap: 6px; margin-top: 12px; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--line); background: #0b1411; font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--entorhinal); text-shadow: 0 0 10px rgba(242, 143, 184, 0.55); }
+.wn-clock--off { opacity: 0.35; text-shadow: none; }
+.wn-clock-hm { font-size: 34px; font-weight: 700; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; min-width: 5ch; text-align: right; }
+.wn-clock-ampm { font-size: 14px; font-weight: 700; }
 .wn-slot { padding: 12px 0; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; cursor: pointer; }
-.wn-timeline--dense { gap: 3px; }
-.wn-timeline--dense .wn-slot { padding: 18px 0; font-size: 11px; }
 .wn-slot:hover { border-color: var(--entorhinal); }
 .wn-slot--truth { border-color: var(--wordform); color: var(--wordform); }
 .wn-slot--wrong { border-color: var(--danger); color: var(--danger); }
 .wn-slot--close { border-color: var(--amber); color: var(--amber); }
-.wn-daybar { position: relative; width: min(420px, 92vw); height: 8px; border-radius: 4px; margin: 10px 0 2px; background: linear-gradient(90deg, #f6c177 0%, #9ccfd8 45%, #eb6f92 80%, #31304f 100%); opacity: 0.8; }
-.wn-sun { position: absolute; top: 50%; transform: translate(-50%, -50%); font-size: 18px; transition: left 0.35s ease; }
 .wn-breakdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; font-size: 13px; color: var(--ink-dim); }
 .wn-breakdown b { color: var(--ink); }
-.wn-ends { display: flex; justify-content: space-between; width: min(420px, 92vw); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; text-transform: uppercase; }

@@ -34,7 +34,9 @@ const ROOMS = [
 const LADDER = [
   [5, 3], [6, 3], [7, 4], [8, 4], [10, 5], [12, 5], [14, 6],
 ];
-const PASS_PCT = 75; // share of animals with the right room AND time within one slot
+const PASS_PCT = 75; // share of animals with the right room AND time within one slot of the truth
+const DAY_START = 7 * 60; // 7:00 AM, in minutes
+const DAY_END = 21 * 60; // 9:00 PM
 const STUDY_MS = 2200;
 const GAP_MS = 350;
 // phones get no keyboard, so don't advertise the number keys there
@@ -49,6 +51,18 @@ function shuffle(a) {
   return b;
 }
 
+// 7:00 AM .. 9:00 PM, evenly spaced and rounded to the quarter hour.
+function dayTimes(n) {
+  const step = Math.round((DAY_END - DAY_START) / (n - 1) / 15) * 15;
+  return Array.from({ length: n }, (_, i) => DAY_START + i * step);
+}
+
+function clockText(mins) {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return { hm: `${((h + 11) % 12) + 1}:${String(m).padStart(2, "0")}`, ampm: h < 12 ? "AM" : "PM" };
+}
+
 function buildRun(level) {
   const [nItems, nRooms] = LADDER[level];
   const rooms = shuffle(ROOMS).slice(0, nRooms);
@@ -60,7 +74,8 @@ function buildRun(level) {
     roomOrder = shuffle(Array.from({ length: nItems }, (_, i) => i % nRooms));
     if (roomOrder.every((r, i) => i === 0 || r !== roomOrder[i - 1])) break;
   }
-  const day = pool.map((animal, i) => ({ animal, name: animal.name, room: roomOrder[i], time: i }));
+  const times = dayTimes(nItems);
+  const day = pool.map((animal, i) => ({ animal, name: animal.name, room: roomOrder[i], time: i, clock: clockText(times[i]) }));
   return { level, rooms, day, test: shuffle(day) };
 }
 
@@ -201,7 +216,7 @@ export default function WhereWhen({ onBack, onFinish, best }) {
             eyebrow="day replayed"
             bigNum={`${summary.pct}%`}
             detail={
-              `${summary.bound} of ${summary.n} fully bound (right room + time within one step) · +${summary.xpEarned} xp · ` +
+              `${summary.bound} of ${summary.n} fully bound (right room + time within one slot) · +${summary.xpEarned} xp · ` +
               (summary.leveledUp ? `level up: ${LADDER[summary.level + 1][0]} animals, ${LADDER[summary.level + 1][1]} rooms next time` : `${PASS_PCT}% to level up`)
             }
             onAgain={start}
@@ -238,8 +253,8 @@ export default function WhereWhen({ onBack, onFinish, best }) {
               </div>
             </div>
             <p className="stage-msg">
-              Animals turn up one at a time, each in a room, from morning to evening. Afterwards you'll say <b style={{ color: "var(--entorhinal)" }}>where</b> each one was and{" "}
-              <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
+              Animals turn up one at a time, each in a room, with the clock moving from morning to night. Afterwards you'll say{" "}
+              <b style={{ color: "var(--entorhinal)" }}>where</b> each one was and <b style={{ color: "var(--entorhinal)" }}>what time</b> it turned up.
             </p>
             <button className="btn btn--primary" onClick={start}>
               Start the day
@@ -258,9 +273,9 @@ export default function WhereWhen({ onBack, onFinish, best }) {
                 </>
               )}
             </div>
-            <DayBar pos={studyIdx >= 0 ? studyIdx : null} n={r.day.length} />
+            <Clock time={studying ? studying.clock : null} />
             <p className="stage-msg">
-              Remember <b style={{ color: "var(--entorhinal)" }}>where</b> each animal is — and <b style={{ color: "var(--entorhinal)" }}>when</b> in the day it turned up.
+              Remember <b style={{ color: "var(--entorhinal)" }}>where</b> each animal is — and <b style={{ color: "var(--entorhinal)" }}>what time</b> it turned up.
             </p>
           </>
         ) : phase === "pause" ? (
@@ -290,21 +305,14 @@ export default function WhereWhen({ onBack, onFinish, best }) {
               </>
             ) : (
               <>
-                <p className="stage-msg">When in the day? (first → last)</p>
-                <div
-                  className={r.day.length > 10 ? "wn-timeline wn-timeline--dense" : "wn-timeline"}
-                  style={{ gridTemplateColumns: `repeat(${r.day.length}, 1fr)` }}
-                >
-                  {r.day.map((_, t) => (
-                    <button key={t} className={slotClass(t)} onClick={() => pickTime(t)} aria-label={`step ${t + 1}`}>
-                      {t + 1}
+                <p className="stage-msg">What time was it?</p>
+                <div className="wn-times">
+                  {r.day.map((d, t) => (
+                    <button key={t} className={slotClass(t)} onClick={() => pickTime(t)}>
+                      {d.clock.hm}
+                      <small>{d.clock.ampm}</small>
                     </button>
                   ))}
-                </div>
-                <DayBar n={r.day.length} />
-                <div className="wn-ends">
-                  <span>morning</span>
-                  <span>evening</span>
                 </div>
               </>
             )}
@@ -319,16 +327,12 @@ export default function WhereWhen({ onBack, onFinish, best }) {
   );
 }
 
-// Morning-to-evening strip. During study a sun marks where in the day this animal
-// turned up; at test the same strip sits under the timeline so the two line up.
-function DayBar({ pos, n }) {
+// Digital clock shown under each animal while the day plays out.
+function Clock({ time }) {
   return (
-    <div className="wn-daybar" aria-hidden="true">
-      {pos !== null && pos !== undefined && (
-        <span className="wn-sun" style={{ left: `${((pos + 0.5) / n) * 100}%` }}>
-          {(pos + 0.5) / n > 0.8 ? "🌙" : "☀️"}
-        </span>
-      )}
+    <div className={time ? "wn-clock" : "wn-clock wn-clock--off"} aria-live="off">
+      <span className="wn-clock-hm">{time ? time.hm : "--:--"}</span>
+      <span className="wn-clock-ampm">{time ? time.ampm : "AM"}</span>
     </div>
   );
 }
